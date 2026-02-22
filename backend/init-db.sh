@@ -3,7 +3,7 @@
 # Script d'initialisation de la base de données SQLite
 
 DB_PATH="explorateurs.db"
-SQL_SCHEMA="../BD_sqlite.sql"
+SQL_SCHEMA="src/main/resources/sql/BD_sqlite.sql"
 
 echo "🗄️  Initialisation de la base de données SQLite..."
 
