@@ -6,11 +6,20 @@ create table classes (
     age int
 );
 
+insert into classes (nom, logo, age) values 
+('Sakaiza', 'sakaiza.jpg', 6),
+('Namana', 'namana.jpg', 8),
+('Mpanazava', 'mpanazava.jpg', 10),
+('Mpamaky lay', 'mpamaky_lay.jpg', 11),
+('Mpandeha lavitra', 'mpandeha_lavitra.jpg', 12),
+('Mpitarika', 'mpitarika.jpg', 12);
+
 create table annee_exercice (
     id serial primary key,
     annee date not null,
     created_at timestamp default current_timestamp
 );
+
 
 
 -- Utilisateur ary mpitarika
@@ -24,8 +33,7 @@ insert into roles_staff (role_name) values
 ('Directeur'),
 ('Co-Directeur'),
 ('Secrétaire'),
-('Instructeur'),
-('Trésorier');
+('Instructeur');
 
 create table roles_action (
     id serial primary key,
@@ -59,6 +67,7 @@ create table instructeur (
     id serial primary key,
     nom varchar(100) not null,  
     prenom varchar(100) not null,
+    genre varchar(10) not null,
     totem varchar(100),
     telephone varchar(15),
     est_chef_guide boolean default false,
@@ -107,6 +116,7 @@ create table inscriptions (
     id serial primary key,
     enfant_id integer references enfants(id),
     annee_exercice_id integer references annee_exercice(id),
+    est_assurance boolean default false,
     classe_id integer references classes(id),
     created_at timestamp default current_timestamp
 );
