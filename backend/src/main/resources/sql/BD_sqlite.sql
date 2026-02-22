@@ -341,6 +341,6 @@ INSERT INTO annee_exercice (annee, created_at) VALUES
 (date('now', 'start of year'), CURRENT_TIMESTAMP);
 
 -- Utilisateur par défaut (directeur/directeur123)
--- Hash BCrypt de "directeur123": $2a$10$N9qo8uLOickgx2ZMRZoMye7I9E7eOLp85GxPj5Ik3rkHcSZWOPeGu
+-- Hash BCrypt généré par Spring Security BCryptPasswordEncoder
 INSERT INTO utilisateur (username, password_hash, role_id, active, annee_exercice_id, created_at, updated_at) VALUES
-('directeur', '$2a$10$N9qo8uLOickgx2ZMRZoMye7I9E7eOLp85GxPj5Ik3rkHcSZWOPeGu', 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('directeur', '$2a$10$jUuOSBA7kVjDxLfvbwa2bObataLc7L3/zVz.IYQsecOE5FwaT.PZa', 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

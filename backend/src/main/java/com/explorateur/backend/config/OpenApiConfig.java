@@ -1,9 +1,12 @@
 package com.explorateur.backend.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,9 +45,22 @@ public class OpenApiConfig {
                         "les budgets, les programmes et les classes progressives.")
                 .contact(contact)
                 .license(license);
+        
+        // Configuration de la sécurité Bearer Token
+        SecurityScheme securityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .name("bearerAuth")
+                .description("Authentification JWT. Utilisez le token obtenu via /api/auth/login");
+        
+        SecurityRequirement securityRequirement = new SecurityRequirement()
+                .addList("bearerAuth");
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(localServer));
+                .servers(List.of(localServer))
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+                .addSecurityItem(securityRequirement);
     }
 }
