@@ -1,5 +1,7 @@
 package com.explorateur.backend.entity;
 
+import com.explorateur.backend.config.LocalDateAttributeConverter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,16 +16,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "Entité représentant une année d'exercice du Club des Explorateurs")
 public class AnneeExercice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Identifiant unique de l'année d'exercice", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Column(nullable = false)
+    @Convert(converter = LocalDateAttributeConverter.class)
+    @Schema(description = "Date de début de l'année d'exercice (1er janvier)", example = "2026-01-01", required = true)
     private LocalDate annee;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Schema(description = "Date de création de l'enregistrement", example = "2026-02-22T19:04:35", accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime createdAt;
 }
