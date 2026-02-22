@@ -2,6 +2,7 @@
 create table classes (
     id serial primary key,
     nom varchar(100) not null, -- Sakaiza, Namana, Mpanazava, ...
+    logo varchar(255),
     age int
 );
 
@@ -31,6 +32,7 @@ create table roles_action (
     role_id integer references roles_staff(id),
     action varchar(100) not null -- CREER, MODIFIER, SUPPRIMER, CONSULTER
 );
+
 insert into roles_action (role_id, action) values 
 (1, 'CREER'),
 (1, 'MODIFIER'),
@@ -165,10 +167,17 @@ create table details_activites (
 
 -- Presence amin'ny activite (ankizy sy staff)
 
-create table participants_activites (
+create table participants_activites_explo (
     id serial primary key,
     activite_id integer references activites(id),
     enfant_id integer references inscriptions(id),
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
+);
+
+create table participants_activites_staff (
+    id serial primary key,
+    activite_id integer references activites(id),
     staff_id integer references staff(id),
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp
@@ -185,7 +194,9 @@ insert into categorie_programme (nom) values
 ('Fikarohana ara-panahy'),
 ('Fanompoana ny hafa'),
 ('Fahasalamana sy toe-batana tomady'),
-('Fiainana ankalamanjana');
+('Fiainana ankalamanjana'),
+('Lalindalina kokoa'),
+('Asa manavanana');
 
 create table programmes (
     id serial primary key,
@@ -206,6 +217,7 @@ insert into programme_status (status) values
 ('En attente'),
 ('En cours'),
 ('Terminé');
+
 -- Kilasim-pandrosoana : CP
 
 create table classe_progressive(
@@ -241,6 +253,24 @@ create table historique_programmes (
     created_at timestamp default current_timestamp
 );
 
+-- gestion budgetaire
+create table type (
+    id serial primary key,
+    type VARCHAR(20) 
+);
+
+insert into type (type) values 
+('RECETTE'),
+('DEPENSE');
+
+create table mouvement_budgetaire (
+    id serial primary key,
+    annee_exercice_id integer references annee_exercice(id),
+    type_id integer references type(id),
+    montant decimal(10,2) not null,
+    description text,
+    created_at timestamp default current_timestamp
+);
 
 -- historique
 create table journal (
