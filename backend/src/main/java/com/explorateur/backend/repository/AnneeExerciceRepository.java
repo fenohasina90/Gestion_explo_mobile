@@ -1,0 +1,22 @@
+package com.explorateur.backend.repository;
+
+import com.explorateur.backend.entity.AnneeExercice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+@Repository
+public interface AnneeExerciceRepository extends JpaRepository<AnneeExercice, Long> {
+    
+    /**
+     * Trouve l'année d'exercice par date
+     */
+    Optional<AnneeExercice> findByAnnee(LocalDate annee);
+    
+    /**
+     * Trouve l'année d'exercice la plus récente
+     */
+    Optional<AnneeExercice> findFirstByOrderByAnneeDesc();
+}
