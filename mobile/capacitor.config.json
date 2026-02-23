@@ -1,0 +1,12 @@
+{
+  "appId": "com.explorateurs.mobile",
+  "appName": "Club Explorateurs",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#3880ff"
+    }
+  }
+}
