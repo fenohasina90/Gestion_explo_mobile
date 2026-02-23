@@ -1,5 +1,6 @@
 package com.explorateur.backend.entity;
 
+import com.explorateur.backend.config.LocalDateTimeConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,14 +32,16 @@ public class Utilisateur {
     @Column(name = "active")
     private Boolean active = true;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "annee_exercice_id")
     private AnneeExercice anneeExercice;
     
     @Column(name = "created_at")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
     
     @PrePersist
