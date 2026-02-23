@@ -64,11 +64,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // Extraire le rôle du token
                     String role = jwtUtil.extractClaim(jwt, claims -> claims.get("role", String.class));
                     
-                    // Créer l'authentification
+                    // Créer l'authentification avec le préfixe ROLE_ (sans conversion en majuscules)
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             username,
                             null,
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
                     );
                     
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

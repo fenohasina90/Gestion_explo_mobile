@@ -1,0 +1,75 @@
+package com.explorateur.backend.controller;
+
+import com.explorateur.backend.dto.JournalFilterRequest;
+import com.explorateur.backend.dto.JournalResponse;
+import com.explorateur.backend.service.JournalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * Controller REST pour la gestion du journal d'audit
+ */
+@RestController
+@RequestMapping("/api/journal")
+@RequiredArgsConstructor
+@Tag(name = "Journal d'audit", description = "Endpoints pour consulter le journal d'audit du système")
+@SecurityRequirement(name = "bearerAuth")
+public class JournalController {
+
+    private final JournalService journalService;
+
+    @GetMapping
+    @PreAuthorize("hasRole('Directeur')")
+    @Operation(summary = "Récupérer toutes les entrées du journal",
+               description = "Retourne toutes les entrées du journal d'audit triées par date décroissante")
+    public ResponseEntity<List<JournalResponse>> getAllJournal() {
+        List<JournalResponse> journals = journalService.getAllJournal();
+        return ResponseEntity.ok(journals);
+    }
+
+    @PostMapping("/filter")
+    @PreAuthorize("hasRole('Directeur')")
+    @Operation(summary = "Filtrer les entrées du journal",
+               description = "Retourne les entrées du journal selon les critères de filtrage (date début, date fin, utilisateur, recherche textuelle)")
+    public ResponseEntity<List<JournalResponse>> filterJournal(@RequestBody JournalFilterRequest filter) {
+        List<JournalResponse> journals = journalService.getJournalWithFilters(filter);
+        return ResponseEntity.ok(journals);
+    }
+
+    @GetMapping("/period")
+    @PreAuthorize("hasRole('Directeur')")
+    @Operation(summary = "Récupérer les entrées par période",
+               description = "Retourne les entrées du journal entre deux dates")
+    public ResponseEntity<List<JournalResponse>> getJournalByPeriod(
+            @Parameter(description = "Date de début (format: yyyy-MM-dd'T'HH:mm:ss)", example = "2026-01-01T00:00:00")
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDebut,
+            
+            @Parameter(description = "Date de fin (format: yyyy-MM-dd'T'HH:mm:ss)", example = "2026-12-31T23:59:59")
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFin) {
+        
+        List<JournalResponse> journals = journalService.getJournalByPeriod(dateDebut, dateFin);
+        return ResponseEntity.ok(journals);
+    }
+
+    @GetMapping("/utilisateur/{utilisateurId}")
+    @PreAuthorize("hasRole('Directeur')")
+    @Operation(summary = "Récupérer les entrées par utilisateur",
+               description = "Retourne toutes les entrées du journal pour un utilisateur spécifique")
+    public ResponseEntity<List<JournalResponse>> getJournalByUtilisateur(
+            @Parameter(description = "ID de l'utilisateur")
+            @PathVariable Long utilisateurId) {
+        
+        List<JournalResponse> journals = journalService.getJournalByUtilisateur(utilisateurId);
+        return ResponseEntity.ok(journals);
+    }
+}
