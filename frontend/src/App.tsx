@@ -6,6 +6,9 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { EnfantsPage } from './pages/EnfantsPage';
 import { ActivitesPage } from './pages/ActivitesPage';
+import { MonProfilPage } from './pages/MonProfilPage';
+import { UtilisateursPage } from './pages/UtilisateursPage';
+import { AnneesExercicePage } from './pages/AnneesExercicePage';
 import { InscriptionsPage, StaffPage, BudgetPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
@@ -83,6 +86,36 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <RapportsPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mon-profil"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <MonProfilPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/utilisateurs"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <UtilisateursPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/annees-exercice"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <AnneesExercicePage />
                 </Layout>
               </PrivateRoute>
             }

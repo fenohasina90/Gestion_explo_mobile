@@ -65,3 +65,49 @@ export interface Inscription {
   montantPaye?: number;
   remarques?: string;
 }
+
+/**
+ * Types pour les utilisateurs
+ */
+export interface Utilisateur {
+  id: number;
+  username: string;
+  role: string;
+  active: boolean;
+  anneeExercice: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateUtilisateurRequest {
+  username: string;
+  password: string;
+  roleId: number;
+  anneeExerciceId: number;
+}
+
+export interface UpdateUtilisateurRequest {
+  username?: string;
+  password?: string;
+  roleId?: number;
+  active?: boolean;
+  anneeExerciceId?: number;
+}
+
+export interface Role {
+  id: number;
+  roleName: string;
+}
+
+/**
+ * Types pour les années d'exercice
+ */
+export interface AnneeExercice {
+  id: number;
+  annee: string;
+  createdAt: string;
+}
+
+export interface CreateAnneeExerciceRequest {
+  annee: string;
+}
