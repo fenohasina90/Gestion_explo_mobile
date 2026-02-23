@@ -4,28 +4,7 @@ import apiService from '@/services/api.service';
 import offlineStorage from '@/services/offline-storage.service';
 import syncService from '@/services/sync.service';
 import { API_ENDPOINTS } from '@/config/api.config';
-
-interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-interface LoginResponse {
-  token: string;
-  type: string;
-  userId: number;
-  username: string;
-  role: string;
-  anneeExercice: string;
-}
-
-interface User {
-  id: number;
-  username: string;
-  role: string;
-  active: boolean;
-  anneeExercice: string;
-}
+import type { LoginRequest, LoginResponse, User } from '@/types';
 
 export const useAuthStore = defineStore('auth', () => {
   // État

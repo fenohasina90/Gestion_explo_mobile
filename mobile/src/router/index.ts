@@ -43,6 +43,18 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/ProfilPage.vue')
       }
     ]
+  },
+  {
+    path: '/utilisateurs',
+    name: 'Utilisateurs',
+    component: () => import('@/views/UtilisateursPage.vue'),
+    meta: { requiresAuth: true, requiresDirecteur: true }
+  },
+  {
+    path: '/annees-exercice',
+    name: 'AnneesExercice',
+    component: () => import('@/views/AnneesExercicePage.vue'),
+    meta: { requiresAuth: true, requiresDirecteur: true }
   }
 ];
 
@@ -61,10 +73,14 @@ router.beforeEach(async (to, from, next) => {
   }
   
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth !== false);
+  const requiresDirecteur = to.matched.some(record => record.meta.requiresDirecteur === true);
   
   if (requiresAuth && !authStore.isAuthenticated) {
     // Rediriger vers login si authentification requise
     next({ name: 'Login', query: { redirect: to.fullPath } });
+  } else if (requiresDirecteur && !authStore.isDirecteur) {
+    // Rediriger vers home si accès Directeur requis
+    next({ name: 'Home' });
   } else if (to.path === '/login' && authStore.isAuthenticated) {
     // Rediriger vers home si déjà authentifié
     next({ name: 'Home' });

@@ -43,10 +43,17 @@ export const API_ENDPOINTS = {
   // Authentification
   login: '/api/auth/login',
   
-  // Utilisateur
+  // Utilisateurs
   currentUser: '/api/utilisateur/me',
+  utilisateurs: '/api/utilisateur',
+  utilisateurById: (id: number) => `/api/utilisateur/${id}`,
+  utilisateursByAnnee: (anneeId: number) => `/api/utilisateur/annee/${anneeId}`,
+  utilisateursActifs: '/api/utilisateur/actifs',
+  roles: '/api/utilisateur/roles',
   
-  // Année d'exercice
+  // Années d'exercice
+  anneesExercice: '/api/annee-exercice',
+  anneeExerciceById: (id: number) => `/api/annee-exercice/${id}`,
   currentYear: '/api/annee-exercice/courante',
   recentYear: '/api/annee-exercice/recente'
 };

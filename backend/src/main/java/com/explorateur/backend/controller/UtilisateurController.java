@@ -1,6 +1,7 @@
 package com.explorateur.backend.controller;
 
 import com.explorateur.backend.dto.CreateUtilisateurRequest;
+import com.explorateur.backend.dto.RoleResponse;
 import com.explorateur.backend.dto.UpdateUtilisateurRequest;
 import com.explorateur.backend.dto.UserInfoResponse;
 import com.explorateur.backend.dto.UtilisateurResponse;
@@ -80,6 +81,14 @@ public class UtilisateurController {
     public ResponseEntity<List<UtilisateurResponse>> getAllUtilisateurs() {
         List<UtilisateurResponse> utilisateurs = utilisateurService.getAllUtilisateurs();
         return ResponseEntity.ok(utilisateurs);
+    }
+
+    @GetMapping("/roles")
+    @Operation(summary = "Récupérer tous les rôles disponibles",
+               description = "Retourne la liste de tous les rôles du système")
+    public ResponseEntity<List<RoleResponse>> getAllRoles() {
+        List<RoleResponse> roles = utilisateurService.getAllRoles();
+        return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")

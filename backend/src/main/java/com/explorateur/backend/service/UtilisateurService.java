@@ -1,6 +1,7 @@
 package com.explorateur.backend.service;
 
 import com.explorateur.backend.dto.CreateUtilisateurRequest;
+import com.explorateur.backend.dto.RoleResponse;
 import com.explorateur.backend.dto.UpdateUtilisateurRequest;
 import com.explorateur.backend.dto.UserInfoResponse;
 import com.explorateur.backend.dto.UtilisateurResponse;
@@ -258,6 +259,19 @@ public class UtilisateurService {
     public List<UtilisateurResponse> getUtilisateursActifs() {
         return utilisateurRepository.findByActive(true).stream()
                 .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Récupère tous les rôles disponibles
+     */
+    @Transactional(readOnly = true)
+    public List<RoleResponse> getAllRoles() {
+        return rolesStaffRepository.findAll().stream()
+                .map(role -> RoleResponse.builder()
+                        .id(role.getId())
+                        .roleName(role.getRoleName())
+                        .build())
                 .collect(Collectors.toList());
     }
 
