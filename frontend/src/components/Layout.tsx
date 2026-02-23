@@ -1,0 +1,85 @@
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import './Layout.css';
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+/**
+ * Layout principal de l'application avec navigation
+ */
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  return (
+    <div className="layout">
+      <header className="header">
+        <div className="header-content">
+          <h1 className="app-title">Gestion Explorateurs</h1>
+          {user && (
+            <div className="user-info">
+              <span className="user-name">{user.username}</span>
+              <span className="user-role">({user.role})</span>
+              <span className="user-year">Année: {user.anneeExercice}</span>
+              <button onClick={handleLogout} className="logout-btn">
+                Déconnexion
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
+
+      <nav className="sidebar">
+        <ul className="nav-menu">
+          <li>
+            <Link to="/dashboard" className="nav-link">
+              📊 Tableau de bord
+            </Link>
+          </li>
+          <li>
+            <Link to="/enfants" className="nav-link">
+              👶 Enfants
+            </Link>
+          </li>
+          <li>
+            <Link to="/activites" className="nav-link">
+              🎯 Activités
+            </Link>
+          </li>
+          <li>
+            <Link to="/inscriptions" className="nav-link">
+              📝 Inscriptions
+            </Link>
+          </li>
+          <li>
+            <Link to="/staff" className="nav-link">
+              👥 Staff
+            </Link>
+          </li>
+          <li>
+            <Link to="/budget" className="nav-link">
+              💰 Budget
+            </Link>
+          </li>
+          <li>
+            <Link to="/rapports" className="nav-link">
+              📈 Rapports
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      <main className="main-content">
+        {children}
+      </main>
+    </div>
+  );
+};
