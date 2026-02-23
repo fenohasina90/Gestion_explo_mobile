@@ -47,8 +47,9 @@ public class UtilisateurService {
      * Crée un nouvel utilisateur
      * Règles métier :
      * - Seul un Directeur peut créer un utilisateur
-     * - Si un nouveau Directeur est créé, l'ancien Directeur devient inactif
-     * - Les utilisateurs sont actifs uniquement durant leur année d'exercice, sauf le Directeur
+     * - Pour créer un utilisateur non-Directeur : doit être dans la même année d'exercice que le Directeur actuel
+     * - Pour créer un Directeur : peut être dans n'importe quelle année d'exercice, mais une seule année ne peut avoir qu'un seul Directeur actif
+     * - Si un nouveau Directeur est créé, tous les autres Directeurs deviennent inactifs
      */
     @Transactional
     public UtilisateurResponse createUtilisateur(CreateUtilisateurRequest request, String currentUsername) {
@@ -72,10 +73,24 @@ public class UtilisateurService {
         AnneeExercice anneeExercice = anneeExerciceRepository.findById(request.getAnneeExerciceId())
                 .orElseThrow(() -> new RuntimeException("Année d'exercice introuvable"));
 
-        // Si on crée un nouveau Directeur, désactiver l'ancien Directeur
+        // Règle : Le Directeur ne peut créer un utilisateur non-Directeur QUE dans son année d'exercice
+        if (!"Directeur".equals(role.getRoleName())) {
+            if (!currentUser.getAnneeExercice().getId().equals(anneeExercice.getId())) {
+                throw new RuntimeException("Vous ne pouvez créer un utilisateur que dans votre année d'exercice actuelle");
+            }
+        }
+
+        // Règle : Vérifier qu'il n'existe pas déjà un Directeur actif pour cette année d'exercice
         if ("Directeur".equals(role.getRoleName())) {
-            List<Utilisateur> ancienDirecteurs = utilisateurRepository.findByRoleRoleNameAndActive("Directeur", true);
-            for (Utilisateur ancienDirecteur : ancienDirecteurs) {
+            List<Utilisateur> directeursExistants = utilisateurRepository.findByRoleRoleNameAndActive("Directeur", true);
+            for (Utilisateur directeur : directeursExistants) {
+                if (directeur.getAnneeExercice().getId().equals(anneeExercice.getId())) {
+                    throw new RuntimeException("Un Directeur existe déjà pour cette année d'exercice");
+                }
+            }
+            
+            // Désactiver tous les autres Directeurs (de toutes les années)
+            for (Utilisateur ancienDirecteur : directeursExistants) {
                 ancienDirecteur.setActive(false);
                 ancienDirecteur.setUpdatedAt(LocalDateTime.now());
                 utilisateurRepository.save(ancienDirecteur);
@@ -99,7 +114,11 @@ public class UtilisateurService {
 
     /**
      * Met à jour un utilisateur
-     * Règle : Seul l'utilisateur connecté peut modifier ses propres informations
+     * Règles :
+     * - Chaque utilisateur peut modifier ses propres informations personnelles (username, password)
+     *   MAIS NE PEUT PAS modifier son role, status actif/inactif ni son année d'exercice
+     * - Le Directeur peut modifier le role, status et année d'exercice des autres utilisateurs
+     *   MAIS NE PEUT PAS modifier leur username ni leur mot de passe
      */
     @Transactional
     public UtilisateurResponse updateUtilisateur(Long id, UpdateUtilisateurRequest request, String currentUsername) {
@@ -109,37 +128,68 @@ public class UtilisateurService {
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
-        // Vérifier que l'utilisateur ne peut modifier que son propre profil
-        if (!utilisateur.getId().equals(currentUser.getId())) {
+        boolean isDirecteur = "Directeur".equals(currentUser.getRole().getRoleName());
+        boolean isSelfUpdate = utilisateur.getId().equals(currentUser.getId());
+
+        // Si ce n'est pas le Directeur et pas une auto-modification, interdire
+        if (!isDirecteur && !isSelfUpdate) {
             throw new RuntimeException("Vous ne pouvez modifier que vos propres informations");
         }
 
-        // Mise à jour des champs
-        if (request.getUsername() != null && !request.getUsername().equals(utilisateur.getUsername())) {
-            if (utilisateurRepository.findByUsername(request.getUsername()).isPresent()) {
-                throw new RuntimeException("Ce nom d'utilisateur existe déjà");
+        // CAS 1 : Auto-modification (l'utilisateur modifie ses propres informations)
+        if (isSelfUpdate) {
+            // Peut modifier : username, password
+            if (request.getUsername() != null && !request.getUsername().equals(utilisateur.getUsername())) {
+                if (utilisateurRepository.findByUsername(request.getUsername()).isPresent()) {
+                    throw new RuntimeException("Ce nom d'utilisateur existe déjà");
+                }
+                utilisateur.setUsername(request.getUsername());
             }
-            utilisateur.setUsername(request.getUsername());
-        }
 
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            utilisateur.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        }
+            if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+                utilisateur.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+            }
 
-        if (request.getRoleId() != null) {
-            RolesStaff role = rolesStaffRepository.findById(request.getRoleId())
-                    .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
-            utilisateur.setRole(role);
+            // Ne peut PAS modifier : role, active, anneeExerciceId
+            if (request.getRoleId() != null || request.getActive() != null || request.getAnneeExerciceId() != null) {
+                throw new RuntimeException("Vous ne pouvez pas modifier votre rôle, votre statut ou votre année d'exercice");
+            }
         }
+        // CAS 2 : Le Directeur modifie un autre utilisateur
+        else if (isDirecteur && !isSelfUpdate) {
+            // Ne peut PAS modifier : username, password
+            if (request.getUsername() != null || request.getPassword() != null) {
+                throw new RuntimeException("Vous ne pouvez pas modifier le nom d'utilisateur ou le mot de passe d'un autre utilisateur");
+            }
 
-        if (request.getActive() != null) {
-            utilisateur.setActive(request.getActive());
-        }
+            // Peut modifier : role, active, anneeExerciceId
+            if (request.getRoleId() != null) {
+                RolesStaff role = rolesStaffRepository.findById(request.getRoleId())
+                        .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
+                utilisateur.setRole(role);
+                
+                // Si on change le rôle en Directeur, désactiver les autres Directeurs
+                if ("Directeur".equals(role.getRoleName())) {
+                    List<Utilisateur> ancienDirecteurs = utilisateurRepository.findByRoleRoleNameAndActive("Directeur", true);
+                    for (Utilisateur ancienDirecteur : ancienDirecteurs) {
+                        if (!ancienDirecteur.getId().equals(utilisateur.getId())) {
+                            ancienDirecteur.setActive(false);
+                            ancienDirecteur.setUpdatedAt(LocalDateTime.now());
+                            utilisateurRepository.save(ancienDirecteur);
+                        }
+                    }
+                }
+            }
 
-        if (request.getAnneeExerciceId() != null) {
-            AnneeExercice anneeExercice = anneeExerciceRepository.findById(request.getAnneeExerciceId())
-                    .orElseThrow(() -> new RuntimeException("Année d'exercice introuvable"));
-            utilisateur.setAnneeExercice(anneeExercice);
+            if (request.getActive() != null) {
+                utilisateur.setActive(request.getActive());
+            }
+
+            if (request.getAnneeExerciceId() != null) {
+                AnneeExercice anneeExercice = anneeExerciceRepository.findById(request.getAnneeExerciceId())
+                        .orElseThrow(() -> new RuntimeException("Année d'exercice introuvable"));
+                utilisateur.setAnneeExercice(anneeExercice);
+            }
         }
 
         utilisateur.setUpdatedAt(LocalDateTime.now());

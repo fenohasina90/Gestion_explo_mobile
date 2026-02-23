@@ -51,7 +51,9 @@ public class UtilisateurController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier un utilisateur",
-               description = "Seul l'utilisateur connecté peut modifier ses propres informations")
+               description = "Chaque utilisateur peut modifier ses propres informations personnelles (username, password). " +
+                             "Le Directeur peut modifier le rôle, le statut et l'année d'exercice des autres utilisateurs, " +
+                             "mais ne peut pas modifier leur username ou mot de passe.")
     public ResponseEntity<UtilisateurResponse> updateUtilisateur(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUtilisateurRequest request) {
