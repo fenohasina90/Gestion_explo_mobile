@@ -16,6 +16,7 @@ export function UtilisateursPage() {
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null);
   const [isSelfEdit, setIsSelfEdit] = useState(false);
+  const [filterAnneeId, setFilterAnneeId] = useState<number | null>(null);
   const [formData, setFormData] = useState<CreateUtilisateurRequest>({
     username: '',
     password: '',
@@ -132,6 +133,20 @@ export function UtilisateursPage() {
     }
   };
 
+  // Filtrer les utilisateurs par année d'exercice
+  const getFilteredUtilisateurs = () => {
+    if (!filterAnneeId) {
+      return utilisateurs;
+    }
+    const anneeSelectionnee = anneesExercice.find(a => a.id === filterAnneeId);
+    if (!anneeSelectionnee) {
+      return utilisateurs;
+    }
+    return utilisateurs.filter(u => u.anneeExercice === anneeSelectionnee.annee);
+  };
+
+  const filteredUtilisateurs = getFilteredUtilisateurs();
+
   if (loading) return <div className="loading">Chargement...</div>;
 
   return (
@@ -152,6 +167,29 @@ export function UtilisateursPage() {
         </div>
       )}
 
+      {/* Filtre par année d'exercice */}
+      <div className="filter-section">
+        <label htmlFor="filter-annee">Filtrer par année d'exercice :</label>
+        <select
+          id="filter-annee"
+          className="form-control filter-select"
+          value={filterAnneeId || ''}
+          onChange={(e) => setFilterAnneeId(e.target.value ? Number(e.target.value) : null)}
+        >
+          <option value="">Toutes les années</option>
+          {anneesExercice.map(annee => (
+            <option key={annee.id} value={annee.id}>
+              {new Date(annee.annee).getFullYear()}
+            </option>
+          ))}
+        </select>
+        {filterAnneeId && (
+          <span className="filter-count">
+            {filteredUtilisateurs.length} utilisateur(s) trouvé(s)
+          </span>
+        )}
+      </div>
+
       <div className="table-container">
         <table className="table">
           <thead>
@@ -166,7 +204,7 @@ export function UtilisateursPage() {
             </tr>
           </thead>
           <tbody>
-            {utilisateurs.map(user => (
+            {filteredUtilisateurs.map(user => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.username}</td>

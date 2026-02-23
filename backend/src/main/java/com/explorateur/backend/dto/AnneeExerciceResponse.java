@@ -25,6 +25,9 @@ public class AnneeExerciceResponse {
     @Schema(description = "Date de début de l'année d'exercice", example = "2026-01-01")
     private LocalDate annee;
     
+    @Schema(description = "Date de fin de l'année d'exercice", example = "2026-12-31")
+    private LocalDate dateFin;
+    
     @Schema(description = "Date de création de l'enregistrement", example = "2026-02-23T03:36:52")
     private LocalDateTime createdAt;
 }

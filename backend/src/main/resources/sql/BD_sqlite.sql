@@ -14,6 +14,7 @@ CREATE TABLE classes (
 CREATE TABLE annee_exercice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee DATE NOT NULL,
+    date_fin DATE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -337,8 +338,8 @@ CREATE TABLE journal (
 -- =========================
 
 -- Année d'exercice en cours (année actuelle de l'appareil)
-INSERT INTO annee_exercice (annee, created_at) VALUES
-(date('now', 'start of year'), CURRENT_TIMESTAMP);
+INSERT INTO annee_exercice (annee, date_fin, created_at) VALUES
+(date('now', 'start of year'), date('now', 'start of year', '+1 year', '-1 day'), CURRENT_TIMESTAMP);
 
 -- Utilisateur par défaut (directeur/directeur123)
 -- Hash BCrypt généré par Spring Security BCryptPasswordEncoder

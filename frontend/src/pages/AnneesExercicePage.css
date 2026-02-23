@@ -220,3 +220,14 @@
   font-size: 18px;
   color: #6c757d;
 }
+
+.status-badge.expired {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #ffc107;
+  color: #856404;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 5px;
+}

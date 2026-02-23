@@ -105,6 +105,7 @@ export interface Role {
 export interface AnneeExercice {
   id: number;
   annee: string;
+  dateFin: string;
   createdAt: string;
 }
 

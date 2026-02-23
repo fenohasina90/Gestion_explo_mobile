@@ -36,9 +36,13 @@ public class AnneeExerciceInitService {
             anneeExercice -> log.info("✅ Année d'exercice {} déjà existante (ID: {})", 
                 anneeCourante.getYear(), anneeExercice.getId()),
             () -> {
+                // Calculer la date de fin (31 décembre)
+                LocalDate dateFin = anneeCourante.withMonth(12).withDayOfMonth(31);
+                
                 // Créer la nouvelle année d'exercice
                 AnneeExercice nouvelleAnnee = AnneeExercice.builder()
                     .annee(anneeCourante)
+                    .dateFin(dateFin)
                     .build();
                 
                 AnneeExercice saved = anneeExerciceRepository.save(nouvelleAnnee);
@@ -57,8 +61,10 @@ public class AnneeExerciceInitService {
         
         return anneeExerciceRepository.findByAnnee(anneeCourante)
             .orElseGet(() -> {
+                LocalDate dateFin = anneeCourante.withMonth(12).withDayOfMonth(31);
                 AnneeExercice nouvelleAnnee = AnneeExercice.builder()
                     .annee(anneeCourante)
+                    .dateFin(dateFin)
                     .build();
                 return anneeExerciceRepository.save(nouvelleAnnee);
             });

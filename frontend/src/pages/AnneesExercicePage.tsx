@@ -89,8 +89,11 @@ export function AnneesExercicePage() {
               </button>
             </div>
             <div className="annee-card-body">
-              <p><strong>Date de début:</strong> {new Date(annee.annee).toLocaleDateString()}</p>
+              <p><strong>Période:</strong> {new Date(annee.annee).toLocaleDateString()} - {new Date(annee.dateFin).toLocaleDateString()}</p>
               <p><strong>Créée le:</strong> {new Date(annee.createdAt).toLocaleDateString()}</p>
+              {new Date(annee.dateFin) < new Date() && (
+                <p className="status-badge expired"><strong>⚠️ Année expirée</strong></p>
+              )}
             </div>
           </div>
         ))}

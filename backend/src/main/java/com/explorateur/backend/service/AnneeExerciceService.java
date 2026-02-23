@@ -31,8 +31,12 @@ public class AnneeExerciceService {
             throw new RuntimeException("Cette année d'exercice existe déjà");
         }
         
+        // Calculer automatiquement la date de fin (31 décembre de l'année)
+        var dateFin = request.getAnnee().withMonth(12).withDayOfMonth(31);
+        
         AnneeExercice anneeExercice = AnneeExercice.builder()
                 .annee(request.getAnnee())
+                .dateFin(dateFin)
                 .createdAt(LocalDateTime.now())
                 .build();
         
@@ -88,6 +92,7 @@ public class AnneeExerciceService {
         return AnneeExerciceResponse.builder()
                 .id(anneeExercice.getId())
                 .annee(anneeExercice.getAnnee())
+                .dateFin(anneeExercice.getDateFin())
                 .createdAt(anneeExercice.getCreatedAt())
                 .build();
     }

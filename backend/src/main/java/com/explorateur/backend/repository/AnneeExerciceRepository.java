@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,9 @@ public interface AnneeExerciceRepository extends JpaRepository<AnneeExercice, Lo
      * Trouve l'année d'exercice la plus récente
      */
     Optional<AnneeExercice> findFirstByOrderByAnneeDesc();
+    
+    /**
+     * Trouve toutes les années d'exercice dépassées (dateFin < date donnée)
+     */
+    List<AnneeExercice> findByDateFinBefore(LocalDate date);
 }
