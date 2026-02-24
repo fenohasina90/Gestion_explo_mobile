@@ -99,6 +99,74 @@ export interface UserInfoResponse {
 }
 
 /**
+ * Types pour les instructeurs
+ */
+export interface Instructeur {
+  id: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide: boolean;
+}
+
+export interface InstructeurSuggestion {
+  id: number;
+  nom: string;
+  prenom: string;
+  nomComplet: string;
+}
+
+export interface CreateInstructeurRequest {
+  nom: string;
+  prenom: string;
+  genre: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide?: boolean;
+}
+
+/**
+ * Types pour les staffs
+ */
+export interface RoleStaff {
+  id: number;
+  roleName: string;
+}
+
+export interface Staff {
+  id: number;
+  instructeurId: number;
+  instructeurNom: string;
+  instructeurPrenom: string;
+  instructeurGenre: string;
+  instructeurTotem?: string;
+  instructeurTelephone?: string;
+  instructeurEstChefGuide: boolean;
+  roleId: number;
+  roleName: string;
+  anneeExerciceId: number;
+  anneeExercice: string;
+}
+
+export interface CreateStaffRequest {
+  instructeurId: number;
+  roleId: number;
+  anneeExerciceId: number;
+}
+
+export interface UpdateStaffRequest {
+  roleId?: number;
+  nom?: string;
+  prenom?: string;
+  genre?: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide?: boolean;
+}
+
+/**
  * Types pour les erreurs
  */
 export interface ApiError {

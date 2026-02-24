@@ -51,6 +51,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true, requiresDirecteur: true }
   },
   {
+    path: '/staffs',
+    name: 'Staffs',
+    component: () => import('@/views/StaffsPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/annees-exercice',
     name: 'AnneesExercice',
     component: () => import('@/views/AnneesExercicePage.vue'),

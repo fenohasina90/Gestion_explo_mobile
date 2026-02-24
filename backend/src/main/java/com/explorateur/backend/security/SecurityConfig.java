@@ -50,6 +50,8 @@ public class SecurityConfig {
                 // Endpoints publics - API
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/test/**").permitAll()
+                // Actuator endpoints (pour health check)
+                .requestMatchers("/actuator/**").permitAll()
                 // Tous les autres endpoints nécessitent une authentification
                 .anyRequest().authenticated()
             )

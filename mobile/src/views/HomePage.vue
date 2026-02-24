@@ -53,6 +53,25 @@
           </ion-row>
         </ion-grid>
 
+        <!-- Section Gestion du Staff (Directeur et Co-Directeur) -->
+        <div v-if="canManageStaff">
+          <h2 class="section-title">Gestion du Staff</h2>
+          
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12">
+                <ion-card button @click="$router.push('/staffs')">
+                  <ion-card-content class="action-card staff-card">
+                    <ion-icon :icon="personCircleOutline" class="action-icon"></ion-icon>
+                    <h3>Staffs & Instructeurs</h3>
+                    <p>Gérer les membres du staff</p>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
         <!-- Section Administration (Directeur uniquement) -->
         <div v-if="authStore.isDirecteur">
           <h2 class="section-title">Administration</h2>
@@ -101,6 +120,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import {
   IonContent,
   IonHeader,
@@ -122,11 +142,16 @@ import {
   peopleOutline,
   calendarOutline,
   personOutline,
-  documentTextOutline
+  documentTextOutline,
+  personCircleOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 
 const authStore = useAuthStore();
+
+const canManageStaff = computed(() => {
+  return authStore.user?.role === 'Directeur' || authStore.user?.role === 'Co_Directeur';
+});
 </script>
 
 <style scoped>
@@ -150,6 +175,20 @@ const authStore = useAuthStore();
 
 .admin-card .action-icon {
   color: var(--ion-color-warning);
+}
+
+.staff-card {
+  padding: 20px;
+}
+
+.staff-card .action-icon {
+  color: var(--ion-color-tertiary);
+}
+
+.staff-card p {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: var(--ion-color-medium);
 }
 
 .audit-card {
