@@ -6,7 +6,7 @@ import type { Utilisateur, UpdateUtilisateurRequest } from '../types';
 import './MonProfilPage.css';
 
 export function MonProfilPage() {
-  const { user: currentUser, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [loading, setLoading] = useState(true);

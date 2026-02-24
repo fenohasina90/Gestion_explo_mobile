@@ -130,3 +130,71 @@ export interface JournalFilterRequest {
   utilisateurId?: number;
   searchText?: string;
 }
+
+/**
+ * Types pour les instructeurs
+ */
+export interface Instructeur {
+  id: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InstructeurSuggestion {
+  id: number;
+  nom: string;
+  prenom: string;
+  nomComplet: string;
+}
+
+export interface CreateInstructeurRequest {
+  nom: string;
+  prenom: string;
+  genre: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide?: boolean;
+}
+
+/**
+ * Types pour les staffs
+ */
+export interface Staff {
+  id: number;
+  instructeurId: number;
+  instructeurNom: string;
+  instructeurPrenom: string;
+  instructeurGenre: string;
+  instructeurTotem?: string;
+  instructeurTelephone?: string;
+  instructeurEstChefGuide: boolean;
+  role: string;
+  roleId: number;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateStaffRequest {
+  instructeurId: number;
+  roleId: number;
+  anneeExerciceId: number;
+}
+
+export interface UpdateStaffRequest {
+  roleId?: number;
+  // Informations de l'instructeur (optionnelles)
+  nom?: string;
+  prenom?: string;
+  genre?: string;
+  totem?: string;
+  telephone?: string;
+  estChefGuide?: boolean;
+}
