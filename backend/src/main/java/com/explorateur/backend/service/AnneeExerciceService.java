@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class AnneeExerciceService {
     
     private final AnneeExerciceRepository anneeExerciceRepository;
+    private final JournalService journalService;
     
     /**
      * Crée une nouvelle année d'exercice
@@ -41,6 +42,10 @@ public class AnneeExerciceService {
                 .build();
         
         AnneeExercice saved = anneeExerciceRepository.save(anneeExercice);
+        
+        // Log l'action dans le journal
+        journalService.logAction("Création de l'année d'exercice " + saved.getAnnee().getYear());
+        
         return mapToResponse(saved);
     }
     
@@ -79,10 +84,14 @@ public class AnneeExerciceService {
      */
     @Transactional
     public void deleteAnneeExercice(Long id) {
-        if (!anneeExerciceRepository.existsById(id)) {
-            throw new RuntimeException("Année d'exercice introuvable");
-        }
+        AnneeExercice anneeExercice = anneeExerciceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Année d'exercice introuvable"));
+        
+        int year = anneeExercice.getAnnee().getYear();
         anneeExerciceRepository.deleteById(id);
+        
+        // Log la suppression
+        journalService.logAction("Suppression de l'année d'exercice " + year);
     }
     
     /**

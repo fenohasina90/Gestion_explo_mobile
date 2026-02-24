@@ -28,6 +28,7 @@ public class UtilisateurService {
     private final RolesStaffRepository rolesStaffRepository;
     private final AnneeExerciceRepository anneeExerciceRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JournalService journalService;
     
     @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(String username) {
@@ -110,6 +111,9 @@ public class UtilisateurService {
 
         Utilisateur saved = utilisateurRepository.save(utilisateur);
         
+        // Log l'action dans le journal
+        journalService.logAction("Création de l'utilisateur " + saved.getUsername());
+        
         return mapToResponse(saved);
     }
 
@@ -137,6 +141,10 @@ public class UtilisateurService {
             throw new RuntimeException("Vous ne pouvez modifier que vos propres informations");
         }
 
+        // Variables pour le journal
+        String oldUsername = utilisateur.getUsername();
+        boolean passwordChanged = false;
+        
         // CAS 1 : Auto-modification (l'utilisateur modifie ses propres informations)
         if (isSelfUpdate) {
             // Peut modifier : username, password
@@ -149,6 +157,7 @@ public class UtilisateurService {
 
             if (request.getPassword() != null && !request.getPassword().isEmpty()) {
                 utilisateur.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+                passwordChanged = true;
             }
 
             // Ne peut PAS modifier : role, active, anneeExerciceId
@@ -165,9 +174,15 @@ public class UtilisateurService {
 
             // Peut modifier : role, active, anneeExerciceId
             if (request.getRoleId() != null) {
+                RolesStaff oldRole = utilisateur.getRole();
                 RolesStaff role = rolesStaffRepository.findById(request.getRoleId())
                         .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
                 utilisateur.setRole(role);
+                
+                // Log le changement de rôle
+                if (!oldRole.getId().equals(role.getId())) {
+                    journalService.logAction("Modification du rôle de l'utilisateur " + utilisateur.getUsername() + " en " + role.getRoleName());
+                }
                 
                 // Si on change le rôle en Directeur, désactiver les autres Directeurs
                 if ("Directeur".equals(role.getRoleName())) {
@@ -183,7 +198,14 @@ public class UtilisateurService {
             }
 
             if (request.getActive() != null) {
+                Boolean oldActive = utilisateur.getActive();
                 utilisateur.setActive(request.getActive());
+                
+                // Log le changement de statut
+                if (!oldActive.equals(request.getActive())) {
+                    String action = request.getActive() ? "Activation" : "Désactivation";
+                    journalService.logAction(action + " de l'utilisateur " + utilisateur.getUsername());
+                }
             }
 
             if (request.getAnneeExerciceId() != null) {
@@ -195,6 +217,16 @@ public class UtilisateurService {
 
         utilisateur.setUpdatedAt(LocalDateTime.now());
         Utilisateur updated = utilisateurRepository.save(utilisateur);
+        
+        // Log pour les cas d'auto-modification
+        if (isSelfUpdate) {
+            if (!oldUsername.equals(updated.getUsername())) {
+                journalService.logAction("Modification de l'utilisateur " + oldUsername + " en " + updated.getUsername());
+            }
+            if (passwordChanged) {
+                journalService.logAction("Modification du mot de passe de l'utilisateur " + updated.getUsername());
+            }
+        }
 
         return mapToResponse(updated);
     }
@@ -218,8 +250,12 @@ public class UtilisateurService {
         if (utilisateur.getUsername().equals(currentUsername)) {
             throw new RuntimeException("Vous ne pouvez pas supprimer votre propre compte");
         }
-
+        
+        String username = utilisateur.getUsername();
         utilisateurRepository.delete(utilisateur);
+        
+        // Log la suppression
+        journalService.logAction("Suppression de l'utilisateur " + username);
     }
 
     /**

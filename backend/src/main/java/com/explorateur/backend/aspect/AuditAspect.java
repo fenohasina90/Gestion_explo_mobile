@@ -20,33 +20,33 @@ public class AuditAspect {
     private final JournalService journalService;
 
     /**
-     * Pointcut pour toutes les méthodes des services SAUF JournalService
+     * Pointcut pour toutes les méthodes des services SAUF JournalService, UtilisateurService et AnneeExerciceService
      */
-    @Pointcut("execution(* com.explorateur.backend.service.*Service.*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..))")
+    @Pointcut("execution(* com.explorateur.backend.service.*Service.*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..)) && !execution(* com.explorateur.backend.service.UtilisateurService.*(..)) && !execution(* com.explorateur.backend.service.AnneeExerciceService.*(..))")
     public void serviceMethodsPointcut() {}
 
     /**
      * Pointcut pour les méthodes de création
      */
-    @Pointcut("execution(* com.explorateur.backend.service.*Service.create*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..))")
+    @Pointcut("execution(* com.explorateur.backend.service.*Service.create*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..)) && !execution(* com.explorateur.backend.service.UtilisateurService.*(..)) && !execution(* com.explorateur.backend.service.AnneeExerciceService.*(..))")
     public void createMethodsPointcut() {}
 
     /**
      * Pointcut pour les méthodes de mise à jour
      */
-    @Pointcut("execution(* com.explorateur.backend.service.*Service.update*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..))")
+    @Pointcut("execution(* com.explorateur.backend.service.*Service.update*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..)) && !execution(* com.explorateur.backend.service.UtilisateurService.*(..)) && !execution(* com.explorateur.backend.service.AnneeExerciceService.*(..))")
     public void updateMethodsPointcut() {}
 
     /**
      * Pointcut pour les méthodes de suppression
      */
-    @Pointcut("execution(* com.explorateur.backend.service.*Service.delete*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..))")
+    @Pointcut("execution(* com.explorateur.backend.service.*Service.delete*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..)) && !execution(* com.explorateur.backend.service.UtilisateurService.*(..)) && !execution(* com.explorateur.backend.service.AnneeExerciceService.*(..))")
     public void deleteMethodsPointcut() {}
 
     /**
      * Pointcut pour les méthodes d'activation/désactivation
      */
-    @Pointcut("execution(* com.explorateur.backend.service.*Service.toggle*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..))")
+    @Pointcut("execution(* com.explorateur.backend.service.*Service.toggle*(..)) && !execution(* com.explorateur.backend.service.JournalService.*(..)) && !execution(* com.explorateur.backend.service.UtilisateurService.*(..)) && !execution(* com.explorateur.backend.service.AnneeExerciceService.*(..))")
     public void toggleMethodsPointcut() {}
 
     /**
