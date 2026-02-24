@@ -13,6 +13,8 @@ export function JournalPage() {
     dateFin: '',
     searchText: '',
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   useEffect(() => {
     loadData();
@@ -69,6 +71,7 @@ export function JournalPage() {
       dateFin: '',
       searchText: '',
     });
+    setCurrentPage(1);
     await loadData();
   };
 
@@ -82,6 +85,22 @@ export function JournalPage() {
       minute: '2-digit',
       second: '2-digit',
     }).format(date);
+  };
+
+  // Calculs de pagination
+  const totalPages = Math.ceil(journalEntries.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentEntries = journalEntries.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
   };
 
   if (loading) return <div className="loading">Chargement...</div>;
@@ -154,9 +173,25 @@ export function JournalPage() {
       )}
 
       <div className="journal-stats">
-        <p>
-          <strong>{journalEntries.length}</strong> entrée{journalEntries.length !== 1 ? 's' : ''} trouvée{journalEntries.length !== 1 ? 's' : ''}
-        </p>
+        <div className="stats-left">
+          <p>
+            <strong>{journalEntries.length}</strong> entrée{journalEntries.length !== 1 ? 's' : ''} trouvée{journalEntries.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <div className="stats-right">
+          <label htmlFor="itemsPerPage">Afficher :</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+          <span>par page</span>
+        </div>
       </div>
 
       <div className="journal-list">
@@ -174,7 +209,7 @@ export function JournalPage() {
               </tr>
             </thead>
             <tbody>
-              {journalEntries.map((entry) => (
+              {currentEntries.map((entry) => (
                 <tr key={entry.id}>
                   <td className="date-cell">{formatDate(entry.timestamp)}</td>
                   <td className="user-cell">
@@ -187,6 +222,50 @@ export function JournalPage() {
           </table>
         )}
       </div>
+
+      {journalEntries.length > 0 && totalPages > 1 && (
+        <div className="pagination">
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            ‹ Précédent
+          </button>
+          
+          <div className="pagination-numbers">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              // Afficher les premières pages, les dernières pages, et les pages autour de la page actuelle
+              if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={page}
+                    className={`pagination-number ${page === currentPage ? 'active' : ''}`}
+                    onClick={() => handlePageChange(page)}
+                  >
+                    {page}
+                  </button>
+                );
+              } else if (page === currentPage - 2 || page === currentPage + 2) {
+                return <span key={page} className="pagination-ellipsis">...</span>;
+              }
+              return null;
+            })}
+          </div>
+
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Suivant ›
+          </button>
+        </div>
+      )}
     </div>
   );
 }
