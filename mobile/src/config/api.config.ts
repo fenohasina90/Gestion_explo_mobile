@@ -55,5 +55,10 @@ export const API_ENDPOINTS = {
   anneesExercice: '/api/annee-exercice',
   anneeExerciceById: (id: number) => `/api/annee-exercice/${id}`,
   currentYear: '/api/annee-exercice/courante',
-  recentYear: '/api/annee-exercice/recente'
+  recentYear: '/api/annee-exercice/recente',
+  
+  // Journal d'audit
+  journal: '/api/journal',
+  journalFilter: '/api/journal/filter',
+  journalByPeriod: '/api/journal/period'
 };

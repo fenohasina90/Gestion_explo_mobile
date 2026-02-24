@@ -55,6 +55,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'AnneesExercice',
     component: () => import('@/views/AnneesExercicePage.vue'),
     meta: { requiresAuth: true, requiresDirecteur: true }
+  },
+  {
+    path: '/journal',
+    name: 'Journal',
+    component: () => import('@/views/JournalPage.vue'),
+    meta: { requiresAuth: true }
   }
 ];
 

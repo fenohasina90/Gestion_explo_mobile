@@ -71,6 +71,23 @@ export interface CreateAnneeExerciceRequest {
 }
 
 /**
+ * Types pour le journal d'audit
+ */
+export interface JournalEntry {
+  id: number;
+  action: string;
+  username: string;
+  utilisateurId: number;
+  timestamp: string;
+}
+
+export interface JournalFilterRequest {
+  dateDebut?: string;
+  dateFin?: string;
+  searchText?: string;
+}
+
+/**
  * Types pour les réponses API
  */
 export interface UserInfoResponse {

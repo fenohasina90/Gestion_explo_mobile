@@ -70,7 +70,7 @@
               <ion-col size="6">
                 <ion-card button @click="$router.push('/annees-exercice')">
                   <ion-card-content class="action-card admin-card">
-                    <ion-icon :icon="timeOutline" class="action-icon"></ion-icon>
+                    <ion-icon :icon="documentTextOutline" class="action-icon"></ion-icon>
                     <h3>Années</h3>
                   </ion-card-content>
                 </ion-card>
@@ -78,6 +78,23 @@
             </ion-row>
           </ion-grid>
         </div>
+
+        <!-- Section Audit (Tous les utilisateurs) -->
+        <h2 class="section-title">Audit</h2>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card button @click="$router.push('/journal')">
+                <ion-card-content class="action-card audit-card">
+                  <ion-icon :icon="documentTextOutline" class="action-icon"></ion-icon>
+                  <h3>Journal d'Audit</h3>
+                  <p>Consulter l'historique des actions</p>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </ion-content>
   </ion-page>
@@ -105,7 +122,7 @@ import {
   peopleOutline,
   calendarOutline,
   personOutline,
-  timeOutline
+  documentTextOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -133,6 +150,20 @@ const authStore = useAuthStore();
 
 .admin-card .action-icon {
   color: var(--ion-color-warning);
+}
+
+.audit-card {
+  padding: 20px;
+}
+
+.audit-card .action-icon {
+  color: var(--ion-color-secondary);
+}
+
+.audit-card p {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: var(--ion-color-medium);
 }
 
 .action-card h3 {
