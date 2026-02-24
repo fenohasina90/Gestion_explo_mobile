@@ -3,7 +3,9 @@ package com.explorateur.backend.service;
 import com.explorateur.backend.dto.AnneeExerciceResponse;
 import com.explorateur.backend.dto.CreateAnneeExerciceRequest;
 import com.explorateur.backend.entity.AnneeExercice;
+import com.explorateur.backend.entity.Utilisateur;
 import com.explorateur.backend.repository.AnneeExerciceRepository;
+import com.explorateur.backend.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +22,32 @@ import java.util.stream.Collectors;
 public class AnneeExerciceService {
     
     private final AnneeExerciceRepository anneeExerciceRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final JournalService journalService;
     
     /**
      * Crée une nouvelle année d'exercice
      */
     @Transactional
-    public AnneeExerciceResponse createAnneeExercice(CreateAnneeExerciceRequest request) {
+    public AnneeExerciceResponse createAnneeExercice(CreateAnneeExerciceRequest request, String currentUsername) {
+        // Vérifier l'utilisateur actuel
+        Utilisateur currentUser = utilisateurRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+        // Vérifier que l'utilisateur est un Directeur
+        if (!"Directeur".equals(currentUser.getRole().getRoleName())) {
+            throw new RuntimeException("Seul un Directeur peut créer une année d'exercice");
+        }
+        
+        // Récupérer l'année actuelle de l'utilisateur
+        int currentYear = currentUser.getAnneeExercice().getAnnee().getYear();
+        int requestedYear = request.getAnnee().getYear();
+        
+        // Vérifier que l'année demandée est l'année suivante
+        if (requestedYear != currentYear + 1) {
+            throw new RuntimeException("Vous ne pouvez créer que l'année d'exercice suivante (" + (currentYear + 1) + ")");
+        }
+        
         // Vérifier si l'année existe déjà
         if (anneeExerciceRepository.findByAnnee(request.getAnnee()).isPresent()) {
             throw new RuntimeException("Cette année d'exercice existe déjà");

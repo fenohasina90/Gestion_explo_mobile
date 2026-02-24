@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,8 +79,9 @@ public class AnneeExerciceController {
         @ApiResponse(responseCode = "403", description = "Accès refusé")
     })
     public ResponseEntity<AnneeExerciceResponse> createAnneeExercice(
-            @Valid @RequestBody CreateAnneeExerciceRequest request) {
-        AnneeExerciceResponse response = anneeExerciceService.createAnneeExercice(request);
+            @Valid @RequestBody CreateAnneeExerciceRequest request,
+            Authentication authentication) {
+        AnneeExerciceResponse response = anneeExerciceService.createAnneeExercice(request, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
