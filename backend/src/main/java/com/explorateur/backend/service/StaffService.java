@@ -106,45 +106,58 @@ public class StaffService {
         Instructeur instructeur = staff.getInstructeur();
         String instructeurName = instructeur.getNom() + " " + instructeur.getPrenom();
         String oldRole = staff.getRole().getRoleName();
+        StringBuilder logMessage = new StringBuilder();
         
         // Mise à jour du rôle
         if (request.getRoleId() != null) {
             RolesStaff role = rolesStaffRepository.findById(request.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
-            staff.setRole(role);
             
             if (!oldRole.equals(role.getRoleName())) {
-                journalService.logAction("Changement du rôle de " + instructeurName + " de " + oldRole + " à " + role.getRoleName());
+                staff.setRole(role);
+                logMessage.append("Changement du rôle de ").append(instructeurName)
+                          .append(" de ").append(oldRole).append(" à ").append(role.getRoleName()).append(". ");
             }
         }
         
-        // Mise à jour des informations de l'instructeur
-        boolean instructeurUpdated = false;
+        // Mise à jour des informations de l'instructeur avec journalisation détaillée
+        StringBuilder instructeurChanges = new StringBuilder();
+        
         if (request.getNom() != null && !request.getNom().equals(instructeur.getNom())) {
+            instructeurChanges.append("Nom: ").append(instructeur.getNom()).append(" → ").append(request.getNom()).append("; ");
             instructeur.setNom(request.getNom());
-            instructeurUpdated = true;
         }
         if (request.getPrenom() != null && !request.getPrenom().equals(instructeur.getPrenom())) {
+            instructeurChanges.append("Prénom: ").append(instructeur.getPrenom()).append(" → ").append(request.getPrenom()).append("; ");
             instructeur.setPrenom(request.getPrenom());
-            instructeurUpdated = true;
         }
         if (request.getGenre() != null && !request.getGenre().equals(instructeur.getGenre())) {
+            instructeurChanges.append("Genre: ").append(instructeur.getGenre()).append(" → ").append(request.getGenre()).append("; ");
             instructeur.setGenre(request.getGenre());
-            instructeurUpdated = true;
         }
-        if (request.getTotem() != null) {
+        if (request.getTotem() != null && !request.getTotem().equals(instructeur.getTotem())) {
+            String oldTotem = instructeur.getTotem() != null ? instructeur.getTotem() : "(vide)";
+            instructeurChanges.append("Totem: ").append(oldTotem).append(" → ").append(request.getTotem()).append("; ");
             instructeur.setTotem(request.getTotem());
         }
-        if (request.getTelephone() != null) {
+        if (request.getTelephone() != null && !request.getTelephone().equals(instructeur.getTelephone())) {
+            String oldTel = instructeur.getTelephone() != null ? instructeur.getTelephone() : "(vide)";
+            instructeurChanges.append("Téléphone: ").append(oldTel).append(" → ").append(request.getTelephone()).append("; ");
             instructeur.setTelephone(request.getTelephone());
         }
-        if (request.getEstChefGuide() != null) {
+        if (request.getEstChefGuide() != null && !request.getEstChefGuide().equals(instructeur.getEstChefGuide())) {
+            instructeurChanges.append("Chef Guide: ").append(instructeur.getEstChefGuide()).append(" → ").append(request.getEstChefGuide()).append("; ");
             instructeur.setEstChefGuide(request.getEstChefGuide());
         }
         
-        if (instructeurUpdated) {
+        if (instructeurChanges.length() > 0) {
             instructeurRepository.save(instructeur);
-            journalService.logAction("Modification des informations de l'instructeur " + instructeurName);
+            logMessage.append("Modification de l'instructeur ").append(instructeurName).append(": ").append(instructeurChanges);
+        }
+        
+        // Enregistrer dans le journal si des modifications ont été effectuées
+        if (logMessage.length() > 0) {
+            journalService.logAction(logMessage.toString());
         }
         
         Staff updated = staffRepository.save(staff);

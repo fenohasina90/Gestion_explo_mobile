@@ -69,23 +69,56 @@ public class InstructeurService {
                 });
         }
         
-        String oldName = instructeur.getNom() + " " + instructeur.getPrenom();
+        StringBuilder logMessage = new StringBuilder("Modification de l'instructeur ");
+        logMessage.append(instructeur.getNom()).append(" ").append(instructeur.getPrenom()).append(": ");
         
-        instructeur.setNom(request.getNom());
-        instructeur.setPrenom(request.getPrenom());
-        instructeur.setGenre(request.getGenre());
-        instructeur.setTotem(request.getTotem());
-        instructeur.setTelephone(request.getTelephone());
-        instructeur.setEstChefGuide(request.getEstChefGuide() != null ? request.getEstChefGuide() : false);
+        boolean hasChanges = false;
+        
+        // Suivre les changements pour le journal
+        if (!instructeur.getNom().equals(request.getNom())) {
+            logMessage.append("Nom: ").append(instructeur.getNom()).append(" → ").append(request.getNom()).append("; ");
+            instructeur.setNom(request.getNom());
+            hasChanges = true;
+        }
+        if (!instructeur.getPrenom().equals(request.getPrenom())) {
+            logMessage.append("Prénom: ").append(instructeur.getPrenom()).append(" → ").append(request.getPrenom()).append("; ");
+            instructeur.setPrenom(request.getPrenom());
+            hasChanges = true;
+        }
+        if (!instructeur.getGenre().equals(request.getGenre())) {
+            logMessage.append("Genre: ").append(instructeur.getGenre()).append(" → ").append(request.getGenre()).append("; ");
+            instructeur.setGenre(request.getGenre());
+            hasChanges = true;
+        }
+        if ((instructeur.getTotem() == null && request.getTotem() != null) ||
+            (instructeur.getTotem() != null && !instructeur.getTotem().equals(request.getTotem()))) {
+            String oldTotem = instructeur.getTotem() != null ? instructeur.getTotem() : "(vide)";
+            String newTotem = request.getTotem() != null ? request.getTotem() : "(vide)";
+            logMessage.append("Totem: ").append(oldTotem).append(" → ").append(newTotem).append("; ");
+            instructeur.setTotem(request.getTotem());
+            hasChanges = true;
+        }
+        if ((instructeur.getTelephone() == null && request.getTelephone() != null) ||
+            (instructeur.getTelephone() != null && !instructeur.getTelephone().equals(request.getTelephone()))) {
+            String oldTel = instructeur.getTelephone() != null ? instructeur.getTelephone() : "(vide)";
+            String newTel = request.getTelephone() != null ? request.getTelephone() : "(vide)";
+            logMessage.append("Téléphone: ").append(oldTel).append(" → ").append(newTel).append("; ");
+            instructeur.setTelephone(request.getTelephone());
+            hasChanges = true;
+        }
+        
+        Boolean newEstChefGuide = request.getEstChefGuide() != null ? request.getEstChefGuide() : false;
+        if (!instructeur.getEstChefGuide().equals(newEstChefGuide)) {
+            logMessage.append("Chef Guide: ").append(instructeur.getEstChefGuide()).append(" → ").append(newEstChefGuide).append("; ");
+            instructeur.setEstChefGuide(newEstChefGuide);
+            hasChanges = true;
+        }
         
         Instructeur updated = instructeurRepository.save(instructeur);
         
-        // Log l'action
-        String newName = updated.getNom() + " " + updated.getPrenom();
-        if (!oldName.equals(newName)) {
-            journalService.logAction("Modification de l'instructeur " + oldName + " en " + newName);
-        } else {
-            journalService.logAction("Modification des informations de l'instructeur " + newName);
+        // Enregistrer dans le journal si des modifications ont été effectuées
+        if (hasChanges) {
+            journalService.logAction(logMessage.toString());
         }
         
         return mapToResponse(updated);
