@@ -10,7 +10,8 @@ import { MonProfilPage } from './pages/MonProfilPage';
 import { UtilisateursPage } from './pages/UtilisateursPage';
 import { AnneesExercicePage } from './pages/AnneesExercicePage';
 import { JournalPage } from './pages/JournalPage';
-import { InscriptionsPage, StaffPage, BudgetPage, RapportsPage } from './pages/PlaceholderPages';
+import { StaffsPage } from './pages/StaffsPage';
+import { InscriptionsPage, BudgetPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Layout>
-                  <StaffPage />
+                  <StaffsPage />
                 </Layout>
               </PrivateRoute>
             }
