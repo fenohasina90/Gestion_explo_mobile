@@ -12,6 +12,7 @@ export function UtilisateursPage() {
   const [anneesExercice, setAnneesExercice] = useState<AnneeExercice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Utilisateur | null>(null);
@@ -103,11 +104,15 @@ export function UtilisateursPage() {
         }
         
         await utilisateurService.updateUtilisateur(selectedUser.id, updateData);
+        setSuccess('Utilisateur modifié avec succès !');
       } else {
         await utilisateurService.createUtilisateur(formData);
+        setSuccess('Utilisateur créé avec succès !');
       }
       setShowModal(false);
+      setError(null);
       loadData();
+      setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors de l\'enregistrement');
     }
@@ -117,7 +122,10 @@ export function UtilisateursPage() {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
       try {
         await utilisateurService.deleteUtilisateur(id);
+        setSuccess('Utilisateur supprimé avec succès !');
+        setError(null);
         loadData();
+        setTimeout(() => setSuccess(null), 3000);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Erreur lors de la suppression');
       }
@@ -127,7 +135,10 @@ export function UtilisateursPage() {
   const toggleActive = async (user: Utilisateur) => {
     try {
       await utilisateurService.updateUtilisateur(user.id, { active: !user.active });
+      setSuccess(`Utilisateur ${!user.active ? 'activé' : 'désactivé'} avec succès !`);
+      setError(null);
       loadData();
+      setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors de la modification');
     }
@@ -164,6 +175,13 @@ export function UtilisateursPage() {
         <div className="alert alert-danger">
           {error}
           <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
+
+      {success && (
+        <div className="alert alert-success">
+          {success}
+          <button onClick={() => setSuccess(null)}>×</button>
         </div>
       )}
 

@@ -9,6 +9,7 @@ import { ActivitesPage } from './pages/ActivitesPage';
 import { MonProfilPage } from './pages/MonProfilPage';
 import { UtilisateursPage } from './pages/UtilisateursPage';
 import { AnneesExercicePage } from './pages/AnneesExercicePage';
+import { JournalPage } from './pages/JournalPage';
 import { InscriptionsPage, StaffPage, BudgetPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
@@ -116,6 +117,16 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <AnneesExercicePage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/journal"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <JournalPage />
                 </Layout>
               </PrivateRoute>
             }

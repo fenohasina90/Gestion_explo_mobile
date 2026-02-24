@@ -40,7 +40,7 @@ public class UtilisateurController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('DIRECTEUR')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Créer un nouvel utilisateur",
                description = "Seul un Directeur peut créer un utilisateur. Si un nouveau Directeur est créé, l'ancien devient inactif")
     public ResponseEntity<UtilisateurResponse> createUtilisateur(@Valid @RequestBody CreateUtilisateurRequest request) {
@@ -65,7 +65,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('DIRECTEUR')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Supprimer un utilisateur",
                description = "Seul un Directeur peut supprimer un utilisateur")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {

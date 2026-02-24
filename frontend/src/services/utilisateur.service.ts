@@ -72,7 +72,7 @@ class UtilisateurService {
    * Récupérer tous les rôles  disponibles
    */
   async getAllRoles(): Promise<Role[]> {
-    return apiService.get<Role[]>('/api/roles');
+    return apiService.get<Role[]>(`${this.baseUrl}/roles`);
   }
 }
 

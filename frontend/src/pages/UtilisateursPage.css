@@ -30,6 +30,12 @@
   color: #842029;
 }
 
+.alert-success {
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+  color: #0f5132;
+}
+
 .alert-info {
   background-color: #d1ecf1;
   border: 1px solid #bee5eb;

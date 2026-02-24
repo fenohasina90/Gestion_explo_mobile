@@ -112,3 +112,21 @@ export interface AnneeExercice {
 export interface CreateAnneeExerciceRequest {
   annee: string;
 }
+
+/**
+ * Types pour le journal d'audit
+ */
+export interface JournalEntry {
+  id: number;
+  action: string;
+  username: string;
+  utilisateurId: number | null;
+  timestamp: string;
+}
+
+export interface JournalFilterRequest {
+  dateDebut?: string;
+  dateFin?: string;
+  utilisateurId?: number;
+  searchText?: string;
+}

@@ -85,6 +85,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
           </li>
           
+          {/* Journal d'audit (visible pour tous) */}
+          <li className="nav-divider">
+            <span>Audit</span>
+          </li>
+          <li>
+            <Link to="/journal" className="nav-link">
+              📋 Journal d'audit
+            </Link>
+          </li>
+          
           {/* Section Administration (visible uniquement pour le Directeur) */}
           {user && user.role === 'Directeur' && (
             <>

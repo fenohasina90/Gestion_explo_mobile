@@ -7,6 +7,7 @@ export function AnneesExercicePage() {
   const [anneesExercice, setAnneesExercice] = useState<AnneeExercice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<CreateAnneeExerciceRequest>({
     annee: new Date().toISOString().split('T')[0],
@@ -40,6 +41,9 @@ export function AnneesExercicePage() {
     try {
       await anneeExerciceService.createAnneeExercice(formData);
       setShowModal(false);
+      setSuccess('Année d\'exercice créée avec succès !');
+      setError(null);
+      setTimeout(() => setSuccess(null), 3000);
       loadData();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors de la création');
@@ -50,6 +54,9 @@ export function AnneesExercicePage() {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette année d\'exercice ?')) {
       try {
         await anneeExerciceService.deleteAnneeExercice(id);
+        setSuccess('Année d\'exercice supprimée avec succès !');
+        setError(null);
+        setTimeout(() => setSuccess(null), 3000);
         loadData();
       } catch (err: any) {
         setError(err.response?.data?.message || 'Erreur lors de la suppression');
@@ -72,6 +79,13 @@ export function AnneesExercicePage() {
         <div className="alert alert-danger">
           {error}
           <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
+
+      {success && (
+        <div className="alert alert-success">
+          {success}
+          <button onClick={() => setSuccess(null)}>×</button>
         </div>
       )}
 

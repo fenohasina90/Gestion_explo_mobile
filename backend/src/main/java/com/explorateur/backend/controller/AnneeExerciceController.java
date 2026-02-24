@@ -69,7 +69,7 @@ public class AnneeExerciceController {
      * Créer une nouvelle année d'exercice
      */
     @PostMapping
-    @PreAuthorize("hasRole('DIRECTEUR')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Créer une nouvelle année d'exercice",
                description = "Seul un Directeur peut créer une nouvelle année d'exercice")
     @ApiResponses(value = {
@@ -116,7 +116,7 @@ public class AnneeExerciceController {
      * Supprimer une année d'exercice
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('DIRECTEUR')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Supprimer une année d'exercice",
                description = "Seul un Directeur peut supprimer une année d'exercice")
     @ApiResponses(value = {

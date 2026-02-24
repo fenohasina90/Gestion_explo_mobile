@@ -29,7 +29,6 @@ public class JournalController {
     private final JournalService journalService;
 
     @GetMapping
-    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Récupérer toutes les entrées du journal",
                description = "Retourne toutes les entrées du journal d'audit triées par date décroissante")
     public ResponseEntity<List<JournalResponse>> getAllJournal() {
@@ -38,16 +37,14 @@ public class JournalController {
     }
 
     @PostMapping("/filter")
-    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Filtrer les entrées du journal",
-               description = "Retourne les entrées du journal selon les critères de filtrage (date début, date fin, utilisateur, recherche textuelle)")
+               description = "Retourne les entrées du journal selon les critères de filtrage (date début, date fin, recherche textuelle)")
     public ResponseEntity<List<JournalResponse>> filterJournal(@RequestBody JournalFilterRequest filter) {
         List<JournalResponse> journals = journalService.getJournalWithFilters(filter);
         return ResponseEntity.ok(journals);
     }
 
     @GetMapping("/period")
-    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Récupérer les entrées par période",
                description = "Retourne les entrées du journal entre deux dates")
     public ResponseEntity<List<JournalResponse>> getJournalByPeriod(
@@ -58,18 +55,6 @@ public class JournalController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFin) {
         
         List<JournalResponse> journals = journalService.getJournalByPeriod(dateDebut, dateFin);
-        return ResponseEntity.ok(journals);
-    }
-
-    @GetMapping("/utilisateur/{utilisateurId}")
-    @PreAuthorize("hasRole('Directeur')")
-    @Operation(summary = "Récupérer les entrées par utilisateur",
-               description = "Retourne toutes les entrées du journal pour un utilisateur spécifique")
-    public ResponseEntity<List<JournalResponse>> getJournalByUtilisateur(
-            @Parameter(description = "ID de l'utilisateur")
-            @PathVariable Long utilisateurId) {
-        
-        List<JournalResponse> journals = journalService.getJournalByUtilisateur(utilisateurId);
         return ResponseEntity.ok(journals);
     }
 }
