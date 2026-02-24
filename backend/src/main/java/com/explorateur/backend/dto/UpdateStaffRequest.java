@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO pour la mise à jour d'un staff
+ * DTO pour la mise à jour d'un staff (avec infos instructeur)
  */
 @Data
 @NoArgsConstructor
@@ -15,4 +15,12 @@ import lombok.NoArgsConstructor;
 public class UpdateStaffRequest {
     
     private Long roleId;
+    
+    // Informations de l'instructeur (optionnelles)
+    private String nom;
+    private String prenom;
+    private String genre;
+    private String totem;
+    private String telephone;
+    private Boolean estChefGuide;
 }

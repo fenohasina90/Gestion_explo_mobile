@@ -38,9 +38,9 @@ public class InstructeurController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
     @Operation(summary = "Modifier un instructeur",
-               description = "Met à jour les informations d'un instructeur (Directeur uniquement)")
+               description = "Met à jour les informations d'un instructeur (Directeur et Co-directeur uniquement)")
     public ResponseEntity<InstructeurResponse> updateInstructeur(
             @PathVariable Long id,
             @Valid @RequestBody CreateInstructeurRequest request) {
@@ -77,8 +77,8 @@ public class InstructeurController {
     @Operation(summary = "Rechercher des instructeurs (auto-complétion)",
                description = "Recherche des instructeurs par nom ou prénom pour l'auto-complétion")
     public ResponseEntity<List<InstructeurSuggestion>> searchInstructeurs(
-            @RequestParam(required = false) String search) {
-        List<InstructeurSuggestion> suggestions = instructeurService.searchInstructeurs(search);
+            @RequestParam(required = false) String query) {
+        List<InstructeurSuggestion> suggestions = instructeurService.searchInstructeurs(query);
         return ResponseEntity.ok(suggestions);
     }
 }

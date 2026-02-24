@@ -87,7 +87,7 @@ public class StaffService {
     }
     
     /**
-     * Met à jour un staff
+     * Met à jour un staff (et les infos de l'instructeur associé)
      */
     @Transactional
     public StaffResponse updateStaff(Long id, UpdateStaffRequest request, String currentUsername) {
@@ -103,9 +103,11 @@ public class StaffService {
             throw new RuntimeException("Vous ne pouvez modifier que les staffs de votre année d'exercice");
         }
         
-        String instructeurName = staff.getInstructeur().getNom() + " " + staff.getInstructeur().getPrenom();
+        Instructeur instructeur = staff.getInstructeur();
+        String instructeurName = instructeur.getNom() + " " + instructeur.getPrenom();
         String oldRole = staff.getRole().getRoleName();
         
+        // Mise à jour du rôle
         if (request.getRoleId() != null) {
             RolesStaff role = rolesStaffRepository.findById(request.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
@@ -114,6 +116,35 @@ public class StaffService {
             if (!oldRole.equals(role.getRoleName())) {
                 journalService.logAction("Changement du rôle de " + instructeurName + " de " + oldRole + " à " + role.getRoleName());
             }
+        }
+        
+        // Mise à jour des informations de l'instructeur
+        boolean instructeurUpdated = false;
+        if (request.getNom() != null && !request.getNom().equals(instructeur.getNom())) {
+            instructeur.setNom(request.getNom());
+            instructeurUpdated = true;
+        }
+        if (request.getPrenom() != null && !request.getPrenom().equals(instructeur.getPrenom())) {
+            instructeur.setPrenom(request.getPrenom());
+            instructeurUpdated = true;
+        }
+        if (request.getGenre() != null && !request.getGenre().equals(instructeur.getGenre())) {
+            instructeur.setGenre(request.getGenre());
+            instructeurUpdated = true;
+        }
+        if (request.getTotem() != null) {
+            instructeur.setTotem(request.getTotem());
+        }
+        if (request.getTelephone() != null) {
+            instructeur.setTelephone(request.getTelephone());
+        }
+        if (request.getEstChefGuide() != null) {
+            instructeur.setEstChefGuide(request.getEstChefGuide());
+        }
+        
+        if (instructeurUpdated) {
+            instructeurRepository.save(instructeur);
+            journalService.logAction("Modification des informations de l'instructeur " + instructeurName);
         }
         
         Staff updated = staffRepository.save(staff);

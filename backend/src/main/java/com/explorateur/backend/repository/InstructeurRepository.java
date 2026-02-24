@@ -17,10 +17,12 @@ public interface InstructeurRepository extends JpaRepository<Instructeur, Long> 
     
     /**
      * Recherche des instructeurs par nom ou prénom (pour auto-complétion)
+     * Utilise une requête native pour compatibilité SQLite
      */
-    @Query("SELECT i FROM Instructeur i WHERE " +
-           "LOWER(i.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(i.prenom) LIKE LOWER(CONCAT('%', :search, '%'))")
+    @Query(value = "SELECT * FROM instructeur WHERE " +
+           "LOWER(nom) LIKE LOWER('%' || :search || '%') OR " +
+           "LOWER(prenom) LIKE LOWER('%' || :search || '%')", 
+           nativeQuery = true)
     List<Instructeur> searchByNomOrPrenom(@Param("search") String search);
     
     /**

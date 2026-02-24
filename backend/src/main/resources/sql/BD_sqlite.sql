@@ -29,7 +29,7 @@ CREATE TABLE roles_staff (
 
 INSERT INTO roles_staff (role_name) VALUES
 ('Directeur'),
-('Co-Directeur'),
+('Co_Directeur'),
 ('Secrétaire'),
 ('Instructeur');
 
