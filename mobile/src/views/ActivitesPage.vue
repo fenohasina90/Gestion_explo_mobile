@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <img src="/assets/logo.png" alt="Logo" class="header-logo" />
+        </ion-buttons>
         <ion-title>Activités</ion-title>
       </ion-toolbar>
     </ion-header>

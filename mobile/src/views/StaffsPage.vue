@@ -4,10 +4,14 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button default-href="/tabs/home"></ion-back-button>
+          <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" />
         </ion-buttons>
-        <ion-title>Gestion des Staffs</ion-title>
-        <ion-buttons slot="end" v-if="isDirecteur">
-          <ion-button @click="openCreateModal">
+        <ion-title>Staffs</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="showFilters = !showFilters">
+            <ion-icon :icon="filterOutline"></ion-icon>
+          </ion-button>
+          <ion-button v-if="isDirecteur" @click="openCreateModal">
             <ion-icon :icon="addOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -20,7 +24,7 @@
       </ion-refresher>
 
       <!-- Filtres -->
-      <div class="ion-padding-horizontal ion-margin-top">
+      <div v-if="showFilters" class="ion-padding-horizontal ion-margin-top">
         <ion-item>
           <ion-label>Année d'exercice</ion-label>
           <ion-select v-model="filterAnneeId" interface="action-sheet" placeholder="Toutes">
@@ -147,7 +151,8 @@ import {
 import {
   addOutline,
   trashOutline,
-  createOutline
+  createOutline,
+  filterOutline
 } from 'ionicons/icons';
 import staffService from '@/services/staff.service';
 import anneeExerciceService from '@/services/annee-exercice.service';
@@ -163,6 +168,7 @@ const filterAnneeId = ref<number | null>(null);
 const filterRoleId = ref<number | null>(null);
 const filterEstChefGuide = ref<boolean | null>(null);
 const loading = ref(true);
+const showFilters = ref(true);
 
 const isDirecteur = computed(() => {
   return authStore.user?.role === 'Directeur';

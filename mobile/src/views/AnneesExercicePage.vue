@@ -4,6 +4,7 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button default-href="/tabs/home"></ion-back-button>
+          <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" />
         </ion-buttons>
         <ion-title>Années d'Exercice</ion-title>
         <ion-buttons slot="end">

@@ -1,0 +1,198 @@
+/* Global Styles - Gestion Explorateur Mobile */
+
+/* Typography - Tailles optimisées pour mobile */
+:root {
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 0.9375rem; /* 15px */
+  --font-size-md: 1rem;        /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  
+  /* Espacements */
+  --spacing-xs: 0.25rem;  /* 4px */
+  --spacing-sm: 0.5rem;   /* 8px */
+  --spacing-md: 1rem;     /* 16px */
+  --spacing-lg: 1.5rem;   /* 24px */
+  --spacing-xl: 2rem;     /* 32px */
+}
+
+/* Headers */
+ion-header ion-title {
+  font-size: var(--font-size-lg) !important;
+  font-weight: 600;
+}
+
+/* Card Titles */
+ion-card-title {
+  font-size: var(--font-size-md) !important;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+ion-card-subtitle {
+  font-size: var(--font-size-sm) !important;
+  margin-top: var(--spacing-xs);
+}
+
+/* Card Content */
+ion-card-content {
+  font-size: var(--font-size-sm) !important;
+}
+
+ion-card-content h2,
+ion-card-content h3 {
+  font-size: var(--font-size-base) !important;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* List Items */
+ion-item ion-label h2,
+ion-item ion-label h3 {
+  font-size: var(--font-size-base) !important;
+  font-weight: 500;
+}
+
+ion-item ion-label p {
+  font-size: var(--font-size-xs) !important;
+  margin-top: var(--spacing-xs);
+}
+
+/* Chips - Plus compacts */
+ion-chip {
+  font-size: var(--font-size-xs) !important;
+  height: 24px;
+  padding: 0 var(--spacing-sm);
+}
+
+/* Buttons */
+ion-button {
+  font-size: var(--font-size-sm) !important;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* Segments */
+ion-segment-button {
+  font-size: var(--font-size-sm) !important;
+  min-height: 36px;
+}
+
+/* Select & Input Labels */
+ion-item ion-label {
+  font-size: var(--font-size-sm) !important;
+  font-weight: 500;
+}
+
+/* Notes & Small Text */
+ion-note {
+  font-size: var(--font-size-xs) !important;
+}
+
+/* Cards - Spacing optimisé */
+ion-card {
+  margin: var(--spacing-sm) var(--spacing-sm);
+}
+
+/* Logo Header */
+.header-logo {
+  height: 36px;
+  width: auto;
+  margin-right: var(--spacing-sm);
+}
+
+/* Stats Cards */
+.stats-card {
+  margin: var(--spacing-sm);
+  padding: var(--spacing-md);
+}
+
+.stats-card h3 {
+  font-size: var(--font-size-lg) !important;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.stats-card p {
+  font-size: var(--font-size-sm) !important;
+  margin-top: var(--spacing-xs);
+  opacity: 0.7;
+}
+
+/* Filter Section */
+.filters-section ion-card-title {
+  font-size: var(--font-size-base) !important;
+}
+
+/* Empty States */
+.empty-state {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.empty-state ion-icon {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: var(--font-size-sm) !important;
+  opacity: 0.6;
+  margin-top: var(--spacing-md);
+}
+
+/* Loading States */
+.loading-container {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.loading-container ion-spinner {
+  transform: scale(1.2);
+}
+
+.loading-container p {
+  font-size: var(--font-size-sm) !important;
+  margin-top: var(--spacing-md);
+}
+
+/* Modal Titles */
+ion-modal ion-title {
+  font-size: var(--font-size-lg) !important;
+}
+
+/* Compact Lists */
+.compact-list ion-item {
+  --padding-start: var(--spacing-sm);
+  --padding-end: var(--spacing-sm);
+  --inner-padding-end: var(--spacing-sm);
+}
+
+/* Action Buttons in Cards */
+.card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.card-actions ion-button {
+  --padding-start: var(--spacing-sm);
+  --padding-end: var(--spacing-sm);
+  height: 32px;
+  font-size: var(--font-size-xs) !important;
+}
+
+/* Professional Color Scheme */
+.professional-card {
+  border-left: 3px solid var(--ion-color-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  :root {
+    --font-size-2xl: 1.375rem; /* 22px sur petit écran */
+    --font-size-xl: 1.125rem;  /* 18px sur petit écran */
+  }
+}

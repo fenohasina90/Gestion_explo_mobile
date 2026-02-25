@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <img src="/assets/logo.png" alt="Logo" class="header-logo" />
+        </ion-buttons>
         <ion-title>Tableau de bord</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -15,15 +18,23 @@
 
       <div class="ion-padding">
         <!-- Carte de bienvenue -->
-        <ion-card>
+        <ion-card class="welcome-card">
           <ion-card-header>
             <ion-card-subtitle>Bienvenue</ion-card-subtitle>
             <ion-card-title>{{ authStore.user?.username }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <p><strong>Rôle:</strong> {{ authStore.user?.role }}</p>
-            <p><strong>Année d'exercice:</strong> {{ authStore.user?.anneeExercice ? new Date(authStore.user.anneeExercice).getFullYear() : 'N/A' }}</p>
-            <ion-badge :color="authStore.user?.active ? 'success' : 'danger'">
+            <div class="user-info">
+              <div class="info-item">
+                <span class="info-label">Rôle:</span>
+                <span class="info-value">{{ authStore.user?.role }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Année:</span>
+                <span class="info-value">{{ authStore.user?.anneeExercice ? new Date(authStore.user.anneeExercice).getFullYear() : 'N/A' }}</span>
+              </div>
+            </div>
+            <ion-badge :color="authStore.user?.active ? 'success' : 'danger'" class="status-badge">
               {{ authStore.user?.active ? 'Actif' : 'Inactif' }}
             </ion-badge>
           </ion-card-content>
@@ -35,7 +46,7 @@
         <ion-grid>
           <ion-row>
             <ion-col size="6">
-              <ion-card button @click="$router.push('/tabs/enfants')">
+              <ion-card button @click="$router.push('/tabs/enfants')" class="action-card-wrapper">
                 <ion-card-content class="action-card">
                   <ion-icon :icon="peopleOutline" class="action-icon"></ion-icon>
                   <h3>Enfants</h3>
@@ -43,7 +54,7 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card button @click="$router.push('/tabs/activites')">
+              <ion-card button @click="$router.push('/tabs/activites')" class="action-card-wrapper">
                 <ion-card-content class="action-card">
                   <ion-icon :icon="calendarOutline" class="action-icon"></ion-icon>
                   <h3>Activités</h3>
@@ -60,7 +71,7 @@
           <ion-grid>
             <ion-row>
               <ion-col size="12">
-                <ion-card button @click="$router.push('/staffs')">
+                <ion-card button @click="$router.push('/staffs')" class="action-card-wrapper">
                   <ion-card-content class="action-card staff-card">
                     <ion-icon :icon="personCircleOutline" class="action-icon"></ion-icon>
                     <h3>Staffs & Instructeurs</h3>
@@ -157,20 +168,70 @@ const canManageStaff = computed(() => {
 <style scoped>
 .section-title {
   color: var(--ion-color-primary);
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin: 24px 0 12px;
+  margin: 1.25rem 0 0.75rem;
+  padding-left: 0.25rem;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, var(--ion-color-primary-tint) 0%, var(--ion-color-primary) 100%);
+  color: white;
+}
+
+.welcome-card ion-card-subtitle,
+.welcome-card ion-card-title {
+  color: white;
+}
+
+.user-info {
+  margin: 0.75rem 0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.info-label {
+  opacity: 0.9;
+}
+
+.info-value {
+  font-weight: 600;
+}
+
+.status-badge {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.action-card-wrapper {
+  margin: 0;
 }
 
 .action-card {
   text-align: center;
-  padding: 24px 16px;
+  padding: 1.25rem 1rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-card h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
 }
 
 .action-icon {
-  font-size: 48px;
+  font-size: 36px;
   color: var(--ion-color-primary);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .admin-card .action-icon {
@@ -178,30 +239,42 @@ const canManageStaff = computed(() => {
 }
 
 .staff-card {
-  padding: 20px;
+  padding: 1rem;
 }
 
 .staff-card .action-icon {
   color: var(--ion-color-tertiary);
+  font-size: 32px;
+}
+
+.staff-card h3 {
+  font-size: 0.9375rem;
+  margin: 0.5rem 0 0.25rem;
 }
 
 .staff-card p {
-  margin-top: 4px;
-  font-size: 0.875rem;
+  margin: 0;
+  font-size: 0.75rem;
   color: var(--ion-color-medium);
 }
 
 .audit-card {
-  padding: 20px;
+  padding: 1rem;
 }
 
 .audit-card .action-icon {
   color: var(--ion-color-secondary);
+  font-size: 32px;
+}
+
+.audit-card h3 {
+  font-size: 0.9375rem;
+  margin: 0.5rem 0 0.25rem;
 }
 
 .audit-card p {
-  margin-top: 4px;
-  font-size: 0.875rem;
+  margin: 0;
+  font-size: 0.75rem;
   color: var(--ion-color-medium);
 }
 

@@ -89,6 +89,14 @@ class ApiService {
   }
 
   /**
+   * Effectue une requête PATCH
+   */
+  async patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.patch(url, data, config);
+    return response.data;
+  }
+
+  /**
    * Vérifie si le serveur est accessible
    */
   async checkConnection(): Promise<boolean> {
@@ -98,6 +106,13 @@ class ApiService {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Retourne l'instance Axios pour des cas d'usage avancés
+   */
+  getAxiosInstance(): AxiosInstance {
+    return this.axiosInstance;
   }
 }
 

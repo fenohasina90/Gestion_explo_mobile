@@ -23,6 +23,8 @@ public class EnfantSuggestion {
     private Integer age;
     private String parentNom;
     private String parentPrenom;
+    private Long classeId;
+    private String classeNom;
     
     /**
      * Nom complet pour l'affichage
