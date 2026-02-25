@@ -36,6 +36,9 @@ public class Utilisateur {
     @JoinColumn(name = "annee_exercice_id")
     private AnneeExercice anneeExercice;
     
+    @Column(name = "etat")
+    private Integer etat = 1; // 1 = actif, 11 = supprimé
+    
     @Column(name = "created_at")
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;

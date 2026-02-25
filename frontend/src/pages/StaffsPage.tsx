@@ -31,6 +31,7 @@ export function StaffsPage() {
   const [filterAnneeId, setFilterAnneeId] = useState<number | null>(null);
   const [filterRoleId, setFilterRoleId] = useState<number | null>(null);
   const [filterGenre, setFilterGenre] = useState<string>('');
+  const [filterEstChefGuide, setFilterEstChefGuide] = useState<string>(''); // '' | 'true' | 'false'
 
   // États pour l'auto-complétion
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,7 +63,7 @@ export function StaffsPage() {
   useEffect(() => {
     // Filtrer les staffs localement
     filterStaffs();
-  }, [filterAnneeId, filterRoleId, filterGenre]);
+  }, [filterAnneeId, filterRoleId, filterGenre, filterEstChefGuide]);
 
   useEffect(() => {
     // Auto-complétion avec debounce
@@ -77,6 +78,17 @@ export function StaffsPage() {
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Fonction helper pour obtenir la classe CSS du badge selon le rôle
+  const getRoleBadgeClass = (roleName: string): string => {
+    const roleClasses: Record<string, string> = {
+      'Directeur': 'badge-danger',
+      'Co_Directeur': 'badge-warning',
+      'Secrétaire': 'badge-primary',
+      'Instructeur': 'badge-secondary'
+    };
+    return roleClasses[roleName] || 'badge-secondary';
+  };
 
   const loadData = async () => {
     try {
@@ -111,9 +123,10 @@ export function StaffsPage() {
 
   const filterStaffs = () => {
     // La filtration se fait côté serveur, on recharge les données
-    if (filterAnneeId || filterRoleId) {
+    if (filterAnneeId || filterRoleId || filterEstChefGuide) {
+      const estChefGuideParam = filterEstChefGuide === 'true' ? true : filterEstChefGuide === 'false' ? false : undefined;
       staffService
-        .getStaffsWithFilters(filterAnneeId || undefined, filterRoleId || undefined)
+        .getStaffsWithFilters(filterAnneeId || undefined, filterRoleId || undefined, estChefGuideParam)
         .then(setStaffs)
         .catch((err) => console.error('Erreur filtrage:', err));
     } else {
@@ -331,6 +344,18 @@ export function StaffsPage() {
             ))}
           </select>
         </div>
+
+        <div className="filter-group">
+          <label>Statut:</label>
+          <select
+            value={filterEstChefGuide}
+            onChange={(e) => setFilterEstChefGuide(e.target.value)}
+          >
+            <option value="">Tous</option>
+            <option value="true">Chef Guide</option>
+            <option value="false">Aspirant</option>
+          </select>
+        </div>
       </div>
 
       {/* Liste des staffs */}
@@ -363,9 +388,19 @@ export function StaffsPage() {
                   <td>{staff.instructeurPrenom}</td>
                   <td>{staff.instructeurGenre}</td>
                   <td>{staff.instructeurTotem || '-'}</td>
-                  <td>{staff.role}</td>
+                  <td>
+                    <span className={`badge ${getRoleBadgeClass(staff.role)}`}>
+                      {staff.role}
+                    </span>
+                  </td>
                   <td>{new Date(staff.anneeExercice).getFullYear()}</td>
-                  <td>{staff.instructeurEstChefGuide ? 'Oui' : 'Non'}</td>
+                  <td>
+                    {staff.instructeurEstChefGuide ? (
+                      <span className="badge badge-success">Chef Guide</span>
+                    ) : (
+                      <span className="badge badge-secondary">Aspirant</span>
+                    )}
+                  </td>
                   <td>{staff.instructeurTelephone || '-'}</td>
                   {(canEdit || canDelete) && (
                     <td className="actions">

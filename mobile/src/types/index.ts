@@ -145,7 +145,7 @@ export interface Staff {
   instructeurTelephone?: string;
   instructeurEstChefGuide: boolean;
   roleId: number;
-  roleName: string;
+  role: string;
   anneeExerciceId: number;
   anneeExercice: string;
 }

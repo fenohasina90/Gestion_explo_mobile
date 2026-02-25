@@ -232,7 +232,7 @@ public class UtilisateurService {
     }
 
     /**
-     * Supprime un utilisateur (seul le Directeur peut supprimer)
+     * Supprime un utilisateur (suppression logique - seul le Directeur peut supprimer)
      */
     @Transactional
     public void deleteUtilisateur(Long id, String currentUsername) {
@@ -246,24 +246,32 @@ public class UtilisateurService {
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
+        // Vérifier que l'utilisateur n'est pas déjà supprimé
+        if (utilisateur.getEtat() == 11) {
+            throw new RuntimeException("Cet utilisateur est déjà supprimé");
+        }
+
         // Empêcher la suppression de soi-même
         if (utilisateur.getUsername().equals(currentUsername)) {
             throw new RuntimeException("Vous ne pouvez pas supprimer votre propre compte");
         }
         
         String username = utilisateur.getUsername();
-        utilisateurRepository.delete(utilisateur);
+        
+        // Suppression logique : mettre etat à 11
+        utilisateur.setEtat(11);
+        utilisateurRepository.save(utilisateur);
         
         // Log la suppression
         journalService.logAction("Suppression de l'utilisateur " + username);
     }
 
     /**
-     * Récupère tous les utilisateurs
+     * Récupère tous les utilisateurs (excluant les supprimés)
      */
     @Transactional(readOnly = true)
     public List<UtilisateurResponse> getAllUtilisateurs() {
-        return utilisateurRepository.findAll().stream()
+        return utilisateurRepository.findAllActive().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

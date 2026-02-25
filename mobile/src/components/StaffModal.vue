@@ -343,7 +343,7 @@ onMounted(async () => {
   
   if (props.mode === 'edit' && props.staff) {
     // Charger les données du staff existant
-    const role = roles.value.find(r => r.roleName === props.staff!.roleName);
+    const role = roles.value.find(r => r.roleName === props.staff!.role);
     
     formData.value = {
       instructeurId: props.staff.instructeurId,

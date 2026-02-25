@@ -165,7 +165,7 @@ public class StaffService {
     }
     
     /**
-     * Supprime un staff
+     * Supprime un staff (suppression logique)
      */
     @Transactional
     public void deleteStaff(Long id, String currentUsername) {
@@ -176,24 +176,32 @@ public class StaffService {
         Staff staff = staffRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Staff introuvable"));
         
+        // Vérifier que le staff n'est pas déjà supprimé
+        if (staff.getEtat() == 11) {
+            throw new RuntimeException("Ce staff est déjà supprimé");
+        }
+        
         // Vérifier que le staff appartient à l'année d'exercice du Directeur
         if (!currentUser.getAnneeExercice().getId().equals(staff.getAnneeExercice().getId())) {
             throw new RuntimeException("Vous ne pouvez supprimer que les staffs de votre année d'exercice");
         }
         
         String instructeurName = staff.getInstructeur().getNom() + " " + staff.getInstructeur().getPrenom();
-        staffRepository.delete(staff);
+        
+        // Suppression logique : mettre etat à 11
+        staff.setEtat(11);
+        staffRepository.save(staff);
         
         // Log la suppression
         journalService.logAction("Suppression du staff " + instructeurName);
     }
     
     /**
-     * Récupère tous les staffs
+     * Récupère tous les staffs (excluant les supprimés)
      */
     @Transactional(readOnly = true)
     public List<StaffResponse> getAllStaffs() {
-        return staffRepository.findAll().stream()
+        return staffRepository.findAllActive().stream()
             .map(this::mapToResponse)
             .collect(Collectors.toList());
     }
@@ -212,8 +220,8 @@ public class StaffService {
      * Récupère les staffs avec filtres
      */
     @Transactional(readOnly = true)
-    public List<StaffResponse> getStaffsWithFilters(Long anneeExerciceId, Long roleId) {
-        return staffRepository.findByFilters(anneeExerciceId, roleId).stream()
+    public List<StaffResponse> getStaffsWithFilters(Long anneeExerciceId, Long roleId, Boolean estChefGuide) {
+        return staffRepository.findByFilters(anneeExerciceId, roleId, estChefGuide).stream()
             .map(this::mapToResponse)
             .collect(Collectors.toList());
     }

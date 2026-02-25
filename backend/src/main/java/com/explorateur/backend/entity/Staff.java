@@ -36,6 +36,9 @@ public class Staff {
     @JoinColumn(name = "annee_exercice_id", nullable = false)
     private AnneeExercice anneeExercice;
     
+    @Column(nullable = false)
+    private Integer etat = 1; // 1 = actif, 11 = supprimé
+    
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     

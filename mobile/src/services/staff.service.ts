@@ -43,10 +43,11 @@ class StaffService {
   /**
    * Récupérer les staffs avec filtres
    */
-  async getStaffsWithFilters(anneeExerciceId?: number, roleId?: number): Promise<Staff[]> {
+  async getStaffsWithFilters(anneeExerciceId?: number, roleId?: number, estChefGuide?: boolean): Promise<Staff[]> {
     const params: any = {};
     if (anneeExerciceId) params.anneeExerciceId = anneeExerciceId;
     if (roleId) params.roleId = roleId;
+    if (estChefGuide !== undefined) params.estChefGuide = estChefGuide;
     
     return apiService.get<Staff[]>(`${this.baseUrl}/filter`, { params });
   }

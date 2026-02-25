@@ -77,11 +77,12 @@ public class StaffController {
     
     @GetMapping("/filter")
     @Operation(summary = "Filtrer les staffs",
-               description = "Récupère les staffs avec filtres : année d'exercice, rôle")
+               description = "Récupère les staffs avec filtres : année d'exercice, rôle, chef guide")
     public ResponseEntity<List<StaffResponse>> getStaffsWithFilters(
             @RequestParam(required = false) Long anneeExerciceId,
-            @RequestParam(required = false) Long roleId) {
-        List<StaffResponse> staffs = staffService.getStaffsWithFilters(anneeExerciceId, roleId);
+            @RequestParam(required = false) Long roleId,
+            @RequestParam(required = false) Boolean estChefGuide) {
+        List<StaffResponse> staffs = staffService.getStaffsWithFilters(anneeExerciceId, roleId, estChefGuide);
         return ResponseEntity.ok(staffs);
     }
     

@@ -49,7 +49,16 @@
           </ion-select>
         </ion-item>
 
-        <p v-if="filterAnneeId || filterRoleId" class="ion-padding-start ion-text-sm">
+        <ion-item>
+          <ion-label>Statut</ion-label>
+          <ion-select v-model="filterEstChefGuide" interface="action-sheet" placeholder="Tous">
+            <ion-select-option :value="null">Tous</ion-select-option>
+            <ion-select-option :value="true">Chef Guide</ion-select-option>
+            <ion-select-option :value="false">Aspirant</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <p v-if="filterAnneeId || filterRoleId || filterEstChefGuide !== null" class="ion-padding-start ion-text-sm">
           {{ filteredStaffs.length }} staff(s)
         </p>
       </div>
@@ -62,15 +71,15 @@
         >
           <ion-label>
             <h2>{{ staff.instructeurPrenom }} {{ staff.instructeurNom }}</h2>
-            <p>{{ staff.roleName }}</p>
+            <!-- <p></p> -->
             <p class="ion-text-wrap" style="font-size: 0.85rem; color: var(--ion-color-medium);">
               <span v-if="staff.instructeurTotem">{{ staff.instructeurTotem }} • </span>
               <span v-if="staff.instructeurTelephone">{{ staff.instructeurTelephone }} • </span>
               <span>{{ new Date(staff.anneeExercice).getFullYear() }}</span>
             </p>
           </ion-label>
-          <ion-badge :color="staff.instructeurEstChefGuide ? 'success' : 'medium'" slot="end">
-            {{ staff.instructeurEstChefGuide ? 'Chef Guide' : 'Instructeur' }}
+          <ion-badge :color="getRoleColor(staff.role)">
+            {{ staff.role }}
           </ion-badge>
           <ion-buttons slot="end">
             <ion-button 
@@ -152,6 +161,7 @@ const roles = ref<RoleStaff[]>([]);
 const anneesExercice = ref<AnneeExercice[]>([]);
 const filterAnneeId = ref<number | null>(null);
 const filterRoleId = ref<number | null>(null);
+const filterEstChefGuide = ref<boolean | null>(null);
 const loading = ref(true);
 
 const isDirecteur = computed(() => {
@@ -176,8 +186,22 @@ const filteredStaffs = computed(() => {
     result = result.filter(s => s.roleId === filterRoleId.value);
   }
 
+  if (filterEstChefGuide.value !== null) {
+    result = result.filter(s => s.instructeurEstChefGuide === filterEstChefGuide.value);
+  }
+
   return result;
 });
+
+function getRoleColor(roleName: string): string {
+  const roleColors: Record<string, string> = {
+    'Directeur': 'success',
+    'Co_Directeur': 'warning',
+    'Secrétaire': 'primary',
+    'Instructeur': 'medium'
+  };
+  return roleColors[roleName] || 'medium';
+}
 
 onMounted(() => {
   loadData();
