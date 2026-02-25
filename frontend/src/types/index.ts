@@ -1,4 +1,19 @@
 /**
+ * Type générique pour les réponses paginées
+ */
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
+/**
  * Types pour l'authentification
  */
 export interface LoginRequest {
@@ -197,4 +212,115 @@ export interface UpdateStaffRequest {
   totem?: string;
   telephone?: string;
   estChefGuide?: boolean;
+}
+
+/**
+ * Types pour les parents
+ */
+export interface Parent {
+  id: number;
+  nom: string;
+  prenom: string;
+  adresse?: string;
+  telephone?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ParentSuggestion {
+  id: number;
+  nom: string;
+  prenom: string;
+  telephone?: string;
+  adresse?: string;
+  nomComplet: string;
+}
+
+export interface CreateParentRequest {
+  nom: string;
+  prenom: string;
+  adresse?: string;
+  telephone?: string;
+}
+
+/**
+ * Types pour les enfants
+ */
+export interface EnfantResponse {
+  id: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  dateNaissance: string;
+  age: number;
+  adresse?: string;
+  parentId?: number;
+  parentNom?: string;
+  parentPrenom?: string;
+  bapteme?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EnfantSuggestion {
+  id: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  dateNaissance: string;
+  age: number;
+  parentNom?: string;
+  parentPrenom?: string;
+  nomComplet: string;
+  parentNomComplet: string;
+}
+
+export interface CreateEnfantRequest {
+  nom: string;
+  prenom: string;
+  genre: string;
+  dateNaissance: string;
+  adresse?: string;
+  parentId: number;
+  bapteme?: string;
+}
+
+/**
+ * Types pour les inscriptions
+ */
+export interface InscriptionResponse {
+  id: number;
+  enfantId: number;
+  enfantNom: string;
+  enfantPrenom: string;
+  enfantGenre: string;
+  enfantDateNaissance: string;
+  enfantAge: number;
+  parentId?: number;
+  parentNom?: string;
+  parentPrenom?: string;
+  parentTelephone?: string;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  classeId: number;
+  classeNom: string;
+  estAssurance: boolean;
+  createdAt: string;
+}
+
+export interface CreateInscriptionRequest {
+  enfantId: number;
+  anneeExerciceId: number;
+  classeId: number;
+  estAssurance?: boolean;
+}
+
+/**
+ * Types pour les classes
+ */
+export interface Classe {
+  id: number;
+  nom: string;
+  logo?: string;
+  age?: number;
 }
