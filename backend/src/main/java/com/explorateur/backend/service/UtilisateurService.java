@@ -258,8 +258,9 @@ public class UtilisateurService {
         
         String username = utilisateur.getUsername();
         
-        // Suppression logique : mettre etat à 11
+        // Suppression logique : mettre etat à 11 et active à false
         utilisateur.setEtat(11);
+        utilisateur.setActive(false);
         utilisateurRepository.save(utilisateur);
         
         // Log la suppression

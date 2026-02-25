@@ -138,6 +138,24 @@
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.badge-primary {
+  background-color: #007bff;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
 }
 
 .badge-directeur {

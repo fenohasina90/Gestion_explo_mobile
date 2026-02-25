@@ -158,6 +158,17 @@ export function UtilisateursPage() {
 
   const filteredUtilisateurs = getFilteredUtilisateurs();
 
+  // Fonction helper pour obtenir la classe CSS du badge selon le rôle
+  const getRoleBadgeClass = (roleName: string): string => {
+    const roleClasses: Record<string, string> = {
+      'Directeur': 'badge-danger',
+      'Co_Directeur': 'badge-warning',
+      'Secrétaire': 'badge-primary',
+      'Instructeur': 'badge-secondary'
+    };
+    return roleClasses[roleName] || 'badge-secondary';
+  };
+
   if (loading) return <div className="loading">Chargement...</div>;
 
   return (
@@ -212,7 +223,7 @@ export function UtilisateursPage() {
         <table className="table">
           <thead>
             <tr>
-              <th>ID</th>
+              {/* <th>ID</th> */}
               <th>Nom d'utilisateur</th>
               <th>Rôle</th>
               <th>Année d'exercice</th>
@@ -224,9 +235,13 @@ export function UtilisateursPage() {
           <tbody>
             {filteredUtilisateurs.map(user => (
               <tr key={user.id}>
-                <td>{user.id}</td>
+                {/* <td>{user.id}</td> */}
                 <td>{user.username}</td>
-                <td><span className={`badge badge-${user.role.toLowerCase()}`}>{user.role}</span></td>
+                <td>
+                  <span className={`badge ${getRoleBadgeClass(user.role)}`}>
+                    {user.role}
+                  </span>
+                </td>
                 <td>{new Date(user.anneeExercice).getFullYear()}</td>
                 <td>
                   <span className={`status-badge ${user.active ? 'active' : 'inactive'}`}>
