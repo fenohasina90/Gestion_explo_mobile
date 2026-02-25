@@ -12,6 +12,8 @@
     <form @submit.prevent="handleSubmit" class="ion-padding">
       <!-- Mode création: recherche d'instructeur -->
       <div v-if="mode === 'create'">
+        <!-- L'année d'exercice est automatiquement définie selon l'utilisateur connecté -->
+        
         <ion-item>
           <ion-label position="stacked">Rechercher un instructeur *</ion-label>
           <ion-input
@@ -215,7 +217,8 @@
         </ion-select>
       </ion-item>
 
-      <!-- Année d'exercice (création seulement) -->
+      <!-- Année d'exercice (création seulement) - Masqué car déjà sélectionné en haut -->
+      <!--
       <ion-item v-if="mode === 'create' && selectedInstructeur">
         <ion-label position="stacked">Année d'exercice *</ion-label>
         <ion-select v-model="formData.anneeExerciceId" interface="action-sheet" placeholder="Sélectionner">
@@ -228,6 +231,7 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
+      -->
 
       <!-- Messages d'info -->
       <ion-note v-if="mode === 'edit' && !isCoDirecteur" class="ion-padding" color="warning">
@@ -330,12 +334,24 @@ const formData = ref<CreateStaffRequest>({
 
 const roles = ref<RoleStaff[]>([]);
 const anneesExercice = ref<AnneeExercice[]>([]);
+const existingStaffs = ref<Staff[]>([]);
 const loading = ref(false);
 
 let searchTimeout: any = null;
 
 const isCoDirecteur = computed(() => {
   return authStore.user?.role === 'Co_Directeur' || authStore.user?.role === 'Directeur';
+});
+
+// IDs des instructeurs déjà assignés pour l'année sélectionnée (excluant les staffs supprimés)
+const assignedInstructeurIds = computed(() => {
+  if (!formData.value.anneeExerciceId) return [];
+  return existingStaffs.value
+    .filter(staff => 
+      staff.anneeExerciceId === formData.value.anneeExerciceId && 
+      staff.etat !== 11 // Exclure seulement les staffs actifs, permettre les supprimés (etat=11)
+    )
+    .map(staff => staff.instructeurId);
 });
 
 onMounted(async () => {
@@ -364,16 +380,27 @@ onMounted(async () => {
 
 async function loadData() {
   try {
-    const [rolesData, anneesData] = await Promise.all([
+    const [rolesData, anneesData, staffsData] = await Promise.all([
       staffService.getAllRoles(),
-      anneeExerciceService.getAllAnneesExercice()
+      anneeExerciceService.getAllAnneesExercice(),
+      staffService.getAllStaffs()
     ]);
     roles.value = rolesData;
     anneesExercice.value = anneesData;
+    existingStaffs.value = staffsData;
     
     if (props.mode === 'create' && roles.value.length > 0 && anneesExercice.value.length > 0) {
       formData.value.roleId = roles.value[0].id;
-      formData.value.anneeExerciceId = anneesExercice.value[0].id;
+      
+      // Définir automatiquement l'année d'exercice de l'utilisateur connecté
+      if (authStore.user?.anneeExercice) {
+        const userAnnee = anneesExercice.value.find(
+          annee => annee.annee === authStore.user!.anneeExercice
+        );
+        if (userAnnee) {
+          formData.value.anneeExerciceId = userAnnee.id;
+        }
+      }
     }
   } catch (error: any) {
     showToast(error.message || 'Erreur lors du chargement', 'danger');
@@ -400,10 +427,15 @@ function handleSearchInput(event: any) {
   }
 }
 
+// fonction handleAnneeChange supprimée car l'année est automatiquement définie
+
 async function searchInstructeurs(query: string) {
   try {
     const results = await instructeurService.searchInstructeurs(query);
-    suggestions.value = results;
+    // Filtrer les instructeurs déjà assignés pour l'année sélectionnée
+    suggestions.value = results.filter(instructeur => 
+      !assignedInstructeurIds.value.includes(instructeur.id)
+    );
     showSuggestions.value = true;
   } catch (error: any) {
     showToast(error.message || 'Erreur lors de la recherche', 'danger');

@@ -148,6 +148,7 @@ export interface Staff {
   role: string;
   anneeExerciceId: number;
   anneeExercice: string;
+  etat: number; // 1 = actif, 11 = supprimé
 }
 
 export interface CreateStaffRequest {

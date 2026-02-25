@@ -13,20 +13,8 @@
 
     <ion-content class="ion-padding">
       <form @submit.prevent="handleSubmit">
-        <!-- Sélection année d'exercice -->
-        <ion-item v-if="!editMode">
-          <ion-label position="stacked">Année d'exercice *</ion-label>
-          <ion-select
-            v-model="formData.anneeExerciceId"
-            placeholder="Sélectionner"
-            interface="action-sheet"
-          >
-            <ion-select-option v-for="annee in anneesExercice" :key="annee.id" :value="annee.id">
-              {{ getAnneeDisplay(annee.annee) }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-
+        <!-- L'année d'exercice est automatiquement définie selon l'utilisateur connecté -->
+        
         <!-- Auto-complétion enfant -->
         <div v-if="!editMode && formData.anneeExerciceId > 0">
           <ion-item>
@@ -259,7 +247,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth.store';
 import {
   IonModal,
   IonHeader,
@@ -321,6 +310,8 @@ const emit = defineEmits<{
   (e: 'success', message: string): void;
   (e: 'error', message: string): void;
 }>();
+
+const authStore = useAuthStore();
 
 // États
 const formData = ref<CreateInscriptionRequest>({
@@ -583,9 +574,20 @@ const handleClose = () => {
 };
 
 const resetForm = () => {
+  // Réinitialiser les données du formulaire
+  const userAnneeId = (() => {
+    if (authStore.user?.anneeExercice && props.anneesExercice.length > 0) {
+      const userAnnee = props.anneesExercice.find(
+        annee => annee.annee === authStore.user!.anneeExercice
+      );
+      return userAnnee?.id || 0;
+    }
+    return 0;
+  })();
+  
   formData.value = {
     enfantId: 0,
-    anneeExerciceId: 0,
+    anneeExerciceId: userAnneeId,
     classeId: 0,
     estAssurance: false,
   };
@@ -622,6 +624,30 @@ const onEnfantSearchChange = () => {
 const onParentSearchChange = () => {
   // Le debounce est géré par le watcher
 };
+
+// Initialiser l'année d'exercice avec celle de l'utilisateur connecté
+const initAnneeExercice = () => {
+  if (authStore.user?.anneeExercice && props.anneesExercice.length > 0) {
+    const userAnnee = props.anneesExercice.find(
+      annee => annee.annee === authStore.user!.anneeExercice
+    );
+    if (userAnnee) {
+      formData.value.anneeExerciceId = userAnnee.id;
+    }
+  }
+};
+
+// Initialiser au montage du composant
+onMounted(() => {
+  initAnneeExercice();
+});
+
+// Réinitialiser quand la modal s'ouvre
+watch(() => props.isOpen, (newVal) => {
+  if (newVal && !props.editMode) {
+    initAnneeExercice();
+  }
+});
 </script>
 
 <style scoped>

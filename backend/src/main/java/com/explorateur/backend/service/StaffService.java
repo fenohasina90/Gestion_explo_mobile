@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -64,24 +65,43 @@ public class StaffService {
             throw new RuntimeException("Vous ne pouvez créer un staff que pour votre année d'exercice");
         }
         
-        // Vérifier que l'instructeur n'est pas déjà staff pour cette année d'exercice
-        staffRepository.findByInstructeurAndAnneeExercice(request.getInstructeurId(), request.getAnneeExerciceId())
-            .ifPresent(s -> {
-                throw new RuntimeException("Cet instructeur est déjà staff pour cette année d'exercice");
-            });
+        // Vérifier si l'instructeur a déjà été staff pour cette année (incluant les supprimés)
+        Optional<Staff> existingStaff = staffRepository.findByInstructeurAndAnneeExerciceIncludingDeleted(
+            request.getInstructeurId(), 
+            request.getAnneeExerciceId()
+        );
         
-        Staff staff = Staff.builder()
-            .instructeur(instructeur)
-            .role(role)
-            .anneeExercice(anneeExercice)
-            .build();
+        Staff staff;
+        String logMessage;
+        
+        if (existingStaff.isPresent() && existingStaff.get().getEtat() == 11) {
+            // Réactiver le staff supprimé
+            staff = existingStaff.get();
+            staff.setEtat(1);
+            staff.setRole(role);
+            logMessage = "Réactivation du staff " + instructeur.getNom() + " " + instructeur.getPrenom() + 
+                        " en tant que " + role.getRoleName() + 
+                        " pour l'année " + anneeExercice.getAnnee().getYear();
+        } else if (existingStaff.isPresent()) {
+            // Staff actif existe déjà
+            throw new RuntimeException("Cet instructeur est déjà staff pour cette année d'exercice");
+        } else {
+            // Créer un nouveau staff
+            staff = Staff.builder()
+                .instructeur(instructeur)
+                .role(role)
+                .anneeExercice(anneeExercice)
+                .etat(1) // 1 = actif
+                .build();
+            logMessage = "Création du staff " + instructeur.getNom() + " " + instructeur.getPrenom() + 
+                        " en tant que " + role.getRoleName() + 
+                        " pour l'année " + anneeExercice.getAnnee().getYear();
+        }
         
         Staff saved = staffRepository.save(staff);
         
         // Log l'action
-        journalService.logAction("Création du staff " + instructeur.getNom() + " " + instructeur.getPrenom() + 
-                                 " en tant que " + role.getRoleName() + 
-                                 " pour l'année " + anneeExercice.getAnnee().getYear());
+        journalService.logAction(logMessage);
         
         return mapToResponse(saved);
     }
@@ -256,6 +276,7 @@ public class StaffService {
             .roleId(staff.getRole().getId())
             .anneeExerciceId(staff.getAnneeExercice().getId())
             .anneeExercice(staff.getAnneeExercice().getAnnee().toString())
+            .etat(staff.getEtat())
             .createdAt(staff.getCreatedAt())
             .updatedAt(staff.getUpdatedAt())
             .build();

@@ -55,4 +55,13 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
      */
     @Query("SELECT s FROM Staff s WHERE s.etat <> 11 ORDER BY s.instructeur.nom ASC, s.instructeur.prenom ASC")
     List<Staff> findAllActive();
+    
+    /**
+     * Trouve un staff par instructeur et année (incluant les supprimés)
+     */
+    @Query("SELECT s FROM Staff s WHERE s.instructeur.id = :instructeurId AND s.anneeExercice.id = :anneeExerciceId")
+    Optional<Staff> findByInstructeurAndAnneeExerciceIncludingDeleted(
+        @Param("instructeurId") Long instructeurId,
+        @Param("anneeExerciceId") Long anneeExerciceId
+    );
 }

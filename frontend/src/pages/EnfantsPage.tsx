@@ -287,9 +287,20 @@ export const EnfantsPage = () => {
   };
   
   const resetInscriptionForm = () => {
+    // Définir automatiquement l'année d'exercice de l'utilisateur connecté
+    let userAnneeId = 0;
+    if (currentUser?.anneeExercice) {
+      const userAnnee = anneesExercice.find(
+        annee => annee.annee === currentUser.anneeExercice
+      );
+      if (userAnnee) {
+        userAnneeId = userAnnee.id;
+      }
+    }
+    
     setInscriptionFormData({
       enfantId: 0,
-      anneeExerciceId: 0,
+      anneeExerciceId: userAnneeId,
       classeId: 0,
       estAssurance: false,
     });
@@ -818,25 +829,7 @@ export const EnfantsPage = () => {
               <div className="modal-body">
                 {!editMode && (
                   <>
-                    {/* Sélection année d'exercice */}
-                    <div className="form-group">
-                      <label>Année d'exercice *</label>
-                      <select
-                        value={inscriptionFormData.anneeExerciceId}
-                        onChange={(e) => setInscriptionFormData(prev => ({
-                          ...prev,
-                          anneeExerciceId: Number(e.target.value)
-                        }))}
-                        required
-                      >
-                        <option value="">Sélectionner</option>
-                        {anneesExercice.map(annee => (
-                          <option key={annee.id} value={annee.id}>
-                            {new Date(annee.annee).getFullYear()}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    {/* L'année d'exercice est automatiquement définie selon l'utilisateur connecté */}
                     
                     {/* Auto-complétion enfant */}
                     {inscriptionFormData.anneeExerciceId > 0 && (

@@ -104,7 +104,7 @@ public class EnfantService {
         Enfant saved = enfantRepository.save(enfant);
         
         // Message d'audit avec le nom du parent et "fils de" ou "fille de"
-        String relation = "M".equals(enfant.getGenre()) ? "fils de" : "fille de";
+        String relation = "GARCON".equals(enfant.getGenre()) ? "fils de" : "fille de";
         journalService.logAction("Création de l'enfant " + enfant.getNom() + " " + enfant.getPrenom() + 
                 " " + relation + " " + parent.getNom() + " " + parent.getPrenom());
         

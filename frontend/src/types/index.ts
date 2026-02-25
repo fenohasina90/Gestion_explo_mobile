@@ -193,6 +193,7 @@ export interface Staff {
   roleId: number;
   anneeExerciceId: number;
   anneeExercice: string;
+  etat: number; // 1 = actif, 11 = supprimé
   createdAt: string;
   updatedAt: string;
 }

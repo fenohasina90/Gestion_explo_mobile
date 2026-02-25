@@ -111,9 +111,23 @@ export function StaffsPage() {
   const searchInstructeurs = async () => {
     try {
       const results = await instructeurService.searchInstructeurs(searchQuery);
-      setSuggestions(results);
+      
+      // Filtrer les instructeurs déjà assignés comme staff actifs pour l'année sélectionnée
+      const anneeExerciceId = staffFormData.anneeExerciceId;
+      const assignedInstructeurIds = staffs
+        .filter(staff => 
+          staff.anneeExerciceId === anneeExerciceId && 
+          staff.etat !== 11 // Exclure seulement les staffs actifs
+        )
+        .map(staff => staff.instructeurId);
+      
+      const filteredResults = results.filter(
+        instructeur => !assignedInstructeurIds.includes(instructeur.id)
+      );
+      
+      setSuggestions(filteredResults);
       // Afficher le formulaire automatiquement si aucun résultat
-      setShowInstructeurForm(results.length === 0);
+      setShowInstructeurForm(filteredResults.length === 0);
     } catch (err: any) {
       console.error('Erreur lors de la recherche:', err);
       setSuggestions([]);
@@ -141,10 +155,22 @@ export function StaffsPage() {
     setSuggestions([]);
     setSelectedInstructeur(null);
     setShowInstructeurForm(false);
+    
+    // Définir automatiquement l'année d'exercice de l'utilisateur connecté
+    let userAnneeId = anneesExercice[0]?.id || 0;
+    if (currentUser?.anneeExercice) {
+      const userAnnee = anneesExercice.find(
+        annee => annee.annee === currentUser.anneeExercice
+      );
+      if (userAnnee) {
+        userAnneeId = userAnnee.id;
+      }
+    }
+    
     setStaffFormData({
       instructeurId: 0,
       roleId: roles[0]?.id || 0,
-      anneeExerciceId: anneesExercice[0]?.id || 0,
+      anneeExerciceId: userAnneeId,
     });
     setInstructeurFormData({
       nom: '',
@@ -448,6 +474,8 @@ export function StaffsPage() {
                 <div className="form-section">
                   <h3>Instructeur</h3>
                   
+                  {/* L'année d'exercice est automatiquement définie selon l'utilisateur connecté */}
+                  
                   {/* Auto-complétion */}
                   <div className="form-group autocomplete-container">
                     <label>Rechercher un instructeur:</label>
@@ -728,29 +756,6 @@ export function StaffsPage() {
                       ))}
                     </select>
                   </div>
-
-                  {!editMode && (
-                    <div className="form-group">
-                      <label>Année d'exercice *:</label>
-                      <select
-                        value={staffFormData.anneeExerciceId}
-                        onChange={(e) =>
-                          setStaffFormData({
-                            ...staffFormData,
-                            anneeExerciceId: Number(e.target.value),
-                          })
-                        }
-                        required
-                      >
-                        <option value="">Sélectionner une année</option>
-                        {anneesExercice.map((annee) => (
-                          <option key={annee.id} value={annee.id}>
-                            {new Date(annee.annee).getFullYear()}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
                 </>
               )}

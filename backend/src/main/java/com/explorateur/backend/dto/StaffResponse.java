@@ -35,6 +35,8 @@ public class StaffResponse {
     private Long anneeExerciceId;
     private String anneeExercice;
     
+    private Integer etat; // 1 = actif, 11 = supprimé
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
