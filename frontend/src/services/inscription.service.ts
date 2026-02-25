@@ -62,6 +62,56 @@ class InscriptionService {
   async deleteInscription(id: number): Promise<void> {
     return apiService.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  /**
+   * Exporter les inscriptions en PDF
+   */
+  async exportToPdf(
+    anneeExerciceId?: number,
+    classeId?: number,
+    genre?: string,
+    estAssurance?: boolean
+  ): Promise<void> {
+    const params: Record<string, any> = {};
+    if (anneeExerciceId) params.anneeExerciceId = anneeExerciceId;
+    if (classeId) params.classeId = classeId;
+    if (genre) params.genre = genre;
+    if (estAssurance !== undefined) params.estAssurance = estAssurance;
+
+    try {
+      // Utiliser l'instance axios du service pour bénéficier des intercepteurs
+      const axiosInstance = apiService.getAxiosInstance();
+      
+      const response = await axiosInstance.get(`${this.baseUrl}/export/pdf`, {
+        params,
+        responseType: 'blob',
+      });
+
+      // Créer un lien de téléchargement
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Extraire le nom de fichier depuis les en-têtes ou utiliser un nom par défaut
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'liste_explorateur.pdf';
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erreur lors de l\'export PDF:', error);
+      throw error;
+    }
+  }
 }
 
 export default new InscriptionService();

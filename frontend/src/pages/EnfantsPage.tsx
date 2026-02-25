@@ -226,6 +226,31 @@ export const EnfantsPage = () => {
     setFilteredParents(filtered);
   };
   
+  const handleExportPdf = async () => {
+    try {
+      setLoading(true);
+      
+      // Convertir les filtres pour l'API
+      const estAssurance = filterAssurance === 'OUI' ? true : filterAssurance === 'NON' ? false : undefined;
+      const genre = filterGenre || undefined;
+      
+      await inscriptionService.exportToPdf(
+        filterAnneeId || undefined,
+        filterClasseId || undefined,
+        genre,
+        estAssurance
+      );
+      
+      setSuccess('Export PDF réussi !');
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Erreur lors de l\'export PDF');
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   const searchEnfants = async () => {
     try {
       const results = await enfantService.searchEnfants(
@@ -572,6 +597,15 @@ export const EnfantsPage = () => {
                     }}
                   >
                     Réinitialiser
+                  </button>
+                  
+                  <button
+                    className="primary-btn"
+                    onClick={handleExportPdf}
+                    disabled={loading || filteredInscriptions.length === 0}
+                    title="Exporter la liste en PDF"
+                  >
+                    📄 Exporter PDF
                   </button>
                 </div>
               </div>
