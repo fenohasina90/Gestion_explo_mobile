@@ -11,6 +11,14 @@ CREATE TABLE classes (
     age INTEGER
 );
 
+INSERT INTO classes (nom, logo, age) VALUES
+('Ami', 'Ami.png', 10),
+('Compagnon', 'Compagnon.png', 11),
+('Eclaireur', 'Eclaireur.png', 12),
+('Pionnier', 'Pionnier.png', 13),
+('Voyageur', 'Voyageur.png', 14),
+('Guide', 'Guide.png', 15);
+
 CREATE TABLE annee_exercice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee DATE NOT NULL,
