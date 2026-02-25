@@ -65,6 +65,24 @@ public class InscriptionService {
                     anneeExercice.getAnnee().getYear());
         }
         
+        // Vérifier que la classe correspond à l'âge de l'enfant
+        if (classe.getAge() != null && classe.getAge() != age) {
+            // Trouver la classe appropriée pour cet âge
+            List<Classe> toutesClasses = classeRepository.findAll();
+            Classe classeAppropriee = toutesClasses.stream()
+                    .filter(c -> c.getAge() != null && c.getAge() == age)
+                    .findFirst()
+                    .orElse(null);
+            
+            if (classeAppropriee != null) {
+                throw new RuntimeException("L'enfant de " + age + " ans doit s'inscrire dans la classe " + 
+                        classeAppropriee.getNom() + " (âge " + classeAppropriee.getAge() + " ans). " +
+                        "Vous avez tenté de l'inscrire dans la classe " + classe.getNom() + " (âge " + classe.getAge() + " ans).");
+            } else {
+                throw new RuntimeException("Aucune classe disponible pour un enfant de " + age + " ans.");
+            }
+        }
+        
         Inscription inscription = new Inscription();
         inscription.setEnfant(enfant);
         inscription.setAnneeExercice(anneeExercice);
@@ -74,7 +92,7 @@ public class InscriptionService {
         Inscription saved = inscriptionRepository.save(inscription);
         
         journalService.logAction("Inscription de l'enfant " + enfant.getNom() + " " + enfant.getPrenom() + 
-                " pour l'année " + anneeExercice.getAnnee().getYear());
+                " dans la classe " + classe.getNom() + " pour l'année " + anneeExercice.getAnnee().getYear());
         
         return mapToResponse(saved);
     }

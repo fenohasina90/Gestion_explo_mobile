@@ -1,6 +1,7 @@
 package com.explorateur.backend.controller;
 
 import com.explorateur.backend.dto.CreateParentRequest;
+import com.explorateur.backend.dto.PageResponse;
 import com.explorateur.backend.dto.ParentResponse;
 import com.explorateur.backend.dto.ParentSuggestion;
 import com.explorateur.backend.service.ParentService;
@@ -10,6 +11,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,9 +53,23 @@ public class ParentController {
     }
     
     @GetMapping
-    @Operation(summary = "Récupérer tous les parents")
-    public ResponseEntity<List<ParentResponse>> getAllParents() {
-        return ResponseEntity.ok(parentService.getAllParents());
+    @Operation(
+            summary = "Récupérer tous les parents avec pagination",
+            description = "Retourne une liste paginée de tous les parents"
+    )
+    public ResponseEntity<PageResponse<ParentResponse>> getAllParents(
+            @Parameter(description = "Numéro de la page (commence à 0)")
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Nombre d'éléments par page")
+            @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Champ de tri (ex: nom, prenom)")
+            @RequestParam(defaultValue = "nom") String sort,
+            @Parameter(description = "Direction du tri (asc ou desc)")
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        return ResponseEntity.ok(parentService.getAllParents(pageable));
     }
     
     @GetMapping("/{id}")

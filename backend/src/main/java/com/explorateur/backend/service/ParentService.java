@@ -1,12 +1,15 @@
 package com.explorateur.backend.service;
 
 import com.explorateur.backend.dto.CreateParentRequest;
+import com.explorateur.backend.dto.PageResponse;
 import com.explorateur.backend.dto.ParentResponse;
 import com.explorateur.backend.dto.ParentSuggestion;
 import com.explorateur.backend.entity.Parent;
 import com.explorateur.backend.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,13 +62,27 @@ public class ParentService {
     }
     
     /**
-     * Récupérer tous les parents
+     * Récupérer tous les parents avec pagination
      */
     @Transactional(readOnly = true)
-    public List<ParentResponse> getAllParents() {
-        return parentRepository.findAll().stream()
+    public PageResponse<ParentResponse> getAllParents(Pageable pageable) {
+        Page<Parent> page = parentRepository.findAll(pageable);
+        
+        List<ParentResponse> content = page.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+        
+        return PageResponse.<ParentResponse>builder()
+                .content(content)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
+                .build();
     }
     
     /**

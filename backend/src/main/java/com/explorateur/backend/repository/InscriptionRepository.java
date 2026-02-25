@@ -53,4 +53,9 @@ public interface InscriptionRepository extends JpaRepository<Inscription, Long> 
      */
     @Query("SELECT i FROM Inscription i WHERE i.enfant.id = :enfantId ORDER BY i.anneeExercice.annee DESC")
     List<Inscription> findByEnfantId(@Param("enfantId") Long enfantId);
+    
+    /**
+     * Vérifie si un enfant est déjà inscrit pour une année d'exercice donnée
+     */
+    boolean existsByEnfantIdAndAnneeExerciceId(Long enfantId, Long anneeExerciceId);
 }

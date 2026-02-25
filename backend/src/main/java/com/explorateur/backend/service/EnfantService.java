@@ -3,14 +3,18 @@ package com.explorateur.backend.service;
 import com.explorateur.backend.dto.CreateEnfantRequest;
 import com.explorateur.backend.dto.EnfantResponse;
 import com.explorateur.backend.dto.EnfantSuggestion;
+import com.explorateur.backend.dto.PageResponse;
 import com.explorateur.backend.entity.AnneeExercice;
 import com.explorateur.backend.entity.Enfant;
 import com.explorateur.backend.entity.Parent;
 import com.explorateur.backend.repository.AnneeExerciceRepository;
 import com.explorateur.backend.repository.EnfantRepository;
+import com.explorateur.backend.repository.InscriptionRepository;
 import com.explorateur.backend.repository.ParentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +31,7 @@ public class EnfantService {
     private final EnfantRepository enfantRepository;
     private final ParentRepository parentRepository;
     private final AnneeExerciceRepository anneeExerciceRepository;
+    private final InscriptionRepository inscriptionRepository;
     private final JournalService journalService;
     
     /**
@@ -54,7 +59,10 @@ public class EnfantService {
                 dateMax.toString()
         );
         
+        // Filtrer les enfants déjà inscrits pour cette année d'exercice
         return enfants.stream()
+                .filter(enfant -> !inscriptionRepository.existsByEnfantIdAndAnneeExerciceId(
+                        enfant.getId(), anneeExerciceId))
                 .map(enfant -> mapToSuggestion(enfant, anneeDebut))
                 .collect(Collectors.toList());
     }
@@ -95,20 +103,37 @@ public class EnfantService {
         
         Enfant saved = enfantRepository.save(enfant);
         
-        journalService.logAction("Création de l'enfant " + enfant.getNom() + " " + enfant.getPrenom());
+        // Message d'audit avec le nom du parent et "fils de" ou "fille de"
+        String relation = "M".equals(enfant.getGenre()) ? "fils de" : "fille de";
+        journalService.logAction("Création de l'enfant " + enfant.getNom() + " " + enfant.getPrenom() + 
+                " " + relation + " " + parent.getNom() + " " + parent.getPrenom());
         
         return mapToResponse(saved, anneeExercice.getAnnee());
     }
     
     /**
-     * Récupérer tous les enfants
+     * Récupérer tous les enfants avec pagination
      */
     @Transactional(readOnly = true)
-    public List<EnfantResponse> getAllEnfants() {
+    public PageResponse<EnfantResponse> getAllEnfants(Pageable pageable) {
         LocalDate now = LocalDate.now();
-        return enfantRepository.findAll().stream()
+        Page<Enfant> page = enfantRepository.findAll(pageable);
+        
+        List<EnfantResponse> content = page.getContent().stream()
                 .map(enfant -> mapToResponse(enfant, now))
                 .collect(Collectors.toList());
+        
+        return PageResponse.<EnfantResponse>builder()
+                .content(content)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
+                .build();
     }
     
     /**
