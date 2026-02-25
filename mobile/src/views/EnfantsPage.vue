@@ -630,7 +630,7 @@ watch([filterParentAnneeId, filterParentClasseId], () => {
 
 <style scoped>
 ion-content {
-  --background: #f5f5f5;
+  --background: transparent;
 }
 
 ion-card {

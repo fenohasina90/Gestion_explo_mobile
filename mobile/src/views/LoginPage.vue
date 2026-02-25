@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page class="login-page">
     <ion-content :fullscreen="true" class="ion-padding">
       <div class="login-container">
         <div class="login-header">
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   IonPage,
@@ -83,6 +83,15 @@ const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
+
+// Ajouter classe au body pour le style du fond
+onMounted(() => {
+  document.body.classList.add('login-page-active');
+});
+
+onUnmounted(() => {
+  document.body.classList.remove('login-page-active');
+});
 
 const handleLogin = async () => {
   if (!username.value || !password.value) {
@@ -163,5 +172,34 @@ ion-item {
 .version-text {
   font-size: 0.75rem;
   margin-top: 2rem;
+}
+</style>
+
+<style>
+/* Override global background pour la page de login */
+body.login-page-active .app-background {
+  background: url('/assets/pathfinder-flag.png') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: #1a1a2a !important;
+}
+
+body.login-page-active .app-background::after {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Rendre le texte et les éléments plus visibles sur le login */
+.login-page ion-card {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.login-page .login-header h1 {
+  color: var(--ion-color-primary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-page .login-header p {
+  color: var(--ion-color-dark);
 }
 </style>

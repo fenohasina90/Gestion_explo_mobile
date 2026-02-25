@@ -18,6 +18,20 @@
   --spacing-xl: 2rem;     /* 32px */
 }
 
+/* Background Image - Toutes les pages sauf Login */
+ion-content {
+  --background: none;
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/assets/pathfinder-flag.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Désactiver le fond transparent pour la page de login */
+ion-content.no-background {
+  --background: var(--ion-background-color);
+}
+
 /* Headers */
 ion-header ion-title {
   font-size: var(--font-size-lg) !important;
