@@ -27,10 +27,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Service pour l'export PDF du budget
@@ -79,7 +82,7 @@ public class BudgetPdfExportService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
-        document.setMargins(40, 40, 60, 40);
+        document.setMargins(20, 30, 40, 30);
         
         // Polices
         PdfFont boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -163,7 +166,7 @@ public class BudgetPdfExportService {
         separator.setWidth(UnitValue.createPercentValue(100));
         separator.addCell(new Cell()
             .add(new Paragraph(""))
-            .setHeight(1)
+            .setHeight(0.5f)
             .setBackgroundColor(SECONDARY_COLOR)
             .setBorder(Border.NO_BORDER));
         separator.setMarginBottom(20);
@@ -198,7 +201,7 @@ public class BudgetPdfExportService {
      */
     private void addActivitiesTable(Document document, PdfFont boldFont, PdfFont regularFont,
                                     List<Activite> activites, ExportBudgetPdfRequest request,
-                                    BudgetGlobal budget) {
+                                    BudgetGlobal budget) throws Exception {
         // Déterminer les colonnes
         List<String> headers = new ArrayList<>();
         if (Boolean.TRUE.equals(request.getIncludeDate())) headers.add("Date");
@@ -284,7 +287,7 @@ public class BudgetPdfExportService {
                             .setFontSize(8));
                     } else {
                         // Aucune date : "-"
-                        cell.add(new Paragraph("-").setFontSize(8));
+                        cell.add(new Paragraph(" ").setFontSize(8));
                     }
                     break;
                     
@@ -299,7 +302,7 @@ public class BudgetPdfExportService {
                         cell.add(new Paragraph(activite.getDescription())
                             .setFontSize(8));
                     } else {
-                        cell.add(new Paragraph("-").setItalic());
+                        cell.add(new Paragraph(" ").setItalic());
                     }
                     break;
                     
@@ -316,7 +319,7 @@ public class BudgetPdfExportService {
                             cell.add(detailPara);
                         }
                     } else {
-                        cell.add(new Paragraph("-").setItalic());
+                        cell.add(new Paragraph(" ").setItalic());
                     }
                     break;
                     
@@ -336,7 +339,7 @@ public class BudgetPdfExportService {
                     break;
                     
                 default:
-                    cell.add(new Paragraph("-"));
+                    cell.add(new Paragraph(" ").setFontSize(8));
             }
             
             table.addCell(cell);
@@ -344,30 +347,21 @@ public class BudgetPdfExportService {
     }
     
     /**
-     * Ajouter le montant total avec le statut
+     * Ajouter le montant total en bas à droite
      */
-    private void addTotalAmount(Document document, PdfFont boldFont, BudgetGlobal budget) {
-        // Créer un tableau avec deux colonnes : statut à gauche, montant à droite
-        Table totalTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
-        totalTable.setWidth(UnitValue.createPercentValue(100));
-        totalTable.setMarginTop(5);
+    private void addTotalAmount(Document document, PdfFont boldFont, BudgetGlobal budget) throws Exception {
+        // Police monospace pour les chiffres (Courier)
+        PdfFont courierFont = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
         
+        Paragraph total = new Paragraph("MONTANT TOTAL : " + formatMontantMillier(budget.getMontant()) + " Ar")
+            .setFont(courierFont)
+            .setFontSize(14)
+            // .setFontColor(PRIMARY_COLOR)
+            .setTextAlignment(TextAlignment.RIGHT)
+            .setMarginTop(15)
+            .setMarginRight(10);
         
-        // Cellule droite : Montant total
-        Cell montantCell = new Cell()
-            .add(new Paragraph("MONTANT TOTAL : " + formatMontantMillier(budget.getMontant()) + " Ar")
-                .setFont(boldFont)
-                .setFontSize(14)
-                // .setFontColor(PRIMARY_COLOR)
-                .setTextAlignment(TextAlignment.RIGHT))
-            .setBorder(Border.NO_BORDER)
-            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPaddingRight(10);
-        
-        // totalTable.addCell(statutCell);
-        totalTable.addCell(montantCell);
-        
-        document.add(totalTable);
+        document.add(total);
     }
     
     /**
@@ -379,7 +373,7 @@ public class BudgetPdfExportService {
         separator.setWidth(UnitValue.createPercentValue(100));
         separator.addCell(new Cell()
             .add(new Paragraph(""))
-            .setHeight(1)
+            .setHeight(0.5f)
             .setBackgroundColor(SECONDARY_COLOR)
             .setBorder(Border.NO_BORDER));
         separator.setMarginTop(30);
@@ -397,10 +391,17 @@ public class BudgetPdfExportService {
     }
     
     /**
-     * Formater un montant avec séparateur de milliers
+     * Formater un montant avec séparateur de milliers (espace)
      */
     private String formatMontantMillier(Double montant) {
         if (montant == null) return "0";
-        return String.format("%,.0f", montant).replace(",", " ");
+        
+        // Utiliser le format français avec espace comme séparateur de milliers
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.FRENCH);
+        symbols.setGroupingSeparator(' ');
+        symbols.setDecimalSeparator(',');
+        
+        DecimalFormat formatter = new DecimalFormat("#,##0", symbols);
+        return formatter.format(montant);
     }
 }
