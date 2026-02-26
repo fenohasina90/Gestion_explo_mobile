@@ -11,7 +11,8 @@ import { UtilisateursPage } from './pages/UtilisateursPage';
 import { AnneesExercicePage } from './pages/AnneesExercicePage';
 import { JournalPage } from './pages/JournalPage';
 import { StaffsPage } from './pages/StaffsPage';
-import { InscriptionsPage, BudgetPage, RapportsPage } from './pages/PlaceholderPages';
+import { BudgetPage } from './pages/BudgetPage';
+import { InscriptionsPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
   return (

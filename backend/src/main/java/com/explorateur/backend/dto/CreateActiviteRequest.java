@@ -30,12 +30,10 @@ public class CreateActiviteRequest {
     @Schema(description = "Description de l'activité", example = "Campement de 3 jours en montagne")
     private String description;
     
-    @NotNull(message = "La date de début est obligatoire")
-    @Schema(description = "Date de début", example = "2026-03-15", required = true)
+    @Schema(description = "Date de début", example = "2026-03-15")
     private LocalDate dateDebut;
     
-    @NotNull(message = "La date de fin est obligatoire")
-    @Schema(description = "Date de fin", example = "2026-03-17", required = true)
+    @Schema(description = "Date de fin", example = "2026-03-17")
     private LocalDate dateFin;
     
     @NotNull(message = "L'ID du budget global est obligatoire")

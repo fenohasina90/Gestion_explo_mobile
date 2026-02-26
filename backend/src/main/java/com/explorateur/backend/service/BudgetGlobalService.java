@@ -84,6 +84,36 @@ public class BudgetGlobalService {
     }
     
     /**
+     * Mettre à jour le statut d'un budget global
+     */
+    @Transactional
+    public BudgetGlobalResponse updateBudgetStatus(Long budgetId, Long statusId, String currentUsername) {
+        log.info("Mise à jour du statut du budget ID: {} vers statut ID: {}", budgetId, statusId);
+        
+        BudgetGlobal budgetGlobal = budgetGlobalRepository.findById(budgetId)
+            .orElseThrow(() -> new RuntimeException("Budget global introuvable"));
+        
+        // Vérifier que le budget n'est pas déjà approuvé (ne peut pas revenir en arrière)
+        if (budgetGlobal.getStatus() != null && "Approuvé comité".equals(budgetGlobal.getStatus().getNom())) {
+            throw new RuntimeException("Impossible de modifier le statut d'un budget déjà approuvé par le comité");
+        }
+        
+        BudgetStatus newStatus = budgetStatusRepository.findById(statusId)
+            .orElseThrow(() -> new RuntimeException("Statut introuvable"));
+        
+        String ancienStatut = budgetGlobal.getStatus() != null ? budgetGlobal.getStatus().getNom() : "N/A";
+        
+        budgetGlobal.setStatus(newStatus);
+        BudgetGlobal updated = budgetGlobalRepository.save(budgetGlobal);
+        
+        journalService.logAction("Modification du statut du budget " + 
+            budgetGlobal.getAnneeExercice().getAnnee().getYear() + 
+            " de '" + ancienStatut + "' vers '" + newStatus.getNom() + "'");
+        
+        return mapToResponse(updated);
+    }
+    
+    /**
      * Mapper une entité vers un DTO de réponse
      */
     private BudgetGlobalResponse mapToResponse(BudgetGlobal budgetGlobal) {

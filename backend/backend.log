@@ -1,0 +1,148 @@
+nohup: les entrées sont ignorées
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m----------------------< [0;36mcom.explorateur:backend[0;1m >-----------------------[m
+[[1;34mINFO[m] [1mBuilding backend 0.0.1-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m>>> [0;32mspring-boot-maven-plugin:4.0.3:run[m [1m(default-cli)[0;1m > [0;1mtest-compile[m @ [36mbackend[0;1m >>>[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:resources[m [1m(default-resources)[m @ [36mbackend[0;1m ---[m
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] Copying 3 resources from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.14.1:compile[m [1m(default-compile)[m @ [36mbackend[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:testResources[m [1m(default-testResources)[m @ [36mbackend[0;1m ---[m
+[[1;34mINFO[m] skip non existing resourceDirectory /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/src/test/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.14.1:testCompile[m [1m(default-testCompile)[m @ [36mbackend[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m<<< [0;32mspring-boot-maven-plugin:4.0.3:run[m [1m(default-cli)[0;1m < [0;1mtest-compile[m @ [36mbackend[0;1m <<<[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspring-boot-maven-plugin:4.0.3:run[m [1m(default-cli)[m @ [36mbackend[0;1m ---[m
+[[1;34mINFO[m] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-02-26T01:37:50.563+03:00  INFO 29499 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Starting BackendApplication using Java 21.0.10 with PID 29499 (/home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/target/classes started by mangalahy in /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend)
+2026-02-26T01:37:50.567+03:00  INFO 29499 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-02-26T01:37:50.650+03:00  INFO 29499 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-26T01:37:50.651+03:00  INFO 29499 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-26T01:37:51.783+03:00  INFO 29499 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-26T01:37:51.879+03:00  INFO 29499 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 15 JPA repository interfaces.
+2026-02-26T01:37:54.346+03:00  INFO 29499 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-26T01:37:54.359+03:00  INFO 29499 --- [backend] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-26T01:37:54.359+03:00  INFO 29499 --- [backend] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-02-26T01:37:54.661+03:00  INFO 29499 --- [backend] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3813 ms
+2026-02-26T01:37:55.293+03:00  INFO 29499 --- [backend] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-26T01:37:55.459+03:00  INFO 29499 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-02-26T01:37:56.569+03:00  INFO 29499 --- [backend] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-26T01:37:56.662+03:00  INFO 29499 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-26T01:37:56.908+03:00  INFO 29499 --- [backend] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@45a0be5d
+2026-02-26T01:37:56.912+03:00  INFO 29499 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-26T01:37:57.009+03:00  INFO 29499 --- [backend] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite:explorateurs.db]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.45.1
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-26T01:37:59.560+03:00  INFO 29499 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-26T01:37:59.574+03:00  INFO 29499 --- [backend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26T01:37:59.914+03:00  INFO 29499 --- [backend] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-26T01:38:03.210+03:00  WARN 29499 --- [backend] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-26T01:38:03.481+03:00  WARN 29499 --- [backend] [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 021a66d1-b70f-432d-aa12-891f044f5c39
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-02-26T01:38:03.495+03:00  INFO 29499 --- [backend] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-02-26T01:38:03.747+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.747+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui.html]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-resources/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/webjars/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:03.748+03:00  WARN 29499 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/configuration/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T01:38:04.761+03:00  WARN 29499 --- [backend] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-02-26T01:38:04.765+03:00  INFO 29499 --- [backend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26T01:38:04.767+03:00  INFO 29499 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-26T01:38:04.769+03:00  INFO 29499 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-26T01:38:04.778+03:00  INFO 29499 --- [backend] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-02-26T01:38:04.789+03:00 ERROR 29499 --- [backend] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:423) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:409) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:613) ~[spring-context-7.0.5.jar:7.0.5]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:379) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:306) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:1013) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-7.0.5.jar:7.0.5]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.3.jar:4.0.3]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.3.jar:4.0.3]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.3.jar:4.0.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.3.jar:4.0.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.3.jar:4.0.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.3.jar:4.0.3]
+	at com.explorateur.backend.BackendApplication.main(BackendApplication.java:14) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.3.jar:4.0.3]
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat server
+	at org.springframework.boot.tomcat.TomcatWebServer.start(TomcatWebServer.java:248) ~[spring-boot-tomcat-4.0.3.jar:4.0.3]
+	at org.springframework.boot.web.server.servlet.context.WebServerStartStopLifecycle.start(WebServerStartStopLifecycle.java:44) ~[spring-boot-web-server-4.0.3.jar:4.0.3]
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:420) ~[spring-context-7.0.5.jar:7.0.5]
+	... 17 common frames omitted
+Caused by: java.lang.IllegalArgumentException: standardService.connector.startFailed
+	at org.apache.catalina.core.StandardService.addConnector(StandardService.java:220) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.springframework.boot.tomcat.TomcatWebServer.addPreviouslyRemovedConnectors(TomcatWebServer.java:307) ~[spring-boot-tomcat-4.0.3.jar:4.0.3]
+	at org.springframework.boot.tomcat.TomcatWebServer.start(TomcatWebServer.java:233) ~[spring-boot-tomcat-4.0.3.jar:4.0.3]
+	... 19 common frames omitted
+Caused by: org.apache.catalina.LifecycleException: Protocol handler start failed
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:1119) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.catalina.core.StandardService.addConnector(StandardService.java:217) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	... 21 common frames omitted
+Caused by: java.net.BindException: Adresse déjà utilisée
+	at java.base/sun.nio.ch.Net.bind0(Native Method) ~[na:na]
+	at java.base/sun.nio.ch.Net.bind(Net.java:577) ~[na:na]
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:344) ~[na:na]
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:301) ~[na:na]
+	at org.apache.tomcat.util.net.NioEndpoint.initServerSocket(NioEndpoint.java:265) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.tomcat.util.net.NioEndpoint.bind(NioEndpoint.java:220) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.tomcat.util.net.AbstractEndpoint.bindWithCleanup(AbstractEndpoint.java:1633) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.tomcat.util.net.AbstractEndpoint.start(AbstractEndpoint.java:1716) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.coyote.AbstractProtocol.start(AbstractProtocol.java:644) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:1116) ~[tomcat-embed-core-11.0.18.jar:11.0.18]
+	... 23 common frames omitted
+
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  18.830 s
+[[1;34mINFO[m] Finished at: 2026-02-26T01:38:04+03:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m

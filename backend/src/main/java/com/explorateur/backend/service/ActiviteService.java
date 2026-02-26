@@ -139,6 +139,119 @@ public class ActiviteService {
     }
     
     /**
+     * Mettre à jour une activité
+     */
+    @Transactional
+    public ActiviteResponse updateActivite(Long id, UpdateActiviteRequest request, String currentUsername) {
+        log.info("Mise à jour de l'activité ID: {}", id);
+        
+        // Vérifier l'utilisateur actuel
+        Utilisateur currentUser = utilisateurRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+        // Récupérer l'activité existante
+        Activite activite = activiteRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Activité introuvable"));
+        
+        // Vérifier que l'utilisateur appartient à la même année d'exercice
+        if (!currentUser.getAnneeExercice().getId().equals(activite.getBudgetGlobal().getAnneeExercice().getId())) {
+            throw new RuntimeException("Vous ne pouvez modifier une activité que de votre année d'exercice");
+        }
+        
+        // Vérifier que le budget n'est pas encore approuvé
+        if (activite.getBudgetGlobal().getStatus() != null && 
+            !"Créé".equals(activite.getBudgetGlobal().getStatus().getNom())) {
+            throw new RuntimeException("Impossible de modifier une activité d'un budget déjà approuvé");
+        }
+        
+        // Vérifier que l'activité n'est pas terminée
+        if (activite.getStatus() != null && "Terminé".equals(activite.getStatus().getStatus())) {
+            throw new RuntimeException("Impossible de modifier une activité dont le statut est 'Terminé'");
+        }
+        
+        // Récupérer le statut
+        ActiviteStatus status = activiteStatusRepository.findById(request.getStatusId())
+            .orElseThrow(() -> new RuntimeException("Statut introuvable"));
+        
+        // Calculer le nouveau montant total
+        Double montantTotal = request.getDetails().stream()
+            .mapToDouble(DetailActiviteDto::getMontant)
+            .sum();
+        
+        // Mettre à jour l'activité
+        activite.setNom(request.getNom());
+        activite.setDescription(request.getDescription());
+        activite.setDateDebut(request.getDateDebut());
+        activite.setDateFin(request.getDateFin());
+        activite.setMontant(montantTotal);
+        activite.setStatus(status);
+        
+        Activite updatedActivite = activiteRepository.save(activite);
+        
+        // Supprimer les anciens détails et créer les nouveaux
+        detailActiviteRepository.deleteByActiviteId(id);
+        
+        List<DetailActivite> newDetails = request.getDetails().stream()
+            .map(dto -> DetailActivite.builder()
+                .activite(updatedActivite)
+                .details(dto.getDetails())
+                .montant(dto.getMontant())
+                .build())
+            .collect(Collectors.toList());
+        
+        detailActiviteRepository.saveAll(newDetails);
+        
+        // Mettre à jour le montant du budget global
+        updateBudgetGlobalMontant(activite.getBudgetGlobal().getId());
+        
+        // Log l'action
+        journalService.logAction("Modification de l'activité " + activite.getNom() + 
+            " - Nouveau montant: " + montantTotal + " Ar");
+        
+        return mapToResponse(updatedActivite, newDetails);
+    }
+    
+    /**
+     * Supprimer une activité
+     */
+    @Transactional
+    public void deleteActivite(Long id, String currentUsername) {
+        log.info("Suppression de l'activité ID: {}", id);
+        
+        // Vérifier l'utilisateur actuel
+        Utilisateur currentUser = utilisateurRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+        // Récupérer l'activité
+        Activite activite = activiteRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Activité introuvable"));
+        
+        // Vérifier que l'utilisateur appartient à la même année d'exercice
+        if (!currentUser.getAnneeExercice().getId().equals(activite.getBudgetGlobal().getAnneeExercice().getId())) {
+            throw new RuntimeException("Vous ne pouvez supprimer une activité que de votre année d'exercice");
+        }
+        
+        // Vérifier que le budget n'est pas encore approuvé
+        if (activite.getBudgetGlobal().getStatus() != null && 
+            !"Créé".equals(activite.getBudgetGlobal().getStatus().getNom())) {
+            throw new RuntimeException("Impossible de supprimer une activité d'un budget déjà approuvé");
+        }
+        
+        Long budgetGlobalId = activite.getBudgetGlobal().getId();
+        String nomActivite = activite.getNom();
+        
+        // Supprimer les détails puis l'activité
+        detailActiviteRepository.deleteByActiviteId(id);
+        activiteRepository.deleteById(id);
+        
+        // Mettre à jour le montant du budget global
+        updateBudgetGlobalMontant(budgetGlobalId);
+        
+        // Log l'action
+        journalService.logAction("Suppression de l'activité " + nomActivite);
+    }
+    
+    /**
      * Mettre à jour le montant du budget global (somme des montants des activités)
      */
     private void updateBudgetGlobalMontant(Long budgetGlobalId) {

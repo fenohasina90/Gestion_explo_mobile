@@ -3,6 +3,7 @@ package com.explorateur.backend.controller;
 import com.explorateur.backend.dto.ActiviteResponse;
 import com.explorateur.backend.dto.ActiviteStatusResponse;
 import com.explorateur.backend.dto.CreateActiviteRequest;
+import com.explorateur.backend.dto.UpdateActiviteRequest;
 import com.explorateur.backend.service.ActiviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,6 +39,29 @@ public class ActiviteController {
             Authentication authentication) {
         ActiviteResponse response = activiteService.createActivite(request, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @Operation(summary = "Modifier une activité",
+               description = "Modifie une activité existante si le budget est en statut 'Créé'")
+    public ResponseEntity<ActiviteResponse> updateActivite(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateActiviteRequest request,
+            Authentication authentication) {
+        ActiviteResponse response = activiteService.updateActivite(id, request, authentication.getName());
+        return ResponseEntity.ok(response);
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @Operation(summary = "Supprimer une activité",
+               description = "Supprime une activité si le budget est en statut 'Créé'")
+    public ResponseEntity<Void> deleteActivite(
+            @PathVariable Long id,
+            Authentication authentication) {
+        activiteService.deleteActivite(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/annee/{anneeExerciceId}")

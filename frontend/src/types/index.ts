@@ -325,3 +325,83 @@ export interface Classe {
   logo?: string;
   age?: number;
 }
+
+/**
+ * Types pour le budget et les activités
+ */
+export interface DetailActiviteDto {
+  details: string;
+  montant: number;
+}
+
+export interface DetailActiviteResponse {
+  id: number;
+  details: string;
+  montant: number;
+  createdAt: string;
+}
+
+export interface CreateActiviteRequest {
+  nom: string;
+  description?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  budgetGlobalId: number;
+  statusId?: number;
+  details: DetailActiviteDto[];
+}
+
+export interface UpdateActiviteRequest {
+  nom: string;
+  description?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  statusId: number;
+  details: DetailActiviteDto[];
+}
+
+export interface UpdateBudgetStatusRequest {
+  statusId: number;
+}
+
+export interface ExportBudgetPdfRequest {
+  anneeExerciceId: number;
+  includeDate?: boolean;
+  includeNomActivite?: boolean;
+  includeCoutActivite?: boolean;
+  includeDescriptionActivite?: boolean;
+  includeDetailsActivite?: boolean;
+  includeCoutDetails?: boolean;
+  includeStatutActivite?: boolean;
+}
+
+export interface ActiviteResponse {
+  id: number;
+  nom: string;
+  description?: string;
+  dateDebut: string;
+  dateFin: string;
+  montant: number;
+  budgetGlobalId: number;
+  anneeExercice: string;
+  status: string;
+  statusId: number;
+  details: DetailActiviteResponse[];
+  createdAt: string;
+}
+
+export interface ActiviteStatusResponse {
+  id: number;
+  status: string;
+}
+
+export interface BudgetGlobalResponse {
+  id: number;
+  anneeExercice: string;
+  anneeExerciceId: number;
+  montant: number;
+  status: string;
+  statusId: number;
+  nombreActivites: number;
+  createdAt: string;
+}

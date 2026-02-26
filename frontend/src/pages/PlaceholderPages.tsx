@@ -15,5 +15,4 @@ const placeholder = (title: string, icon: string) => () => (
 
 export const InscriptionsPage = placeholder('Gestion des Inscriptions', '📝');
 export const StaffPage = placeholder('Gestion du Staff', '👥');
-export const BudgetPage = placeholder('Gestion du Budget', '💰');
 export const RapportsPage = placeholder('Rapports et Statistiques', '📈');
