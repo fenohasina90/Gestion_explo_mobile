@@ -146,6 +146,7 @@ public class BudgetPdfExportService {
         // Titre à droite
         Cell titleCell = new Cell()
             .add(new Paragraph("BUDGET PROGRAMME EXPLORATEUR " + anneeExercice.getAnnee().getYear())
+            // .add(new Paragraph("Detail Budget lasy camp volant fiangonana maromaro any Anjeva : 200 000 Ar.")
                 .setFont(boldFont)
                 .setFontSize(18)
                 .setFontColor(SECONDARY_COLOR)

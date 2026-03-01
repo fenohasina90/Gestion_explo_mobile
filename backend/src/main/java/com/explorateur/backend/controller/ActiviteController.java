@@ -64,6 +64,17 @@ public class ActiviteController {
         return ResponseEntity.noContent().build();
     }
     
+    @PutMapping("/{id}/annuler")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @Operation(summary = "Annuler une activité",
+               description = "Annule une activité si le budget est 'Approuvé comité' et l'activité n'est pas terminée")
+    public ResponseEntity<ActiviteResponse> annulerActivite(
+            @PathVariable Long id,
+            Authentication authentication) {
+        ActiviteResponse response = activiteService.annulerActivite(id, authentication.getName());
+        return ResponseEntity.ok(response);
+    }
+    
     @GetMapping("/annee/{anneeExerciceId}")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir les activités d'une année",

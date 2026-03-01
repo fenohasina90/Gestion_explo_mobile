@@ -252,6 +252,41 @@ public class ActiviteService {
     }
     
     /**
+     * Annuler une activité
+     */
+    @Transactional
+    public ActiviteResponse annulerActivite(Long activiteId, String currentUsername) {
+        log.info("Annulation de l'activité ID: {} par {}", activiteId, currentUsername);
+        
+        // Vérifier que l'activité existe
+        Activite activite = activiteRepository.findById(activiteId)
+                .orElseThrow(() -> new RuntimeException("Activité introuvable"));
+        
+        // Vérifier que le budget est approuvé
+        if (!"Approuvé comité".equals(activite.getBudgetGlobal().getStatus().getNom())) {
+            throw new RuntimeException("Vous ne pouvez annuler une activité que si le budget est approuvé");
+        }
+        
+        // Vérifier que l'activité n'est pas déjà terminée
+        if ("Terminé".equals(activite.getStatus().getStatus())) {
+            throw new RuntimeException("Impossible d'annuler une activité terminée");
+        }
+        
+        // Changer le statut à "Annulé" (ID 3)
+        ActiviteStatus statusAnnule = activiteStatusRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("Statut 'Annulé' non trouvé"));
+        activite.setStatus(statusAnnule);
+        
+        Activite updatedActivite = activiteRepository.save(activite);
+        
+        // Log l'action
+        journalService.logAction("Annulation de l'activité " + activite.getNom());
+        
+        List<DetailActivite> details = detailActiviteRepository.findByActiviteId(activiteId);
+        return mapToResponse(updatedActivite, details);
+    }
+    
+    /**
      * Mettre à jour le montant du budget global (somme des montants des activités)
      */
     private void updateBudgetGlobalMontant(Long budgetGlobalId) {
