@@ -405,3 +405,41 @@ export interface BudgetGlobalResponse {
   nombreActivites: number;
   createdAt: string;
 }
+
+/**
+ * Types pour la gestion de présence aux activités
+ */
+export interface ParticipantEnfantDto {
+  inscriptionId: number;
+  enfantId: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  classeId?: number;
+  classeNom?: string;
+}
+
+export interface ParticipantStaffDto {
+  staffId: number;
+  instructeurId: number;
+  nom: string;
+  prenom: string;
+  totem?: string;
+  role?: string;
+}
+
+export interface PersonnesDisponiblesResponse {
+  enfants: ParticipantEnfantDto[];
+  staff: ParticipantStaffDto[];
+}
+
+export interface EnregistrerPresenceRequest {
+  activiteId: number;
+  enfantsPresents: number[];
+  staffPresents: number[];
+}
+
+export interface ParticipantsResponse {
+  enfants?: ParticipantEnfantDto[];
+  staff?: ParticipantStaffDto[];
+}

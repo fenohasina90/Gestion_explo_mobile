@@ -1,0 +1,257 @@
+.participants-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+.filters-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.filters-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.classe-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.classe-filter label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.classe-filter select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  color: #1f2937;
+  cursor: pointer;
+  min-width: 180px;
+  transition: all 0.2s;
+}
+
+.classe-filter select:hover {
+  border-color: #9ca3af;
+}
+
+.classe-filter select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.total-count {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.total-count strong {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.loading-state,
+.error-message,
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  font-size: 15px;
+  color: #6b7280;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+}
+
+.empty-state {
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+.participants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.section-title {
+  grid-column: 1 / -1;
+  margin: 16px 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+.participant-card {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+  background: white;
+}
+
+.participant-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.enfant-card {
+  border-left: 4px solid #3b82f6;
+}
+
+.staff-card {
+  border-left: 4px solid #10b981;
+}
+
+.participant-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.participant-details {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Badges spécifiques par classe */
+.badge-ami {
+  background: #0052a5;
+  color: white;
+}
+
+.badge-compagnon {
+  background: #f10000;
+  color: white;
+}
+
+.badge-eclaireur {
+  background: #28a745;
+  color: white;
+}
+
+.badge-pionnier {
+  background: #6c757d;
+  color: white;
+}
+
+.badge-voyageur {
+  background: #722f37;
+  color: white;
+}
+
+.badge-guide {
+  background: #ffc107;
+  color: #212529;
+}
+
+.badge-success {
+  background: #28a745;
+  color: white;
+}
+
+.badge-genre {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.badge-totem {
+  background: #fef3c7;
+  color: #92400e;
+  font-style: italic;
+}
+
+.badge-role {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .participants-modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .filter-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .classe-filter {
+    width: 100%;
+  }
+
+  .classe-filter select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .participants-grid {
+    grid-template-columns: 1fr;
+  }
+}

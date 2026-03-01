@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import budgetGlobalService from '../services/budget-global.service';
 import activiteService from '../services/activite.service';
 import anneeExerciceService from '../services/annee-exercice.service';
+import participantService from '../services/participant-activite.service';
 import type {
   BudgetGlobalResponse,
   ActiviteResponse,
@@ -12,6 +13,8 @@ import type {
   ActiviteStatusResponse,
   AnneeExercice,
 } from '../types';
+import { PresenceModal } from '../components/PresenceModal';
+import { ParticipantsModal } from '../components/ParticipantsModal';
 import './BudgetPage.css';
 
 export const BudgetPage = () => {
@@ -52,6 +55,11 @@ export const BudgetPage = () => {
     includeCoutDetails: true,
     includeStatutActivite: true,
   });
+
+  // États pour les modaux de présence
+  const [showPresenceModal, setShowPresenceModal] = useState(false);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
+  const [selectedActiviteForPresence, setSelectedActiviteForPresence] = useState<ActiviteResponse | null>(null);
 
   // Charger les données initiales
   useEffect(() => {
@@ -300,6 +308,43 @@ export const BudgetPage = () => {
     }
   };
 
+  // Gestion de la présence aux activités
+  const handleAnnulerActivite = async (activiteId: number, nom: string) => {
+    if (!window.confirm(`Êtes-vous sûr de vouloir annuler l'activité "${nom}" ?`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      await participantService.annulerActivite(activiteId);
+
+      setSuccess('Activité annulée avec succès');
+      loadBudgetAndActivites();
+    } catch (err: any) {
+      console.error('Erreur lors de l\'annulation:', err);
+      setError(err.response?.data?.message || 'Erreur lors de l\'annulation de l\'activité');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenPresenceModal = (activite: ActiviteResponse) => {
+    setSelectedActiviteForPresence(activite);
+    setShowPresenceModal(true);
+  };
+
+  const handleOpenParticipantsModal = (activite: ActiviteResponse) => {
+    setSelectedActiviteForPresence(activite);
+    setShowParticipantsModal(true);
+  };
+
+  const handlePresenceSuccess = () => {
+    setSuccess('Présence enregistrée avec succès');
+    loadBudgetAndActivites();
+  };
+
   const handleBudgetStatusChange = async (newStatusId: number) => {
     if (!budget) return;
 
@@ -325,6 +370,10 @@ export const BudgetPage = () => {
 
   const isBudgetEditable = () => {
     return budget && budget.status === 'Créé';
+  };
+
+  const isBudgetApprouveComite = () => {
+    return budget && budget.status === 'Approuvé comité';
   };
 
   const formatMontant = (montant: number) => {
@@ -505,22 +554,60 @@ export const BudgetPage = () => {
                     <span className={`status-badge status-${activite.status.toLowerCase().replace(/\s/g, '-')}`}>
                       {activite.status}
                     </span>
-                    {canManageBudget() && isBudgetEditable() && (
+                    {canManageBudget() && (
                       <div className="activite-actions">
-                        <button
-                          className="btn btn-sm btn-secondary"
-                          onClick={() => openEditModal(activite)}
-                          title="Modifier"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(activite.id, activite.nom)}
-                          title="Supprimer"
-                        >
-                          🗑️
-                        </button>
+                        {/* Boutons pour budget "Créé" */}
+                        {isBudgetEditable() && (
+                          <>
+                            <button
+                              className="btn btn-sm btn-secondary"
+                              onClick={() => openEditModal(activite)}
+                              title="Modifier"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDelete(activite.id, activite.nom)}
+                              title="Supprimer"
+                            >
+                              🗑️
+                            </button>
+                          </>
+                        )}
+
+                        {/* Boutons pour budget "Approuvé comité" */}
+                        {isBudgetApprouveComite() && (
+                          <>
+                            {activite.status !== 'Terminé' && activite.status !== 'Annulé' && (
+                              <>
+                                <button
+                                  className="btn btn-sm btn-warning"
+                                  onClick={() => handleAnnulerActivite(activite.id, activite.nom)}
+                                  title="Annuler l'activité"
+                                >
+                                  ❌ Annuler
+                                </button>
+                                <button
+                                  className="btn btn-sm btn-primary"
+                                  onClick={() => handleOpenPresenceModal(activite)}
+                                  title="Faire présence"
+                                >
+                                  ✅ Faire présence
+                                </button>
+                              </>
+                            )}
+                            {activite.status === 'Terminé' && (
+                              <button
+                                className="btn btn-sm btn-info"
+                                onClick={() => handleOpenParticipantsModal(activite)}
+                                title="Voir les participants"
+                              >
+                                👥 Voir participants
+                              </button>
+                            )}
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
@@ -795,6 +882,30 @@ export const BudgetPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modaux de gestion de présence */}
+      {showPresenceModal && selectedActiviteForPresence && (
+        <PresenceModal
+          activiteId={selectedActiviteForPresence.id}
+          activiteNom={selectedActiviteForPresence.nom}
+          onClose={() => {
+            setShowPresenceModal(false);
+            setSelectedActiviteForPresence(null);
+          }}
+          onSuccess={handlePresenceSuccess}
+        />
+      )}
+
+      {showParticipantsModal && selectedActiviteForPresence && (
+        <ParticipantsModal
+          activiteId={selectedActiviteForPresence.id}
+          activiteNom={selectedActiviteForPresence.nom}
+          onClose={() => {
+            setShowParticipantsModal(false);
+            setSelectedActiviteForPresence(null);
+          }}
+        />
       )}
     </div>
   );
