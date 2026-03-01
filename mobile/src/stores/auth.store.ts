@@ -56,6 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
         username: response.username,
         role: response.role,
         active: true,
+        anneeExerciceId: response.anneeExerciceId,
         anneeExercice: response.anneeExercice
       };
 

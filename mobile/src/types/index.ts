@@ -12,6 +12,7 @@ export interface LoginResponse {
   userId: number;
   username: string;
   role: string;
+  anneeExerciceId: number;
   anneeExercice: string;
 }
 
@@ -20,6 +21,7 @@ export interface User {
   username: string;
   role: string;
   active: boolean;
+  anneeExerciceId: number;
   anneeExercice: string;
 }
 
@@ -304,3 +306,131 @@ export interface PageResponse<T> {
   hasNext: boolean;
   hasPrevious: boolean;
 }
+
+/**
+ * Types pour les budgets globaux
+ */
+export interface BudgetStatus {
+  id: number;
+  nom: string;
+}
+
+export interface BudgetGlobalResponse {
+  id: number;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  statusId: number;
+  status: string;
+  montant: number;
+  nombreActivites: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBudgetGlobalRequest {
+  anneeExerciceId: number;
+  statusId: number;
+}
+
+export interface UpdateBudgetGlobalRequest {
+  statusId: number;
+}
+
+/**
+ * Types pour les activités
+ */
+export interface ActiviteStatus {
+  id: number;
+  nom: string;
+}
+
+export interface DetailActiviteDto {
+  details: string;
+  montant: number;
+}
+
+export interface ActiviteResponse {
+  id: number;
+  nom: string;
+  description?: string;
+  dateDebut: string;
+  dateFin: string;
+  budgetGlobalId: number;
+  anneeExercice: string;
+  statusId: number;
+  status: string;
+  montant: number;
+  details: DetailActiviteDto[];
+  createdAt: string;
+}
+
+export interface CreateActiviteRequest {
+  nom: string;
+  description?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  budgetGlobalId: number;
+  statusId: number;
+  details: DetailActiviteDto[];
+}
+
+export interface UpdateActiviteRequest {
+  nom?: string;
+  description?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  statusId?: number;
+  details?: DetailActiviteDto[];
+}
+
+/**
+ * Types pour les colonnes d'export PDF budget
+ */
+export interface ExportColumnsDto {
+  includeDate: boolean;
+  includeNomActivite: boolean;
+  includeCoutActivite: boolean;
+  includeDescriptionActivite: boolean;
+  includeDetailsActivite: boolean;
+  includeCoutDetails: boolean;
+  includeStatutActivite: boolean;
+}
+
+/**
+ * Types pour la participation aux activités
+ */
+export interface ParticipantEnfantDto {
+  inscriptionId: number;
+  enfantId: number;
+  nom: string;
+  prenom: string;
+  genre: string;
+  classeId?: number;
+  classeNom?: string;
+}
+
+export interface ParticipantStaffDto {
+  staffId: number;
+  instructeurId: number;
+  nom: string;
+  prenom: string;
+  totem?: string;
+  role: string;
+}
+
+export interface PersonnesDisponiblesResponse {
+  enfants: ParticipantEnfantDto[];
+  staff: ParticipantStaffDto[];
+}
+
+export interface EnregistrerPresenceRequest {
+  activiteId: number;
+  enfantsPresents: number[];
+  staffPresents: number[];
+}
+
+export interface ParticipantsResponse {
+  enfants?: ParticipantEnfantDto[];
+  staff?: ParticipantStaffDto[];
+}
+

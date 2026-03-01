@@ -16,6 +16,7 @@ public class LoginResponse {
     @Schema(description = "Token JWT", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
     
+    @Builder.Default
     @Schema(description = "Type de token", example = "Bearer")
     private String type = "Bearer";
     
@@ -27,6 +28,9 @@ public class LoginResponse {
     
     @Schema(description = "Rôle de l'utilisateur", example = "Directeur")
     private String role;
+    
+    @Schema(description = "ID de l'année d'exercice", example = "1")
+    private Long anneeExerciceId;
     
     @Schema(description = "Année d'exercice", example = "2026-01-01")
     private String anneeExercice;

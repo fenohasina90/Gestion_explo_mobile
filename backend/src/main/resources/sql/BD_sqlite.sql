@@ -232,6 +232,7 @@ CREATE TABLE categorie_programme (
 );
 
 INSERT INTO categorie_programme (nom) VALUES
+('Lovan'' ny fiangonana'),
 ('Ankapobeny'),
 ('Fikarohana ara-panahy'),
 ('Fanompoana ny hafa'),
@@ -272,7 +273,9 @@ CREATE TABLE classe_progressive (
     heure_debut TIME NOT NULL,
     heure_fin TIME NOT NULL,
     niveau INTEGER,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    annee_exercice_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (annee_exercice_id) REFERENCES annee_exercice(id)
 );
 
 CREATE TABLE cp_details (
@@ -306,6 +309,19 @@ CREATE TABLE historique_programmes (
     FOREIGN KEY (programme_id) REFERENCES programmes(id),
     FOREIGN KEY (classe_progressive_id) REFERENCES classe_progressive(id),
     FOREIGN KEY (status_id) REFERENCES programme_status(id)
+);
+
+CREATE TABLE programme_progression_annuelle (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    programme_id INTEGER NOT NULL,
+    annee_exercice_id INTEGER NOT NULL,
+    statut_final_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (programme_id) REFERENCES programmes(id),
+    FOREIGN KEY (annee_exercice_id) REFERENCES annee_exercice(id),
+    FOREIGN KEY (statut_final_id) REFERENCES programme_status(id),
+    UNIQUE(programme_id, annee_exercice_id)
 );
 
 -- =========================

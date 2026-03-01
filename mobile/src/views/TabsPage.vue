@@ -13,9 +13,9 @@
           <ion-label>Enfants</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="activites" href="/tabs/activites">
-          <ion-icon aria-hidden="true" :icon="calendarOutline" />
-          <ion-label>Activités</ion-label>
+        <ion-tab-button tab="budget" href="/tabs/budget">
+          <ion-icon aria-hidden="true" :icon="walletOutline" />
+          <ion-label>Budget</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="profil" href="/tabs/profil">
@@ -29,5 +29,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { homeOutline, peopleOutline, calendarOutline, personOutline } from 'ionicons/icons';
+import { homeOutline, peopleOutline, walletOutline, personOutline } from 'ionicons/icons';
 </script>

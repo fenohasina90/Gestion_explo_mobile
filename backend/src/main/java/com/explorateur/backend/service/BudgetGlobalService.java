@@ -4,10 +4,12 @@ import com.explorateur.backend.dto.BudgetGlobalResponse;
 import com.explorateur.backend.entity.AnneeExercice;
 import com.explorateur.backend.entity.BudgetGlobal;
 import com.explorateur.backend.entity.BudgetStatus;
+import com.explorateur.backend.entity.Utilisateur;
 import com.explorateur.backend.repository.AnneeExerciceRepository;
 import com.explorateur.backend.repository.ActiviteRepository;
 import com.explorateur.backend.repository.BudgetGlobalRepository;
 import com.explorateur.backend.repository.BudgetStatusRepository;
+import com.explorateur.backend.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class BudgetGlobalService {
     private final AnneeExerciceRepository anneeExerciceRepository;
     private final BudgetStatusRepository budgetStatusRepository;
     private final ActiviteRepository activiteRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final JournalService journalService;
     
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -90,8 +93,17 @@ public class BudgetGlobalService {
     public BudgetGlobalResponse updateBudgetStatus(Long budgetId, Long statusId, String currentUsername) {
         log.info("Mise à jour du statut du budget ID: {} vers statut ID: {}", budgetId, statusId);
         
+        // Vérifier l'utilisateur actuel
+        Utilisateur currentUser = utilisateurRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
         BudgetGlobal budgetGlobal = budgetGlobalRepository.findById(budgetId)
             .orElseThrow(() -> new RuntimeException("Budget global introuvable"));
+        
+        // Vérifier que l'utilisateur appartient à la même année d'exercice
+        if (!currentUser.getAnneeExercice().getId().equals(budgetGlobal.getAnneeExercice().getId())) {
+            throw new RuntimeException("Vous ne pouvez modifier le statut que du budget de votre année d'exercice");
+        }
         
         // Vérifier que le budget n'est pas déjà approuvé (ne peut pas revenir en arrière)
         if (budgetGlobal.getStatus() != null && "Approuvé comité".equals(budgetGlobal.getStatus().getNom())) {

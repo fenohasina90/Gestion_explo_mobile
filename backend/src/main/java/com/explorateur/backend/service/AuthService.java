@@ -43,6 +43,8 @@ public class AuthService {
                 .userId(utilisateur.getId())
                 .username(utilisateur.getUsername())
                 .role(utilisateur.getRole().getRoleName())
+                .anneeExerciceId(utilisateur.getAnneeExercice() != null ? 
+                        utilisateur.getAnneeExercice().getId() : null)
                 .anneeExercice(utilisateur.getAnneeExercice() != null ? 
                         utilisateur.getAnneeExercice().getAnnee().toString() : null)
                 .build();
