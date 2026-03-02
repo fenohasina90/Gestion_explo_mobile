@@ -94,12 +94,16 @@ public class ProgrammeController {
     
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
-    @Operation(summary = "Rechercher des programmes par nom",
-               description = "Recherche des programmes dont le nom contient le texte fourni")
+    @Operation(summary = "Rechercher/Filtrer des programmes",
+               description = "Recherche et filtre les programmes par catégorie, classe et/ou nom (tous les paramètres sont optionnels)")
     public ResponseEntity<List<ProgrammeResponse>> searchByNom(
-            @Parameter(description = "Texte à rechercher dans le nom", required = true)
-            @RequestParam String nom) {
-        List<ProgrammeResponse> programmes = programmeService.searchByNom(nom);
+            @Parameter(description = "ID de la catégorie (optionnel)")
+            @RequestParam(required = false) Long categorieId,
+            @Parameter(description = "ID de la classe (optionnel)")
+            @RequestParam(required = false) Long classeId,
+            @Parameter(description = "Texte à rechercher dans le nom (optionnel)")
+            @RequestParam(required = false) String nom) {
+        List<ProgrammeResponse> programmes = programmeService.filterProgrammes(categorieId, classeId, nom);
         return ResponseEntity.ok(programmes);
     }
     

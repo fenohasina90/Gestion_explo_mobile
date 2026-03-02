@@ -95,6 +95,45 @@ public class ClasseProgressiveController {
     }
     
     /**
+     * Filtrer les CP avec paramètres optionnels
+     * Accessible à tous les rôles authentifiés
+     * Tous les paramètres sont optionnels
+     */
+    @GetMapping("/filter")
+    @Operation(summary = "Filtrer les CP", 
+               description = "Filtre les Classes Progressives avec paramètres optionnels (dates et/ou année)")
+    public ResponseEntity<List<ClasseProgressiveResponse>> filterCP(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin,
+            @RequestParam(required = false) Long anneeExerciceId) {
+        
+        List<ClasseProgressiveResponse> response;
+        
+        // Si aucun paramètre, retourner toutes les CP
+        if (dateDebut == null && dateFin == null && anneeExerciceId == null) {
+            response = cpService.getAllClassesProgressives();
+        }
+        // Si dates + année
+        else if (dateDebut != null && dateFin != null && anneeExerciceId != null) {
+            response = cpService.filterByDateRangeAndAnneeExercice(dateDebut, dateFin, anneeExerciceId);
+        }
+        // Si seulement dates
+        else if (dateDebut != null && dateFin != null) {
+            response = cpService.filterByDateRange(dateDebut, dateFin);
+        }
+        // Si seulement année
+        else if (anneeExerciceId != null) {
+            response = cpService.filterByAnneeExercice(anneeExerciceId);
+        }
+        // Autres cas : retourner toutes
+        else {
+            response = cpService.getAllClassesProgressives();
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
      * Filtrer les CP par plage de dates
      * Accessible à tous les rôles authentifiés
      */

@@ -69,6 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         role: response.role,
         active: true,
         anneeExercice: response.anneeExercice,
+        anneeExerciceId: response.anneeExerciceId,
       };
 
       // Mettre à jour l'état

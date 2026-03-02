@@ -28,6 +28,7 @@ export interface LoginResponse {
   username: string;
   role: string;
   anneeExercice: string;
+  anneeExerciceId?: number;
 }
 
 export interface User {
@@ -36,6 +37,7 @@ export interface User {
   role: string;
   active: boolean;
   anneeExercice: string;
+  anneeExerciceId?: number;
 }
 
 /**
@@ -442,4 +444,130 @@ export interface EnregistrerPresenceRequest {
 export interface ParticipantsResponse {
   enfants?: ParticipantEnfantDto[];
   staff?: ParticipantStaffDto[];
+}
+
+/**
+ * Types pour les catégories de programme
+ */
+export interface CategorieProgramme {
+  id: number;
+  nom: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCategorieProgrammeRequest {
+  nom: string;
+  description?: string;
+}
+
+export interface UpdateCategorieProgrammeRequest {
+  nom: string;
+  description?: string;
+}
+
+/**
+ * Types pour les programmes
+ */
+export interface Programme {
+  id: number;
+  nom: string;
+  description?: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProgrammeRequest {
+  nom: string;
+  description?: string;
+  categorieId: number;
+  classeId: number;
+}
+
+export interface UpdateProgrammeRequest {
+  nom: string;
+  description?: string;
+  categorieId: number;
+  classeId: number;
+}
+
+/**
+ * Types pour les Classes Progressives (CP)
+ */
+export interface ClasseProgressive {
+  id: number;
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau: string;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateClasseProgressiveRequest {
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau: string;
+  anneeExerciceId: number;
+}
+
+export interface UpdateClasseProgressiveRequest {
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau: string;
+}
+
+/**
+ * Types pour les CP Details (affectation des programmes à une CP)
+ */
+export interface InstructeurSimpleDto {
+  id: number;
+  nomComplet: string;
+}
+
+export interface CpDetailsResponse {
+  id: number;
+  programmeId?: number;
+  programmeName?: string;
+  categorieId?: number;
+  categorieName?: string;
+  description?: string;
+  instructeurs: InstructeurSimpleDto[];
+  statutActuel?: string;
+}
+
+export interface AddProgrammeToCpRequest {
+  classeProgressiveId: number;
+  programmeId?: number;
+  description?: string;
+  instructeurIds: number[];
+}
+
+export interface UpdateCpDetailsInstructeurRequest {
+  instructeurIds: number[];
+}
+
+/**
+ * Types pour l'historique des programmes
+ */
+export interface HistoriqueProgramme {
+  id: number;
+  ancienStatut: string;
+  nouveauStatut: string;
+  dateChangement: string;
+  utilisateurId: number;
+  utilisateurNom: string;
+}
+
+export interface UpdateProgrammeStatusRequest {
+  nouveauStatut: string;
 }

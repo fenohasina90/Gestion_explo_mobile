@@ -75,6 +75,26 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
           </li>
           
+          {/* Section Programmes */}
+          <li className="nav-divider">
+            <span>Programmes</span>
+          </li>
+          <li>
+            <Link to="/categories-programme" className="nav-link">
+              📚 Catégories
+            </Link>
+          </li>
+          <li>
+            <Link to="/programmes" className="nav-link">
+              📖 Programmes
+            </Link>
+          </li>
+          <li>
+            <Link to="/cp" className="nav-link">
+              🎯 Classes Progressives
+            </Link>
+          </li>
+          
           {/* Section Compte */}
           <li className="nav-divider">
             <span>Mon Compte</span>

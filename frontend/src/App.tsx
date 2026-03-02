@@ -12,6 +12,10 @@ import { AnneesExercicePage } from './pages/AnneesExercicePage';
 import { JournalPage } from './pages/JournalPage';
 import { StaffsPage } from './pages/StaffsPage';
 import { BudgetPage } from './pages/BudgetPage';
+import { CategoriesProgrammePage } from './pages/CategoriesProgrammePage';
+import { ProgrammesPage } from './pages/ProgrammesPage';
+import { ClassesProgressivesPage } from './pages/ClassesProgressivesPage';
+import { CPDetailsPage } from './pages/CPDetailsPage';
 import { InscriptionsPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
@@ -129,6 +133,46 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <JournalPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/categories-programme"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <CategoriesProgrammePage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/programmes"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <ProgrammesPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cp"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <ClassesProgressivesPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cp/:cpId/programmes"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <CPDetailsPage />
                 </Layout>
               </PrivateRoute>
             }
