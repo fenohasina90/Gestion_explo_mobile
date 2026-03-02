@@ -5,6 +5,7 @@ import com.explorateur.backend.dto.CpDetailsResponse;
 import com.explorateur.backend.dto.UpdateCpDetailsInstructeurRequest;
 import com.explorateur.backend.entity.*;
 import com.explorateur.backend.repository.*;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,77 +26,137 @@ public class CpDetailsService {
     private final ClasseProgressiveRepository cpRepository;
     private final ProgrammeRepository programmeRepository;
     private final InstructeurRepository instructeurRepository;
+    private final CpDetailsInstructeurRepository cpDetailsInstructeurRepository;
     private final ProgrammeStatusService programmeStatusService;
     private final HistoriqueProgrammesRepository historiqueProgrammesRepository;
+    private final EntityManager entityManager;
     
     /**
-     * Ajouter un programme à une CP
+     * Ajouter un programme ou une activité libre à une CP avec un ou plusieurs instructeurs
      */
     @Transactional
     public CpDetailsResponse addProgrammeToCP(AddProgrammeToCpRequest request) {
-        log.info("Ajout du programme ID: {} à la CP ID: {}", request.getProgrammeId(), request.getClasseProgressiveId());
+        log.info("Ajout à la CP ID: {} - Programme: {}, Description: '{}', Instructeurs: {}", 
+                request.getClasseProgressiveId(), 
+                request.getProgrammeId(),
+                request.getDescription(),
+                request.getInstructeurIds() != null ? request.getInstructeurIds().size() : 0);
+        
+        // Validation: soit programmeId soit description doit être fourni
+        if (request.getProgrammeId() == null && (request.getDescription() == null || request.getDescription().trim().isEmpty())) {
+            throw new RuntimeException("Vous devez fournir soit un programme (programmeId) soit une description pour l'activité libre");
+        }
+        
+        // Si les deux sont fournis, on privilégie le programme
+        if (request.getProgrammeId() != null && request.getDescription() != null && !request.getDescription().trim().isEmpty()) {
+            log.warn("Programme et description fournis - la description sera ignorée");
+        }
         
         // Vérifier que la CP existe
         ClasseProgressive cp = cpRepository.findById(request.getClasseProgressiveId())
                 .orElseThrow(() -> new RuntimeException("CP non trouvée avec l'ID: " + request.getClasseProgressiveId()));
         
-        // Vérifier que le programme existe
-        Programme programme = programmeRepository.findById(request.getProgrammeId())
-                .orElseThrow(() -> new RuntimeException("Programme non trouvé avec l'ID: " + request.getProgrammeId()));
+        Programme programme = null;
         
-        // Règle métier: Un même programme ne peut être ajouté qu'une seule fois dans la même CP
-        if (cpDetailsRepository.existsByClasseProgressiveIdAndProgrammeId(
-                request.getClasseProgressiveId(), request.getProgrammeId())) {
-            throw new RuntimeException("Ce programme est déjà ajouté à cette CP");
+        // Si programmeId est fourni, vérifier que le programme existe
+        if (request.getProgrammeId() != null) {
+            programme = programmeRepository.findById(request.getProgrammeId())
+                    .orElseThrow(() -> new RuntimeException("Programme non trouvé avec l'ID: " + request.getProgrammeId()));
+            
+            // Règle métier: Un même programme ne peut être ajouté qu'une seule fois dans la même CP
+            if (cpDetailsRepository.existsByClasseProgressiveIdAndProgrammeId(
+                    request.getClasseProgressiveId(), request.getProgrammeId())) {
+                throw new RuntimeException("Ce programme est déjà ajouté à cette CP");
+            }
         }
         
-        // Vérifier l'instructeur si spécifié
-        Instructeur instructeur = null;
-        if (request.getInstructeurId() != null) {
-            instructeur = instructeurRepository.findById(request.getInstructeurId())
-                    .orElseThrow(() -> new RuntimeException("Instructeur non trouvé avec l'ID: " + request.getInstructeurId()));
-        }
-        
-        // Créer l'affectation
+        // Créer l'affectation (programme ou activité libre)
         CpDetails cpDetails = CpDetails.builder()
                 .classeProgressive(cp)
                 .programme(programme)
-                .instructeur(instructeur)
+                .description(request.getProgrammeId() == null ? request.getDescription() : null)
                 .build();
         
         CpDetails savedCpDetails = cpDetailsRepository.save(cpDetails);
-        log.info("Programme ajouté à la CP avec l'ID: {}", savedCpDetails.getId());
+        log.info("{} ajouté à la CP avec l'ID: {}", 
+                programme != null ? "Programme" : "Activité libre", 
+                savedCpDetails.getId());
         
-        // Règle métier: Lors de l'ajout, le statut est automatiquement "En attente"
-        programmeStatusService.initializeProgrammeStatus(
-                request.getProgrammeId(), 
-                request.getClasseProgressiveId());
+        // Ajouter les instructeurs à la collection si spécifiés
+        if (request.getInstructeurIds() != null && !request.getInstructeurIds().isEmpty()) {
+            for (Long instructeurId : request.getInstructeurIds()) {
+                // Vérifier que l'instructeur existe
+                Instructeur instructeur = instructeurRepository.findById(instructeurId)
+                        .orElseThrow(() -> new RuntimeException("Instructeur non trouvé avec l'ID: " + instructeurId));
+                
+                // Créer l'association et l'ajouter à la collection
+                CpDetailsInstructeur cpDetailsInstructeur = CpDetailsInstructeur.builder()
+                        .cpDetails(savedCpDetails)
+                        .instructeur(instructeur)
+                        .build();
+                
+                savedCpDetails.getInstructeurs().add(cpDetailsInstructeur);
+                log.info("Instructeur ID: {} ajouté à la collection", instructeurId);
+            }
+            
+            // Sauvegarder pour persister les instructeurs (cascade)
+            savedCpDetails = cpDetailsRepository.save(savedCpDetails);
+        }
+        
+        // Règle métier: Lors de l'ajout d'un PROGRAMME, le statut est automatiquement "En attente"
+        // Les activités libres n'ont pas de statut
+        if (request.getProgrammeId() != null) {
+            programmeStatusService.initializeProgrammeStatus(
+                    request.getProgrammeId(), 
+                    request.getClasseProgressiveId());
+        }
+        
+        log.info("CpDetails créé avec {} instructeur(s)", 
+                savedCpDetails.getInstructeurs() != null ? savedCpDetails.getInstructeurs().size() : 0);
         
         return mapToResponse(savedCpDetails);
     }
     
     /**
-     * Modifier l'instructeur d'un programme dans une CP
+     * Modifier les instructeurs d'un programme dans une CP (remplace tous les instructeurs existants)
      */
     @Transactional
     public CpDetailsResponse updateInstructeur(Long cpDetailsId, UpdateCpDetailsInstructeurRequest request) {
-        log.info("Modification de l'instructeur pour le cp_details ID: {}", cpDetailsId);
+        log.info("Modification des instructeurs pour le cp_details ID: {}", cpDetailsId);
         
-        CpDetails cpDetails = cpDetailsRepository.findById(cpDetailsId)
+        CpDetails cpDetails = cpDetailsRepository.findByIdWithInstructeurs(cpDetailsId)
                 .orElseThrow(() -> new RuntimeException("Affectation non trouvée avec l'ID: " + cpDetailsId));
         
-        // Vérifier l'instructeur si spécifié
-        Instructeur instructeur = null;
-        if (request.getInstructeurId() != null) {
-            instructeur = instructeurRepository.findById(request.getInstructeurId())
-                    .orElseThrow(() -> new RuntimeException("Instructeur non trouvé avec l'ID: " + request.getInstructeurId()));
+        // Vider la collection (orphanRemoval supprimera automatiquement les entrées en base)
+        cpDetails.getInstructeurs().clear();
+        
+        // Forcer le flush pour exécuter les suppressions avant les insertions
+        entityManager.flush();
+        log.info("Suppressions des anciens instructeurs effectuées");
+        
+        // Ajouter les nouveaux instructeurs à la collection
+        if (request.getInstructeurIds() != null && !request.getInstructeurIds().isEmpty()) {
+            for (Long instructeurId : request.getInstructeurIds()) {
+                // Vérifier que l'instructeur existe
+                Instructeur instructeur = instructeurRepository.findById(instructeurId)
+                        .orElseThrow(() -> new RuntimeException("Instructeur non trouvé avec l'ID: " + instructeurId));
+                
+                // Créer l'association et l'ajouter à la collection
+                CpDetailsInstructeur cpDetailsInstructeur = CpDetailsInstructeur.builder()
+                        .cpDetails(cpDetails)
+                        .instructeur(instructeur)
+                        .build();
+                
+                cpDetails.getInstructeurs().add(cpDetailsInstructeur);
+                log.info("Instructeur ID: {} ajouté à la collection", instructeurId);
+            }
         }
         
-        cpDetails.setInstructeur(instructeur);
-        CpDetails updatedCpDetails = cpDetailsRepository.save(cpDetails);
-        log.info("Instructeur modifié avec succès pour cp_details ID: {}", cpDetailsId);
+        // Sauvegarder (cascade persistera les nouvelles associations)
+        cpDetailsRepository.save(cpDetails);
         
-        return mapToResponse(updatedCpDetails);
+        log.info("Instructeurs modifiés avec succès pour cp_details ID: {}", cpDetailsId);
+        return mapToResponse(cpDetails);
     }
     
     /**
@@ -130,8 +191,9 @@ public class CpDetailsService {
         cpRepository.findById(classeProgressiveId)
                 .orElseThrow(() -> new RuntimeException("CP non trouvée avec l'ID: " + classeProgressiveId));
         
-        return cpDetailsRepository.findByClasseProgressiveId(classeProgressiveId)
-                .stream()
+        List<CpDetails> cpDetailsList = cpDetailsRepository.findByClasseProgressiveIdWithInstructeurs(classeProgressiveId);
+        
+        return cpDetailsList.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -142,8 +204,9 @@ public class CpDetailsService {
     @Transactional(readOnly = true)
     public CpDetailsResponse getCpDetailsById(Long id) {
         log.info("Récupération du cp_details ID: {}", id);
-        CpDetails cpDetails = cpDetailsRepository.findById(id)
+        CpDetails cpDetails = cpDetailsRepository.findByIdWithInstructeurs(id)
                 .orElseThrow(() -> new RuntimeException("Affectation non trouvée avec l'ID: " + id));
+        
         return mapToResponse(cpDetails);
     }
     
@@ -153,21 +216,51 @@ public class CpDetailsService {
      * Mapper une entité CpDetails vers un DTO de réponse
      */
     private CpDetailsResponse mapToResponse(CpDetails cpDetails) {
-        // Récupérer le statut actuel du programme dans cette CP
-        String statutActuel = getStatutActuel(
-                cpDetails.getProgramme().getId(), 
-                cpDetails.getClasseProgressive().getId());
+        log.debug("Mapping CpDetails ID: {} - Programme: {} - Nombre d'instructeurs: {}", 
+                cpDetails.getId(),
+                cpDetails.getProgramme() != null ? cpDetails.getProgramme().getId() : "null (activité libre)",
+                cpDetails.getInstructeurs() != null ? cpDetails.getInstructeurs().size() : "null");
+        
+        // Variables pour les infos du programme (null si activité libre)
+        Long programmeId = null;
+        String programmeName = null;
+        Long categorieId = null;
+        String categorieName = null;
+        String statutActuel = null;
+        
+        // Si c'est un programme (pas une activité libre)
+        if (cpDetails.getProgramme() != null) {
+            programmeId = cpDetails.getProgramme().getId();
+            programmeName = cpDetails.getProgramme().getNom();
+            categorieId = cpDetails.getProgramme().getCategorie().getId();
+            categorieName = cpDetails.getProgramme().getCategorie().getNom();
+            
+            // Récupérer le statut actuel du programme dans cette CP
+            statutActuel = getStatutActuel(
+                    cpDetails.getProgramme().getId(), 
+                    cpDetails.getClasseProgressive().getId());
+        }
+        
+        // Mapper les instructeurs
+        List<CpDetailsResponse.InstructeurSimpleDto> instructeurs = cpDetails.getInstructeurs()
+                .stream()
+                .map(cdi -> CpDetailsResponse.InstructeurSimpleDto.builder()
+                        .id(cdi.getInstructeur().getId())
+                        .nomComplet(cdi.getInstructeur().getNom() + " " + cdi.getInstructeur().getPrenom())
+                        .build())
+                .collect(Collectors.toList());
+        
+        log.debug("Instructeurs mappés: {}", instructeurs.size());
         
         return CpDetailsResponse.builder()
                 .id(cpDetails.getId())
                 .classeProgressiveId(cpDetails.getClasseProgressive().getId())
-                .programmeId(cpDetails.getProgramme().getId())
-                .programmeName(cpDetails.getProgramme().getNom())
-                .categorieId(cpDetails.getProgramme().getCategorie().getId())
-                .categorieName(cpDetails.getProgramme().getCategorie().getNom())
-                .instructeurId(cpDetails.getInstructeur() != null ? cpDetails.getInstructeur().getId() : null)
-                .instructeurName(cpDetails.getInstructeur() != null ? 
-                        cpDetails.getInstructeur().getNom() + " " + cpDetails.getInstructeur().getPrenom() : null)
+                .programmeId(programmeId)
+                .programmeName(programmeName)
+                .categorieId(categorieId)
+                .categorieName(categorieName)
+                .description(cpDetails.getDescription())
+                .instructeurs(instructeurs)
                 .statutActuel(statutActuel)
                 .createdAt(cpDetails.getCreatedAt())
                 .build();

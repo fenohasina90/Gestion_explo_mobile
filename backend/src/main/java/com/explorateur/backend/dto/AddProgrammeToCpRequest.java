@@ -7,24 +7,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * DTO de requête pour ajouter un programme à une CP
+ * DTO de requête pour ajouter un programme ou une activité libre à une CP
+ * Soit programmeId est fourni (activité programmée), soit description (activité libre)
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Requête d'ajout de programme à une CP")
+@Schema(description = "Requête d'ajout de programme ou activité libre à une CP")
 public class AddProgrammeToCpRequest {
     
     @NotNull(message = "L'ID de la classe progressive est obligatoire")
     @Schema(description = "ID de la classe progressive", example = "1", required = true)
     private Long classeProgressiveId;
     
-    @NotNull(message = "L'ID du programme est obligatoire")
-    @Schema(description = "ID du programme à ajouter", example = "1", required = true)
+    @Schema(description = "ID du programme à ajouter (optionnel si description fournie)", example = "1")
     private Long programmeId;
     
-    @Schema(description = "ID de l'instructeur à assigner (optionnel)", example = "1")
-    private Long instructeurId;
+    @Schema(description = "Description de l'activité libre (obligatoire si programmeId non fourni)", 
+            example = "Atelier de bricolage pour la fête des pères")
+    private String description;
+    
+    @Schema(description = "Liste des IDs des instructeurs à assigner (optionnel)", example = "[1, 2, 3]")
+    private List<Long> instructeurIds;
 }

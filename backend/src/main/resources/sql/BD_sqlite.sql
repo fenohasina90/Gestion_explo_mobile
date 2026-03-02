@@ -280,13 +280,23 @@ CREATE TABLE classe_progressive (
 
 CREATE TABLE cp_details (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    classe_progressive_id INTEGER,
+    classe_progressive_id INTEGER NOT NULL,
     programme_id INTEGER,
-    instructeur_id INTEGER,
+    description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (classe_progressive_id) REFERENCES classe_progressive(id),
     FOREIGN KEY (programme_id) REFERENCES programmes(id),
-    FOREIGN KEY (instructeur_id) REFERENCES instructeur(id)
+    UNIQUE(classe_progressive_id, programme_id)
+);
+
+CREATE TABLE cp_details_instructeurs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cp_details_id INTEGER NOT NULL,
+    instructeur_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cp_details_id) REFERENCES cp_details(id) ON DELETE CASCADE,
+    FOREIGN KEY (instructeur_id) REFERENCES instructeur(id),
+    UNIQUE(cp_details_id, instructeur_id)
 );
 
 CREATE TABLE cp_presence (

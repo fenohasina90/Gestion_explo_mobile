@@ -27,13 +27,13 @@ public class CpDetailsController {
     private final CpDetailsService cpDetailsService;
     
     /**
-     * Ajouter un programme à une CP
+     * Ajouter un programme à une CP avec un ou plusieurs instructeurs
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
     @Operation(summary = "Ajouter un programme à une CP", 
-               description = "Ajoute un programme à une CP avec initialisation automatique du statut 'En attente'. Réservé au Directeur et Co-Directeur.")
+               description = "Ajoute un programme à une CP avec un ou plusieurs instructeurs et initialisation automatique du statut 'En attente'. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<CpDetailsResponse> addProgrammeToCP(
             @Valid @RequestBody AddProgrammeToCpRequest request) {
         CpDetailsResponse response = cpDetailsService.addProgrammeToCP(request);
@@ -41,13 +41,13 @@ public class CpDetailsController {
     }
     
     /**
-     * Modifier l'instructeur d'un programme dans une CP
+     * Modifier les instructeurs d'un programme dans une CP
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PutMapping("/{id}/instructeur")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
-    @Operation(summary = "Modifier l'instructeur", 
-               description = "Modifie l'instructeur assigné à un programme dans une CP. Réservé au Directeur et Co-Directeur.")
+    @Operation(summary = "Modifier les instructeurs", 
+               description = "Modifie les instructeurs assignés à un programme dans une CP (remplace tous les instructeurs existants). Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<CpDetailsResponse> updateInstructeur(
             @PathVariable Long id,
             @Valid @RequestBody UpdateCpDetailsInstructeurRequest request) {

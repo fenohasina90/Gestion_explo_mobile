@@ -1,6 +1,7 @@
 package com.explorateur.backend.repository;
 
 import com.explorateur.backend.entity.CpDetails;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,9 +51,23 @@ public interface CpDetailsRepository extends JpaRepository<CpDetails, Long> {
             @Param("programmeId") Long programmeId);
     
     /**
+     * Trouver un CpDetails par ID avec ses instructeurs (EntityGraph)
+     */
+    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur"})
+    @Query("SELECT cd FROM CpDetails cd WHERE cd.id = :id")
+    Optional<CpDetails> findByIdWithInstructeurs(@Param("id") Long id);
+    
+    /**
+     * Trouver tous les programmes d'une CP avec leurs instructeurs (EntityGraph)
+     */
+    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur"})
+    @Query("SELECT cd FROM CpDetails cd WHERE cd.classeProgressive.id = :cpId")
+    List<CpDetails> findByClasseProgressiveIdWithInstructeurs(@Param("cpId") Long cpId);
+    
+    /**
      * Trouver tous les programmes d'un instructeur
      */
-    List<CpDetails> findByInstructeurId(Long instructeurId);
+//     List<CpDetails> findByInstructeurId(Long instructeurId);
     
     /**
      * Trouver tous les détails d'une CP par ID de programme
