@@ -6,10 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 /**
  * Entité ProgrammeStatus
+ * Table de référence pour les statuts de programme (En attente, En cours, Terminé)
  */
 @Entity
 @Table(name = "programme_status")
@@ -25,12 +24,4 @@ public class ProgrammeStatus {
     
     @Column(nullable = false)
     private String status;
-    
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }
