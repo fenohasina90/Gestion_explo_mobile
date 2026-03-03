@@ -79,6 +79,14 @@
           <ion-buttons slot="end">
             <ion-button 
               v-if="canModify"
+              @click.stop="goToPresence(cp.id)"
+              :color="cpHasPresence[cp.id] ? 'primary' : 'medium'"
+              :title="cpHasPresence[cp.id] ? 'Voir participants' : 'Gérer la présence'"
+            >
+              <ion-icon :icon="peopleOutline"></ion-icon>
+            </ion-button>
+            <ion-button 
+              v-if="canModify"
               @click.stop="openEditModal(cp)"
             >
               <ion-icon :icon="createOutline"></ion-icon>
@@ -142,9 +150,10 @@ import {
   alertController,
   toastController
 } from '@ionic/vue';
-import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline, peopleOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 import classeProgressiveService from '@/services/classe-progressive.service';
+import cpPresenceService from '@/services/cp-presence.service';
 import type { ClasseProgressive } from '@/types';
 
 const router = useRouter();
@@ -155,6 +164,7 @@ const filteredCPs = ref<ClasseProgressive[]>([]);
 const showFilters = ref(false);
 const filterDateDebut = ref<string | null>(null);
 const filterDateFin = ref<string | null>(null);
+const cpHasPresence = ref<Record<number, boolean>>({});
 
 const canModify = computed(() => {
   const role = authStore.user?.role;
@@ -170,6 +180,8 @@ async function loadCPs() {
     loading.value = true;
     cps.value = await classeProgressiveService.getAllCP();
     filteredCPs.value = cps.value;
+    // Vérifier la présence pour chaque CP
+    await checkPresenceForCPs();
   } catch (error: any) {
     const toast = await toastController.create({
       message: error.message || 'Erreur lors du chargement des CPs',
@@ -179,6 +191,22 @@ async function loadCPs() {
     await toast.present();
   } finally {
     loading.value = false;
+  }
+}
+
+async function checkPresenceForCPs() {
+  // Vérifier pour chaque CP si elle a déjà une présence enregistrée
+  for (const cp of cps.value) {
+    try {
+      const participants = await cpPresenceService.getParticipants(cp.id);
+      // Si au moins un enfant ou staff est présent, la présence est validée
+      const hasEnfants = participants.enfants && participants.enfants.length > 0;
+      const hasStaff = participants.staff && participants.staff.length > 0;
+      cpHasPresence.value[cp.id] = !!(hasEnfants || hasStaff);
+    } catch (error) {
+      // En cas d'erreur, considérer qu'il n'y a pas de présence
+      cpHasPresence.value[cp.id] = false;
+    }
   }
 }
 
@@ -224,6 +252,10 @@ function getYear(anneeStr: string): string {
 
 function goToCPDetails(cpId: number) {
   router.push(`/tabs/cp-details/${cpId}`);
+}
+
+function goToPresence(cpId: number) {
+  router.push(`/tabs/cp-presence/${cpId}`);
 }
 
 async function openCreateModal() {

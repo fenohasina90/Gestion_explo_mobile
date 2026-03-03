@@ -67,6 +67,7 @@ public class CpPresenceController {
      * Consulter les participants d'une classe progressive avec filtres
      */
     @GetMapping("/{classeProgressiveId}")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Consulter les participants",
                description = "Retourne la liste des participants à une CP avec filtres optionnels (enfant, staff, classe)")
     public ResponseEntity<ParticipantsResponse> getParticipants(

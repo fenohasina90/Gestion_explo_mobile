@@ -96,6 +96,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CPDetails',
     component: () => import('@/views/CPDetailsPage.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/tabs/cp-presence/:id',
+    name: 'CPPresence',
+    component: () => import('@/views/CPPresencePage.vue'),
+    meta: { requiresAuth: true }
   }
 ];
 

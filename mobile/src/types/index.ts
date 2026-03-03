@@ -435,6 +435,15 @@ export interface ParticipantsResponse {
 }
 
 /**
+ * Types pour la présence aux classes progressives (CP)
+ */
+export interface EnregistrerPresenceCpRequest {
+  classeProgressiveId: number;
+  enfantsPresents: number[];
+  staffPresents: number[];
+}
+
+/**
  * Types pour les catégories de programme
  */
 export interface CategorieProgramme {

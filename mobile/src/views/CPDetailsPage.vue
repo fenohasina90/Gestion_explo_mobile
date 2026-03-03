@@ -267,7 +267,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   IonPage,
   IonHeader,
@@ -313,6 +313,7 @@ import classeService from '@/services/classe.service';
 import type { ClasseProgressive, CpDetails, Programme, Instructeur, ProgrammeStatus, CategorieProgramme, Classe } from '@/types';
 
 const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
 const loading = ref(false);
 const cp = ref<ClasseProgressive | null>(null);
