@@ -252,30 +252,36 @@ public class CpDetailsService {
         
         // Variables pour les infos du programme (null si activité libre)
         Long programmeId = null;
-        String programmeName = null;
+        String programmeNom = null;
+        String programmeDescription = null;
         Long categorieId = null;
         String categorieName = null;
-        String statutActuel = null;
+        Long statusId = null;
+        String statusNom = null;
         
         // Si c'est un programme (pas une activité libre)
         if (cpDetails.getProgramme() != null) {
             programmeId = cpDetails.getProgramme().getId();
-            programmeName = cpDetails.getProgramme().getNom();
+            programmeNom = cpDetails.getProgramme().getNom();
+            programmeDescription = cpDetails.getProgramme().getDescription();
             categorieId = cpDetails.getProgramme().getCategorie().getId();
             categorieName = cpDetails.getProgramme().getCategorie().getNom();
             
             // Récupérer le statut actuel du programme dans cette CP
-            statutActuel = getStatutActuel(
+            var statusInfo = getStatutActuel(
                     cpDetails.getProgramme().getId(), 
                     cpDetails.getClasseProgressive().getId());
+            statusId = statusInfo.statusId();
+            statusNom = statusInfo.statusNom();
         }
         
-        // Mapper les instructeurs
+        // Mapper les instructeurs avec nom et prénom séparés
         List<CpDetailsResponse.InstructeurSimpleDto> instructeurs = cpDetails.getInstructeurs()
                 .stream()
                 .map(cdi -> CpDetailsResponse.InstructeurSimpleDto.builder()
                         .id(cdi.getInstructeur().getId())
-                        .nomComplet(cdi.getInstructeur().getNom() + " " + cdi.getInstructeur().getPrenom())
+                        .nom(cdi.getInstructeur().getNom())
+                        .prenom(cdi.getInstructeur().getPrenom())
                         .build())
                 .collect(Collectors.toList());
         
@@ -284,13 +290,16 @@ public class CpDetailsService {
         return CpDetailsResponse.builder()
                 .id(cpDetails.getId())
                 .classeProgressiveId(cpDetails.getClasseProgressive().getId())
+                .classeProgressiveDate(cpDetails.getClasseProgressive().getDateCp().toString())
                 .programmeId(programmeId)
-                .programmeName(programmeName)
+                .programmeNom(programmeNom)
+                .programmeDescription(programmeDescription)
                 .categorieId(categorieId)
                 .categorieName(categorieName)
                 .description(cpDetails.getDescription())
                 .instructeurs(instructeurs)
-                .statutActuel(statutActuel)
+                .statusId(statusId)
+                .statusNom(statusNom)
                 .createdAt(cpDetails.getCreatedAt())
                 .build();
     }
@@ -298,9 +307,17 @@ public class CpDetailsService {
     /**
      * Récupérer le statut actuel d'un programme dans une CP
      */
-    private String getStatutActuel(Long programmeId, Long cpId) {
+    private StatusInfo getStatutActuel(Long programmeId, Long cpId) {
         return historiqueProgrammesRepository.findLatestByProgrammeAndCP(programmeId, cpId)
-                .map(historique -> historique.getStatus().getStatus())
-                .orElse("Non défini");
+                .map(historique -> new StatusInfo(
+                        historique.getStatus().getId(),
+                        historique.getStatus().getStatus()
+                ))
+                .orElse(new StatusInfo(null, "Non défini"));
     }
+    
+    /**
+     * Record pour retourner statusId et statusNom
+     */
+    private record StatusInfo(Long statusId, String statusNom) {}
 }

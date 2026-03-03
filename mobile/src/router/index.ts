@@ -72,6 +72,30 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Journal',
     component: () => import('@/views/JournalPage.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: () => import('@/views/CategoriesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/programmes',
+    name: 'Programmes',
+    component: () => import('@/views/ProgrammesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/classes-progressives',
+    name: 'ClassesProgressives',
+    component: () => import('@/views/ClassesProgressivesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/tabs/cp-details/:id',
+    name: 'CPDetails',
+    component: () => import('@/views/CPDetailsPage.vue'),
+    meta: { requiresAuth: true }
   }
 ];
 

@@ -83,6 +83,43 @@
           </ion-grid>
         </div>
 
+        <!-- Section Gestion des Programmes (Directeur et Co-Directeur) -->
+        <div v-if="canManageStaff">
+          <h2 class="section-title">Gestion des Programmes</h2>
+          
+          <ion-grid>
+            <ion-row>
+              <ion-col size="6">
+                <ion-card button @click="$router.push('/categories')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card">
+                    <ion-icon :icon="documentTextOutline" class="action-icon"></ion-icon>
+                    <h3>Catégories</h3>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+              <ion-col size="6">
+                <ion-card button @click="$router.push('/programmes')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card">
+                    <ion-icon :icon="listOutline" class="action-icon"></ion-icon>
+                    <h3>Programmes</h3>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <ion-card button @click="$router.push('/classes-progressives')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card-large">
+                    <ion-icon :icon="checkmarkOutline" class="action-icon"></ion-icon>
+                    <h3>Classes Progressives (CP)</h3>
+                    <p>Planifier et gérer les séances</p>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
         <!-- Section Administration (Directeur uniquement) -->
         <div v-if="authStore.isDirecteur">
           <h2 class="section-title">Administration</h2>
@@ -155,7 +192,9 @@ import {
   calendarOutline,
   personOutline,
   documentTextOutline,
-  personCircleOutline
+  personCircleOutline,
+  listOutline,
+  checkmarkOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -274,6 +313,30 @@ const canManageStaff = computed(() => {
 }
 
 .audit-card p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+}
+
+.programme-card .action-icon {
+  color: var(--ion-color-success);
+}
+
+.programme-card-large {
+  padding: 1rem;
+}
+
+.programme-card-large .action-icon {
+  color: var(--ion-color-success);
+  font-size: 32px;
+}
+
+.programme-card-large h3 {
+  font-size: 0.9375rem;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.programme-card-large p {
   margin: 0;
   font-size: 0.75rem;
   color: var(--ion-color-medium);

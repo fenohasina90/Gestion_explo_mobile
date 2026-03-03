@@ -25,11 +25,17 @@ public class CpDetailsResponse {
     @Schema(description = "ID de la classe progressive", example = "1")
     private Long classeProgressiveId;
     
+    @Schema(description = "Date de la classe progressive", example = "2026-03-03")
+    private String classeProgressiveDate;
+    
     @Schema(description = "ID du programme (null pour activité libre)", example = "1")
     private Long programmeId;
     
     @Schema(description = "Nom du programme (null pour activité libre)", example = "Étude biblique")
-    private String programmeName;
+    private String programmeNom;
+    
+    @Schema(description = "Description du programme (null pour activité libre)", example = "Étude des paraboles")
+    private String programmeDescription;
     
     @Schema(description = "ID de la catégorie du programme (null pour activité libre)", example = "1")
     private Long categorieId;
@@ -44,8 +50,11 @@ public class CpDetailsResponse {
     @Schema(description = "Liste des instructeurs assignés")
     private List<InstructeurSimpleDto> instructeurs;
     
-    @Schema(description = "Statut actuel du programme (null pour activité libre)", example = "En attente")
-    private String statutActuel;
+    @Schema(description = "ID du statut du programme (null pour activité libre)", example = "1")
+    private Long statusId;
+    
+    @Schema(description = "Nom du statut du programme (null pour activité libre)", example = "En attente")
+    private String statusNom;
     
     @Schema(description = "Date de création", example = "2026-03-01T10:00:00")
     private LocalDateTime createdAt;
@@ -58,7 +67,10 @@ public class CpDetailsResponse {
         @Schema(description = "ID de l'instructeur", example = "1")
         private Long id;
         
-        @Schema(description = "Nom complet de l'instructeur", example = "Jean Dupont")
-        private String nomComplet;
+        @Schema(description = "Nom de l'instructeur", example = "Dupont")
+        private String nom;
+        
+        @Schema(description = "Prénom de l'instructeur", example = "Jean")
+        private String prenom;
     }
 }

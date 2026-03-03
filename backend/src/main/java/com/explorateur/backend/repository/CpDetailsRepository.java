@@ -53,14 +53,14 @@ public interface CpDetailsRepository extends JpaRepository<CpDetails, Long> {
     /**
      * Trouver un CpDetails par ID avec ses instructeurs (EntityGraph)
      */
-    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur"})
+    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur", "programme", "programme.categorie", "programme.classe", "classeProgressive"})
     @Query("SELECT cd FROM CpDetails cd WHERE cd.id = :id")
     Optional<CpDetails> findByIdWithInstructeurs(@Param("id") Long id);
     
     /**
      * Trouver tous les programmes d'une CP avec leurs instructeurs (EntityGraph)
      */
-    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur"})
+    @EntityGraph(attributePaths = {"instructeurs", "instructeurs.instructeur", "programme", "programme.categorie", "programme.classe", "classeProgressive"})
     @Query("SELECT cd FROM CpDetails cd WHERE cd.classeProgressive.id = :cpId")
     List<CpDetails> findByClasseProgressiveIdWithInstructeurs(@Param("cpId") Long cpId);
     

@@ -434,3 +434,160 @@ export interface ParticipantsResponse {
   staff?: ParticipantStaffDto[];
 }
 
+/**
+ * Types pour les catégories de programme
+ */
+export interface CategorieProgramme {
+  id: number;
+  nom: string;
+  nombreProgrammes: number;
+}
+
+export interface CreateCategorieProgrammeRequest {
+  nom: string;
+}
+
+export interface UpdateCategorieProgrammeRequest {
+  nom: string;
+}
+
+/**
+ * Types pour les programmes
+ */
+export interface Programme {
+  id: number;
+  nom: string;
+  description?: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProgrammeRequest {
+  nom: string;
+  description?: string;
+  categorieId: number;
+  classeId: number;
+}
+
+export interface UpdateProgrammeRequest {
+  nom: string;
+  description?: string;
+  categorieId: number;
+  classeId: number;
+}
+
+/**
+ * Types pour les statuts de programme
+ */
+export interface ProgrammeStatus {
+  id: number;
+  nom: string;
+}
+
+export interface ProgrammeStatusResponse {
+  id: number;
+  programmeId: number;
+  programmeNom: string;
+  classeProgressiveId: number;
+  classeProgressiveDate: string;
+  statusId: number;
+  statusNom: string;
+  dateChangement: string;
+}
+
+export interface UpdateProgrammeStatusRequest {
+  statusId: number;
+}
+
+/**
+ * Types pour les classes progressives (CP)
+ */
+export interface ClasseProgressive {
+  id: number;
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau?: string;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  nombreProgrammes: number;
+}
+
+export interface CreateClasseProgressiveRequest {
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau?: string;
+  anneeExerciceId: number;
+}
+
+export interface UpdateClasseProgressiveRequest {
+  dateCp: string;
+  heureDebut: string;
+  heureFin: string;
+  niveau?: string;
+  anneeExerciceId: number;
+}
+
+export interface ClasseProgressiveFilterRequest {
+  dateDebut?: string;
+  dateFin?: string;
+  anneeExerciceId?: number;
+}
+
+/**
+ * Types pour les détails de CP (affectation programmes)
+ */
+export interface CpDetailsInstructeurDto {
+  id: number;
+  nom: string;
+  prenom: string;
+  totem?: string;
+}
+
+export interface CpDetails {
+  id: number;
+  classeProgressiveId: number;
+  classeProgressiveDate: string;
+  programmeId?: number;
+  programmeNom?: string;
+  programmeDescription?: string;
+  description?: string; // Pour activité libre
+  statusId?: number;
+  statusNom?: string;
+  instructeurs: CpDetailsInstructeurDto[];
+}
+
+export interface AddProgrammeToCpRequest {
+  classeProgressiveId: number;
+  programmeId?: number;
+  description?: string;
+  instructeurIds: number[];
+}
+
+export interface UpdateCpDetailsInstructeurRequest {
+  instructeurIds: number[];
+}
+
+/**
+ * Types pour l'historique des programmes
+ */
+export interface HistoriqueProgramme {
+  id: number;
+  programmeId: number;
+  programmeNom: string;
+  classeProgressiveId: number;
+  classeProgressiveDate: string;
+  ancienStatusId: number;
+  ancienStatusNom: string;
+  nouveauStatusId: number;
+  nouveauStatusNom: string;
+  dateChangement: string;
+  utilisateurId: number;
+  username: string;
+}
+
