@@ -8,6 +8,9 @@
         </ion-buttons>
         <ion-title v-if="cp">{{ formatDate(cp.dateCp) }}</ion-title>
         <ion-buttons slot="end">
+          <ion-button v-if="canModify" @click="goToPresence">
+            <ion-icon :icon="listOutline"></ion-icon>
+          </ion-button>
           <ion-button v-if="canModify" @click="openAddProgrammeModal">
             <ion-icon :icon="addOutline"></ion-icon>
           </ion-button>
@@ -301,7 +304,7 @@ import {
   alertController,
   toastController
 } from '@ionic/vue';
-import { addOutline, createOutline, trashOutline, people, checkmarkOutline, closeOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, people, checkmarkOutline, closeOutline, listOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 import classeProgressiveService from '@/services/classe-progressive.service';
 import cpDetailsService from '@/services/cp-details.service';
@@ -440,6 +443,11 @@ async function loadClasses() {
 async function handleRefresh(event: any) {
   await loadData();
   event.target.complete();
+}
+
+function goToPresence() {
+  const cpId = parseInt(route.params.id as string);
+  router.push(`/tabs/cp-presence/${cpId}`);
 }
 
 function formatDate(dateStr: string): string {

@@ -282,6 +282,7 @@ public class CpDetailsService {
                         .id(cdi.getInstructeur().getId())
                         .nom(cdi.getInstructeur().getNom())
                         .prenom(cdi.getInstructeur().getPrenom())
+                        .nomComplet(cdi.getInstructeur().getNom() + " " + cdi.getInstructeur().getPrenom())
                         .build())
                 .collect(Collectors.toList());
         

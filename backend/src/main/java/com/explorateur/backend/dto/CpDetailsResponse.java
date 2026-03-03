@@ -72,5 +72,8 @@ public class CpDetailsResponse {
         
         @Schema(description = "Prénom de l'instructeur", example = "Jean")
         private String prenom;
+        
+        @Schema(description = "Nom complet de l'instructeur", example = "Dupont Jean")
+        private String nomComplet;
     }
 }

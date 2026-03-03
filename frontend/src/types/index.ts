@@ -447,6 +447,25 @@ export interface ParticipantsResponse {
 }
 
 /**
+ * Types pour la gestion de présence aux classes progressives
+ */
+export interface CpPersonnesDisponiblesResponse {
+  enfants: ParticipantEnfantDto[];
+  staff: ParticipantStaffDto[];
+}
+
+export interface EnregistrerPresenceCpRequest {
+  classeProgressiveId: number;
+  enfantsPresents: number[];
+  staffPresents: number[];
+}
+
+export interface CpParticipantsResponse {
+  enfants?: ParticipantEnfantDto[];
+  staff?: ParticipantStaffDto[];
+}
+
+/**
  * Types pour les catégories de programme
  */
 export interface CategorieProgramme {

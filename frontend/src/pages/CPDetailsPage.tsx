@@ -6,6 +6,7 @@ import programmeService from '../services/programme.service';
 import instructeurService from '../services/instructeur.service';
 import categorieProgrammeService from '../services/categorie-programme.service';
 import classeService from '../services/classe.service';
+import { CPPresenceModal } from '../components/CPPresenceModal';
 import type { 
   CpDetailsResponse, 
   AddProgrammeToCpRequest,
@@ -33,6 +34,7 @@ export function CPDetailsPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPresenceModal, setShowPresenceModal] = useState(false);
   const [editingDetail, setEditingDetail] = useState<CpDetailsResponse | null>(null);
   
   // Filtres de programme
@@ -306,9 +308,14 @@ export function CPDetailsPage() {
             </p>
           )}
         </div>
-        <button className="btn btn-primary" onClick={handleAddActivity}>
-          + Ajouter une activité
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button className="btn btn-info" onClick={() => setShowPresenceModal(true)}>
+            👥 Gérer présence
+          </button>
+          <button className="btn btn-primary" onClick={handleAddActivity}>
+            + Ajouter une activité
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -633,6 +640,19 @@ export function CPDetailsPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Modal de gestion de présence */}
+      {showPresenceModal && cp && (
+        <CPPresenceModal
+          classeProgressiveId={Number(cpId)}
+          cpDate={cp.dateCp}
+          onClose={() => setShowPresenceModal(false)}
+          onSuccess={() => {
+            setSuccess('Présence enregistrée avec succès');
+            setTimeout(() => setSuccess(null), 3000);
+          }}
+        />
       )}
     </div>
   );
