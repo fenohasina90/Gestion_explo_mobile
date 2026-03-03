@@ -3,7 +3,6 @@ package com.explorateur.backend.service;
 import com.explorateur.backend.dto.ChangeProgrammeStatusRequest;
 import com.explorateur.backend.dto.HistoriqueProgrammesResponse;
 import com.explorateur.backend.dto.ProgrammeStatusResponse;
-import com.explorateur.backend.entity.HistoriqueProgrammes;
 import com.explorateur.backend.entity.Programme;
 import com.explorateur.backend.entity.ProgrammeStatus;
 import com.explorateur.backend.repository.HistoriqueProgrammesRepository;
@@ -29,6 +28,7 @@ public class ProgrammeStatusService {
     private final ProgrammeStatusRepository programmeStatusRepository;
     private final HistoriqueProgrammesRepository historiqueProgrammesRepository;
     private final ProgrammeRepository programmeRepository;
+    private final HistoriqueProgrammeService historiqueProgrammeService; // NOUVEAU SERVICE
     
     // Constantes pour les statuts
     private static final String STATUS_EN_ATTENTE = "En attente";
@@ -64,8 +64,8 @@ public class ProgrammeStatusService {
         ProgrammeStatus newStatus = programmeStatusRepository.findById(request.getNewStatusId())
                 .orElseThrow(() -> new RuntimeException("Statut introuvable"));
         
-        // Récupérer le statut actuel du programme dans cette CP
-        Optional<HistoriqueProgrammes> currentHistorique = historiqueProgrammesRepository
+        // Récupérer le statut actuel du programme dans cette CP (ancien système)
+        Optional<com.explorateur.backend.entity.HistoriqueProgrammes> currentHistorique = historiqueProgrammesRepository
                 .findLatestByProgrammeAndCP(request.getProgrammeId(), request.getClasseProgressiveId());
         
         String currentStatusName = currentHistorique
@@ -75,14 +75,21 @@ public class ProgrammeStatusService {
         // Appliquer les règles métier
         validateStatusTransition(currentStatusName, newStatus.getStatus());
         
-        // Créer l'entrée dans l'historique
-        HistoriqueProgrammes historique = HistoriqueProgrammes.builder()
+        // NOUVELLE LOGIQUE: Enregistrer dans le nouveau système d'historique
+        historiqueProgrammeService.enregistrerChangementStatut(
+                request.getProgrammeId(),
+                request.getClasseProgressiveId(),
+                request.getNewStatusId()
+        );
+        
+        // Garder la compatibilité avec l'ancien système
+        com.explorateur.backend.entity.HistoriqueProgrammes historique = com.explorateur.backend.entity.HistoriqueProgrammes.builder()
                 .programme(programme)
                 .classeProgressiveId(request.getClasseProgressiveId())
                 .status(newStatus)
                 .build();
         
-        HistoriqueProgrammes saved = historiqueProgrammesRepository.save(historique);
+        com.explorateur.backend.entity.HistoriqueProgrammes saved = historiqueProgrammesRepository.save(historique);
         
         return mapHistoriqueToResponse(saved);
     }
@@ -96,21 +103,28 @@ public class ProgrammeStatusService {
         
         // Vérifier que le programme existe
         Programme programme = programmeRepository.findById(programmeId)
-                .orElseThrow(() -> new RuntimeException("Programme introuvable"));
-        
-        // Récupérer le statut "En attente"
-        ProgrammeStatus statusEnAttente = programmeStatusRepository.findByStatus(STATUS_EN_ATTENTE)
-                .orElseThrow(() -> new RuntimeException("Statut 'En attente' introuvable"));
-        
-        // Vérifier qu'aucun statut n'existe déjà pour ce programme dans cette CP
-        Optional<HistoriqueProgrammes> existing = historiqueProgrammesRepository
+                .com.explorateur.backend.entity.HistoriqueProgrammes> existing = historiqueProgrammesRepository
                 .findLatestByProgrammeAndCP(programmeId, classeProgressiveId);
         
         if (existing.isPresent()) {
             throw new RuntimeException("Ce programme a déjà un statut dans cette CP");
         }
         
-        // Créer l'entrée initiale dans l'historique
+        // NOUVELLE LOGIQUE: Enregistrer dans le nouveau système d'historique
+        historiqueProgrammeService.enregistrerChangementStatut(
+                programmeId,
+                classeProgressiveId,
+                statusEnAttente.getId()
+        );
+        
+        // Garder la compatibilité avec l'ancien système
+        com.explorateur.backend.entity.HistoriqueProgrammes historique = com.explorateur.backend.entity.HistoriqueProgrammes.builder()
+                .programme(programme)
+                .classeProgressiveId(classeProgressiveId)
+                .status(statusEnAttente)
+                .build();
+        
+        com.explorateur.backend.entity.// Créer l'entrée initiale dans l'historique
         HistoriqueProgrammes historique = HistoriqueProgrammes.builder()
                 .programme(programme)
                 .classeProgressiveId(classeProgressiveId)
@@ -150,7 +164,7 @@ public class ProgrammeStatusService {
                 .collect(Collectors.toList());
     }
     
-    /**
+    /**com.explorateur.backend.entity.
      * Obtenir le statut actuel d'un programme dans une CP
      */
     @Transactional(readOnly = true)
@@ -205,7 +219,7 @@ public class ProgrammeStatusService {
     /**
      * Mapper un historique vers un DTO de réponse
      */
-    private HistoriqueProgrammesResponse mapHistoriqueToResponse(HistoriqueProgrammes historique) {
+    private HistoriqueProgrammesResponse mapHistoriqueToResponse(com.explorateur.backend.entity.HistoriqueProgrammes historique) {
         return HistoriqueProgrammesResponse.builder()
                 .id(historique.getId())
                 .programmeId(historique.getProgramme() != null ? historique.getProgramme().getId() : null)
