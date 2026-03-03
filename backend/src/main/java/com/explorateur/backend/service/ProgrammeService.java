@@ -28,6 +28,7 @@ public class ProgrammeService {
     private final ProgrammeRepository programmeRepository;
     private final CategorieProgrammeRepository categorieProgrammeRepository;
     private final ClasseRepository classeRepository;
+    private final JournalService journalService;
     
     /**
      * Créer un nouveau programme
@@ -52,6 +53,11 @@ public class ProgrammeService {
                 .build();
         
         Programme saved = programmeRepository.save(programme);
+        
+        // Journalisation
+        journalService.logAction("Creation du programme " + saved.getNom() + 
+                " dans la categorie " + categorie.getNom() + 
+                " pour la classe " + classe.getNom());
         
         return mapToResponse(saved);
     }
@@ -82,6 +88,11 @@ public class ProgrammeService {
         
         Programme updated = programmeRepository.save(programme);
         
+        // Journalisation
+        journalService.logAction("Modification du programme " + updated.getNom() + 
+                " dans la categorie " + categorie.getNom() + 
+                " pour la classe " + classe.getNom());
+        
         return mapToResponse(updated);
     }
     
@@ -104,6 +115,9 @@ public class ProgrammeService {
             throw new RuntimeException("Impossible de supprimer ce programme car il est utilisé dans une Classe Progressive");
         }
         */
+        
+        // Journalisation avant suppression
+        journalService.logAction("Suppression du programme " + programme.getNom());
         
         programmeRepository.delete(programme);
     }

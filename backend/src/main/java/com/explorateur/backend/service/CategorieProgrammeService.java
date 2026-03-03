@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class CategorieProgrammeService {
     
     private final CategorieProgrammeRepository categorieProgrammeRepository;
+    private final JournalService journalService;
     
     /**
      * Créer une nouvelle catégorie de programme
@@ -40,6 +41,9 @@ public class CategorieProgrammeService {
                 .build();
         
         CategorieProgramme saved = categorieProgrammeRepository.save(categorie);
+        
+        // Journalisation
+        journalService.logAction("Creation de la categorie " + saved.getNom());
         
         return mapToResponse(saved);
     }
@@ -62,6 +66,9 @@ public class CategorieProgrammeService {
         categorie.setNom(request.getNom());
         CategorieProgramme updated = categorieProgrammeRepository.save(categorie);
         
+        // Journalisation
+        journalService.logAction("Modification de la categorie " + updated.getNom());
+        
         return mapToResponse(updated);
     }
     
@@ -81,6 +88,9 @@ public class CategorieProgrammeService {
             throw new RuntimeException("Impossible de supprimer cette catégorie car elle est utilisée par " 
                     + nombreProgrammes + " programme(s)");
         }
+        
+        // Journalisation avant suppression
+        journalService.logAction("Suppression de la categorie " + categorie.getNom());
         
         categorieProgrammeRepository.delete(categorie);
     }

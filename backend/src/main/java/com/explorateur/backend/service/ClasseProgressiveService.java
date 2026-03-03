@@ -30,6 +30,7 @@ public class ClasseProgressiveService {
     private final ClasseProgressiveRepository cpRepository;
     private final AnneeExerciceRepository anneeExerciceRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final JournalService journalService;
     
     /**
      * Créer une nouvelle CP
@@ -74,6 +75,10 @@ public class ClasseProgressiveService {
         ClasseProgressive savedCp = cpRepository.save(cp);
         log.info("CP créée avec succès avec l'ID: {}", savedCp.getId());
         
+        // Journalisation
+        journalService.logAction("Enregistrement de la classe progressive le " + 
+                savedCp.getDateCp() + " a " + savedCp.getHeureDebut() + " - " + savedCp.getHeureFin());
+        
         return mapToResponse(savedCp);
     }
     
@@ -117,6 +122,10 @@ public class ClasseProgressiveService {
         ClasseProgressive updatedCp = cpRepository.save(cp);
         log.info("CP mise à jour avec succès: {}", updatedCp.getId());
         
+        // Journalisation
+        journalService.logAction("Modification de la classe progressive du " + 
+                updatedCp.getDateCp() + " a " + updatedCp.getHeureDebut() + " - " + updatedCp.getHeureFin());
+        
         return mapToResponse(updatedCp);
     }
     
@@ -145,6 +154,9 @@ public class ClasseProgressiveService {
         if (cpRepository.hasProgrammesTermines(id)) {
             throw new RuntimeException("Impossible de supprimer cette CP: des programmes sont déjà terminés");
         }
+        
+        // Journalisation avant suppression
+        journalService.logAction("Suppression de la classe progressive du " + cp.getDateCp());
         
         cpRepository.delete(cp);
         log.info("CP supprimée avec succès: {}", id);

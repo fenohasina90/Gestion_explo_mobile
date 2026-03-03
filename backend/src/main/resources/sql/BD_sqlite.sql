@@ -299,14 +299,21 @@ CREATE TABLE cp_details_instructeurs (
     UNIQUE(cp_details_id, instructeur_id)
 );
 
-CREATE TABLE cp_presence (
+CREATE TABLE cp_presence_explo (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     classe_progressive_id INTEGER,
     enfant_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (classe_progressive_id) REFERENCES classe_progressive(id),
+    FOREIGN KEY (enfant_id) REFERENCES inscriptions(id)
+);
+
+CREATE TABLE cp_presence_staff (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    classe_progressive_id INTEGER,
     staff_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (classe_progressive_id) REFERENCES classe_progressive(id),
-    FOREIGN KEY (enfant_id) REFERENCES inscriptions(id),
     FOREIGN KEY (staff_id) REFERENCES staff(id)
 );
 

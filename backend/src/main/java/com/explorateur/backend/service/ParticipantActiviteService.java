@@ -23,6 +23,7 @@ public class ParticipantActiviteService {
     private final InscriptionRepository inscriptionRepository;
     private final StaffRepository staffRepository;
     private final ActiviteStatusRepository activiteStatusRepository;
+    private final JournalService journalService;
     
     /**
      * Récupérer les personnes disponibles pour faire la présence
@@ -120,6 +121,13 @@ public class ParticipantActiviteService {
         
         log.info("Présence enregistrée pour l'activité {} par {} - {} enfants, {} staff",
                 activite.getId(), username, request.getEnfantsPresents().size(), request.getStaffPresents().size());
+        
+        // Journalisation
+        int nbEnfants = request.getEnfantsPresents().size();
+        int nbStaff = request.getStaffPresents().size();
+        journalService.logAction("Enregistrement de presence pour l'activite " + activite.getNom() + 
+                " (" + nbEnfants + " enfant" + (nbEnfants > 1 ? "s" : "") + 
+                " et " + nbStaff + " staff" + (nbStaff > 1 ? "s" : "") + ")");
     }
     
     /**

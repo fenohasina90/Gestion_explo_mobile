@@ -30,6 +30,7 @@ public class CpDetailsService {
     private final ProgrammeStatusService programmeStatusService;
     private final HistoriqueProgrammesRepository historiqueProgrammesRepository;
     private final EntityManager entityManager;
+    private final JournalService journalService;
     
     /**
      * Ajouter un programme ou une activité libre à une CP avec un ou plusieurs instructeurs
@@ -114,6 +115,18 @@ public class CpDetailsService {
         log.info("CpDetails créé avec {} instructeur(s)", 
                 savedCpDetails.getInstructeurs() != null ? savedCpDetails.getInstructeurs().size() : 0);
         
+        // Journalisation
+        int nbInstructeurs = savedCpDetails.getInstructeurs() != null ? savedCpDetails.getInstructeurs().size() : 0;
+        String message;
+        if (savedCpDetails.getProgramme() != null) {
+            message = "Ajout du programme " + savedCpDetails.getProgramme().getNom() + " a la CP du " + cp.getDateCp() + 
+                    " avec " + nbInstructeurs + " instructeur(s)";
+        } else {
+            message = "Ajout de l'activite libre '" + savedCpDetails.getDescription() + "' a la CP du " + cp.getDateCp() + 
+                    " avec " + nbInstructeurs + " instructeur(s)";
+        }
+        journalService.logAction(message);
+        
         return mapToResponse(savedCpDetails);
     }
     
@@ -156,6 +169,15 @@ public class CpDetailsService {
         cpDetailsRepository.save(cpDetails);
         
         log.info("Instructeurs modifiés avec succès pour cp_details ID: {}", cpDetailsId);
+        
+        // Journalisation
+        int nbInstructeurs = cpDetails.getInstructeurs() != null ? cpDetails.getInstructeurs().size() : 0;
+        String nomActivite = cpDetails.getProgramme() != null ? 
+                cpDetails.getProgramme().getNom() : 
+                "l'activite libre '" + cpDetails.getDescription() + "'";
+        journalService.logAction("Modification des instructeurs pour " + nomActivite + 
+                " (" + nbInstructeurs + " instructeur(s))");
+        
         return mapToResponse(cpDetails);
     }
     
@@ -175,6 +197,13 @@ public class CpDetailsService {
                 cpDetails.getProgramme().getId())) {
             throw new RuntimeException("Impossible de supprimer ce programme: il est déjà terminé");
         }
+        
+        // Journalisation avant suppression
+        String nomActivite = cpDetails.getProgramme() != null ? 
+                cpDetails.getProgramme().getNom() : 
+                "l'activite libre '" + cpDetails.getDescription() + "'";
+        journalService.logAction("Retrait de " + nomActivite + " de la CP du " + 
+                cpDetails.getClasseProgressive().getDateCp());
         
         cpDetailsRepository.delete(cpDetails);
         log.info("Programme retiré de la CP avec succès");
