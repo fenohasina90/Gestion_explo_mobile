@@ -16,6 +16,7 @@ import { CategoriesProgrammePage } from './pages/CategoriesProgrammePage';
 import { ProgrammesPage } from './pages/ProgrammesPage';
 import { ClassesProgressivesPage } from './pages/ClassesProgressivesPage';
 import { CPDetailsPage } from './pages/CPDetailsPage';
+import { HistoriqueProgrammesPage } from './pages/HistoriqueProgrammesPage';
 import { InscriptionsPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
@@ -173,6 +174,16 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <CPDetailsPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/historique-programmes"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <HistoriqueProgrammesPage />
                 </Layout>
               </PrivateRoute>
             }

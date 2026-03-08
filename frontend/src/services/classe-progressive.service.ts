@@ -63,6 +63,14 @@ class ClasseProgressiveService {
   async getCPByAnneeExercice(anneeExerciceId: number): Promise<ClasseProgressive[]> {
     return apiService.get<ClasseProgressive[]>(`${this.baseUrl}/annee/${anneeExerciceId}`);
   }
+
+  /**
+   * Clôturer une CP (met etat à 1)
+   * Une fois clôturée, les présences et changements de statuts sont interdits
+   */
+  async cloturerCP(id: number): Promise<ClasseProgressive> {
+    return apiService.put<ClasseProgressive>(`${this.baseUrl}/${id}/cloturer`, {});
+  }
 }
 
 export default new ClasseProgressiveService();

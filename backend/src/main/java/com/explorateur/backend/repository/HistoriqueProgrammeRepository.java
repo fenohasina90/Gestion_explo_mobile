@@ -59,6 +59,28 @@ public interface HistoriqueProgrammeRepository extends JpaRepository<HistoriqueP
     Long countByProgrammeId(@Param("programmeId") Long programmeId);
     
     /**
+     * Récupère le dernier historique d'un programme pour une année donnée
+     * (statut actuel du programme dans cette année)
+     */
+    @Query("SELECT h FROM HistoriqueProgramme h " +
+           "WHERE h.programme.id = :programmeId " +
+           "AND h.classeProgressive.anneeExercice.id = :anneeExerciceId " +
+           "ORDER BY h.createdAt DESC")
+    List<HistoriqueProgramme> findLatestByProgrammeAndAnnee(
+            @Param("programmeId") Long programmeId,
+            @Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
+     * Compte les changements pour un programme dans une année
+     */
+    @Query("SELECT COUNT(h) FROM HistoriqueProgramme h " +
+           "WHERE h.programme.id = :programmeId " +
+           "AND h.classeProgressive.anneeExercice.id = :anneeExerciceId")
+    Long countByProgrammeAndAnnee(
+            @Param("programmeId") Long programmeId,
+            @Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
      * Vérifie si un programme a déjà été marqué comme "Terminé" 
      * dans une CP donnée
      */
@@ -67,4 +89,16 @@ public interface HistoriqueProgrammeRepository extends JpaRepository<HistoriqueP
            "AND h.classeProgressive.id = :cpId " +
            "AND h.status.status = 'Terminé'")
     boolean existsTermineInCp(@Param("programmeId") Long programmeId, @Param("cpId") Long cpId);
+    
+    /**
+     * Vérifie si un programme est terminé pour une année d'exercice donnée
+     * (a atteint le statut "Terminé" et ne peut plus être modifié)
+     */
+    @Query("SELECT CASE WHEN COUNT(ppa) > 0 THEN true ELSE false END " +
+           "FROM ProgrammeProgressionAnnuelle ppa " +
+           "WHERE ppa.programme.id = :programmeId " +
+           "AND ppa.anneeExercice.id = :anneeExerciceId " +
+           "AND ppa.statutFinal.status = 'Terminé'")
+    boolean isProgrammeTerminePourAnnee(@Param("programmeId") Long programmeId, 
+                                        @Param("anneeExerciceId") Long anneeExerciceId);
 }

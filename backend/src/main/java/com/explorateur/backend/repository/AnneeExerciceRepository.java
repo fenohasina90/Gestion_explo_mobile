@@ -17,6 +17,11 @@ public interface AnneeExerciceRepository extends JpaRepository<AnneeExercice, Lo
     Optional<AnneeExercice> findByAnnee(LocalDate annee);
     
     /**
+     * Trouve toutes les années d'exercice commençant à une date donnée
+     */
+    List<AnneeExercice> findAllByAnnee(LocalDate annee);
+    
+    /**
      * Trouve l'année d'exercice la plus récente
      */
     Optional<AnneeExercice> findFirstByOrderByAnneeDesc();

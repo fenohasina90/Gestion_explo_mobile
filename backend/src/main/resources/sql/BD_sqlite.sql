@@ -23,6 +23,7 @@ CREATE TABLE annee_exercice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee DATE NOT NULL,
     date_fin DATE NOT NULL,
+    statuts_initialises INTEGER DEFAULT 0 NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -273,6 +274,7 @@ CREATE TABLE classe_progressive (
     heure_debut TIME NOT NULL,
     heure_fin TIME NOT NULL,
     niveau INTEGER,
+    etat INTEGER DEFAULT 0 NOT NULL,
     annee_exercice_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (annee_exercice_id) REFERENCES annee_exercice(id)
@@ -319,13 +321,15 @@ CREATE TABLE cp_presence_staff (
 
 CREATE TABLE historique_programmes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    programme_id INTEGER,
-    classe_progressive_id INTEGER,
-    status_id INTEGER,
+    programme_id INTEGER NOT NULL,
+    classe_progressive_id INTEGER,  -- NULL pour initialisation automatique/système
+    status_id INTEGER NOT NULL,
+    annee_exercice_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (programme_id) REFERENCES programmes(id),
     FOREIGN KEY (classe_progressive_id) REFERENCES classe_progressive(id),
-    FOREIGN KEY (status_id) REFERENCES programme_status(id)
+    FOREIGN KEY (status_id) REFERENCES programme_status(id),
+    FOREIGN KEY (annee_exercice_id) REFERENCES annee_exercice(id)
 );
 
 CREATE TABLE programme_progression_annuelle (

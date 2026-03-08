@@ -6,7 +6,9 @@ import programmeService from '../services/programme.service';
 import instructeurService from '../services/instructeur.service';
 import categorieProgrammeService from '../services/categorie-programme.service';
 import classeService from '../services/classe.service';
+import programmeStatusService from '../services/programme-status.service';
 import { CPPresenceModal } from '../components/CPPresenceModal';
+import { useAuth } from '../contexts/AuthContext';
 import type { 
   CpDetailsResponse, 
   AddProgrammeToCpRequest,
@@ -22,6 +24,7 @@ import './CPDetailsPage.css';
 export function CPDetailsPage() {
   const { cpId } = useParams<{ cpId: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [cpDetails, setCpDetails] = useState<CpDetailsResponse[]>([]);
   const [cp, setCP] = useState<ClasseProgressive | null>(null);
@@ -249,6 +252,41 @@ export function CPDetailsPage() {
     setShowEditModal(true);
   };
 
+  const handleChangeStatus = async (detail: CpDetailsResponse, newStatusId: number, newStatusName: string) => {
+    // Vérifier si la CP est clôturée
+    if (cp?.etat === 1) {
+      setError('Impossible de modifier le statut : la CP est clôturée');
+      return;
+    }
+
+    // Vérifier si le programme est déjà terminé
+    if (detail.statusNom === 'Terminé') {
+      setError('Impossible de modifier le statut : le programme est déjà terminé');
+      return;
+    }
+
+    if (!detail.programmeId) {
+      setError('Impossible de changer le statut d\'une activité libre');
+      return;
+    }
+
+    if (window.confirm(`Confirmer le passage au statut "${newStatusName}" ?`)) {
+      try {
+        await programmeStatusService.changeProgrammeStatus({
+          programmeId: detail.programmeId,
+          classeProgressiveId: Number(cpId),
+          newStatusId
+        });
+        setSuccess(`Statut changé avec succès : ${newStatusName}`);
+        setError(null);
+        setTimeout(() => setSuccess(null), 3000);
+        loadData();
+      } catch (err: any) {
+        setError(err.response?.data?.message || 'Erreur lors du changement de statut');
+      }
+    }
+  };
+
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -348,9 +386,9 @@ export function CPDetailsPage() {
                       <h3>{detail.programmeName}</h3>
                       <div className="activity-meta">
                         <span className="badge badge-info">{detail.categorieName}</span>
-                        {detail.statutActuel && (
-                          <span className={`badge badge-status badge-${detail.statutActuel.toLowerCase().replace(' ', '-')}`}>
-                            {detail.statutActuel}
+                        {detail.statusNom && (
+                          <span className={`badge badge-status badge-${detail.statusNom.toLowerCase().replace(' ', '-')}`}>
+                            {detail.statusNom}
                           </span>
                         )}
                       </div>
@@ -376,6 +414,30 @@ export function CPDetailsPage() {
               </div>
 
               <div className="activity-actions">
+                {/* Boutons de changement de statut (uniquement pour Directeur/Co-Directeur et programmes) */}
+                {detail.programmeId && (user?.role === 'Directeur' || user?.role === 'Co_Directeur') && cp?.etat !== 1 && (
+                  <>
+                    {detail.statusNom === 'En attente' && (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleChangeStatus(detail, 2, 'En cours')}
+                        title="Passer en cours"
+                      >
+                        ▶️ En cours
+                      </button>
+                    )}
+                    {detail.statusNom === 'En cours' && (
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={() => handleChangeStatus(detail, 3, 'Terminé')}
+                        title="Marquer comme terminé"
+                      >
+                        ✅ Terminé
+                      </button>
+                    )}
+                  </>
+                )}
+                
                 <button
                   className="btn btn-sm btn-info"
                   onClick={() => handleEditInstructeurs(detail)}
@@ -387,7 +449,7 @@ export function CPDetailsPage() {
                   className="btn btn-sm btn-danger"
                   onClick={() => handleDelete(detail.id)}
                   title="Retirer de la CP"
-                  disabled={detail.statutActuel === 'Terminé'}
+                  disabled={detail.statusNom === 'Terminé'}
                 >
                   🗑️ Retirer
                 </button>

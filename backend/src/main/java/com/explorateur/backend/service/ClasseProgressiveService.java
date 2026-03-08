@@ -223,6 +223,37 @@ public class ClasseProgressiveService {
                 .collect(Collectors.toList());
     }
     
+    /**
+     * Clôturer une CP (met etat à 1)
+     * Une fois clôturée, la CP ne peut plus être modifiée et les présences/statuts ne peuvent plus être saisis
+     */
+    @Transactional
+    public ClasseProgressiveResponse cloturerCP(Long id) {
+        log.info("Clôture de la CP ID: {}", id);
+        
+        ClasseProgressive cp = cpRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("CP non trouvée avec l'ID: " + id));
+        
+        // Validation: L'utilisateur ne peut clôturer que dans son année d'exercice
+        validateUserAnneeExercice(cp.getAnneeExercice());
+        
+        // Validation: Vérifier que la CP n'est pas déjà clôturée
+        if (cp.getEtat() != null && cp.getEtat() == 1) {
+            throw new RuntimeException("Cette CP est déjà clôturée");
+        }
+        
+        // Clôturer la CP
+        cp.setEtat(1);
+        ClasseProgressive savedCp = cpRepository.save(cp);
+        log.info("CP clôturée avec succès: ID {}", savedCp.getId());
+        
+        // Journalisation
+        journalService.logAction("Clôture de la classe progressive du " + 
+                savedCp.getDateCp() + " à " + savedCp.getHeureDebut() + " - " + savedCp.getHeureFin());
+        
+        return mapToResponse(savedCp);
+    }
+    
     // ========== MÉTHODES DE VALIDATION ==========
     
     /**
@@ -282,6 +313,7 @@ public class ClasseProgressiveService {
                 .heureDebut(cp.getHeureDebut())
                 .heureFin(cp.getHeureFin())
                 .niveau(cp.getNiveau())
+                .etat(cp.getEtat() != null ? cp.getEtat() : 0)
                 .anneeExerciceId(cp.getAnneeExercice().getId())
                 .anneeExercice(cp.getAnneeExercice().getAnnee())
                 .createdAt(cp.getCreatedAt())

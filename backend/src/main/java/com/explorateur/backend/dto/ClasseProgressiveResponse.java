@@ -35,6 +35,9 @@ public class ClasseProgressiveResponse {
     @Schema(description = "Niveau de la CP", example = "1")
     private Integer niveau;
     
+    @Schema(description = "État de la CP (0=ouverte, 1=clôturée)", example = "0")
+    private Integer etat;
+    
     @Schema(description = "ID de l'année d'exercice", example = "1")
     private Long anneeExerciceId;
     

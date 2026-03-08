@@ -29,8 +29,11 @@ public class CpDetailsService {
     private final CpDetailsInstructeurRepository cpDetailsInstructeurRepository;
     private final ProgrammeStatusService programmeStatusService;
     private final HistoriqueProgrammesRepository historiqueProgrammesRepository;
+    private final HistoriqueProgrammeRepository historiqueProgrammeRepository;
     private final EntityManager entityManager;
     private final JournalService journalService;
+    private final HistoriqueProgrammeService historiqueProgrammeService;
+    private final ProgrammeStatusRepository programmeStatusRepository;
     
     /**
      * Ajouter un programme ou une activité libre à une CP avec un ou plusieurs instructeurs
@@ -57,6 +60,11 @@ public class CpDetailsService {
         ClasseProgressive cp = cpRepository.findById(request.getClasseProgressiveId())
                 .orElseThrow(() -> new RuntimeException("CP non trouvée avec l'ID: " + request.getClasseProgressiveId()));
         
+        // RÈGLE MÉTIER 1: Vérifier que la CP n'est pas clôturée
+        if (cp.getEtat() != null && cp.getEtat() == 1) {
+            throw new RuntimeException("Cette Classe Progressive est clôturée. Ajout de programme interdit.");
+        }
+        
         Programme programme = null;
         
         // Si programmeId est fourni, vérifier que le programme existe
@@ -68,6 +76,17 @@ public class CpDetailsService {
             if (cpDetailsRepository.existsByClasseProgressiveIdAndProgrammeId(
                     request.getClasseProgressiveId(), request.getProgrammeId())) {
                 throw new RuntimeException("Ce programme est déjà ajouté à cette CP");
+            }
+            
+            // RÈGLE MÉTIER 2: Vérifier que le programme n'est pas TERMINÉ pour l'année
+            Long anneeExerciceId = cp.getAnneeExercice().getId();
+            
+            // Utiliser le repository pour vérifier si le programme est terminé
+            boolean estTermine = historiqueProgrammeRepository
+                    .isProgrammeTerminePourAnnee(request.getProgrammeId(), anneeExerciceId);
+            
+            if (estTermine) {
+                throw new RuntimeException("Ce programme est déjà TERMINÉ pour cette année. Ajout interdit.");
             }
         }
         
@@ -104,12 +123,22 @@ public class CpDetailsService {
             savedCpDetails = cpDetailsRepository.save(savedCpDetails);
         }
         
-        // Règle métier: Lors de l'ajout d'un PROGRAMME, le statut est automatiquement "En attente"
+        // RÈGLE MÉTIER 3: Lors de l'ajout d'un PROGRAMME, le statut passe automatiquement à "En cours"
         // Les activités libres n'ont pas de statut
         if (request.getProgrammeId() != null) {
-            programmeStatusService.initializeProgrammeStatus(
-                    request.getProgrammeId(), 
-                    request.getClasseProgressiveId());
+            // Trouver le statut "En cours"
+            ProgrammeStatus statusEnCours = programmeStatusRepository.findByStatus("En cours")
+                    .orElseThrow(() -> new RuntimeException("Statut 'En cours' introuvable"));
+            
+            // Changer le statut vers "En cours" (transition automatique EN_ATTENTE → EN_COURS)
+            com.explorateur.backend.dto.ChangeProgrammeStatusRequest statusRequest = 
+                    new com.explorateur.backend.dto.ChangeProgrammeStatusRequest();
+            statusRequest.setProgrammeId(request.getProgrammeId());
+            statusRequest.setClasseProgressiveId(request.getClasseProgressiveId());
+            statusRequest.setNewStatusId(statusEnCours.getId());
+            
+            programmeStatusService.changeProgrammeStatus(statusRequest);
+            log.info("Statut du programme {} automatiquement changé à 'En cours'", request.getProgrammeId());
         }
         
         log.info("CpDetails créé avec {} instructeur(s)", 

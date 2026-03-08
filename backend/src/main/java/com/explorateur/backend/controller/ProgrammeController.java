@@ -126,4 +126,27 @@ public class ProgrammeController {
         List<ProgrammeResponse> programmes = programmeService.getProgrammesByClasse(classeId);
         return ResponseEntity.ok(programmes);
     }
+    
+    @GetMapping("/disponibles/annee/{anneeExerciceId}")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @Operation(summary = "Obtenir les programmes disponibles pour une année",
+               description = "Récupère tous les programmes qui ne sont pas TERMINÉ pour l'année spécifiée. " +
+                             "Utilisé pour afficher uniquement les programmes qui peuvent être ajoutés aux CP.")
+    public ResponseEntity<List<ProgrammeResponse>> getProgrammesDisponiblesAnnee(
+            @PathVariable Long anneeExerciceId,
+            @Parameter(description = "ID de la catégorie (optionnel)")
+            @RequestParam(required = false) Long categorieId,
+            @Parameter(description = "ID de la classe (optionnel)")
+            @RequestParam(required = false) Long classeId) {
+        
+        List<ProgrammeResponse> programmes;
+        if (classeId != null) {
+            // Filtrer par classe (et ignorer categorieId car la classe détermine déjà les programmes)
+            programmes = programmeService.getProgrammesDisponiblesParAnneeEtClasse(anneeExerciceId, classeId);
+        } else {
+            programmes = programmeService.getProgrammesDisponiblesParAnnee(anneeExerciceId);
+        }
+        
+        return ResponseEntity.ok(programmes);
+    }
 }

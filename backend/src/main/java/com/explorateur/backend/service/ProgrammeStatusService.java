@@ -3,11 +3,8 @@ package com.explorateur.backend.service;
 import com.explorateur.backend.dto.ChangeProgrammeStatusRequest;
 import com.explorateur.backend.dto.HistoriqueProgrammesResponse;
 import com.explorateur.backend.dto.ProgrammeStatusResponse;
-import com.explorateur.backend.entity.Programme;
-import com.explorateur.backend.entity.ProgrammeStatus;
-import com.explorateur.backend.repository.HistoriqueProgrammesRepository;
-import com.explorateur.backend.repository.ProgrammeRepository;
-import com.explorateur.backend.repository.ProgrammeStatusRepository;
+import com.explorateur.backend.entity.*;
+import com.explorateur.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Service pour la gestion des statuts de programme
+ * Service pour la gestion des statuts de programme (NOUVEAU SYSTÈME)
+ * Utilise HistoriqueProgramme et ProgrammeProgressionAnnuelle
  */
 @Service
 @RequiredArgsConstructor
@@ -26,9 +24,11 @@ import java.util.stream.Collectors;
 public class ProgrammeStatusService {
     
     private final ProgrammeStatusRepository programmeStatusRepository;
-    private final HistoriqueProgrammesRepository historiqueProgrammesRepository;
+    private final HistoriqueProgrammeRepository historiqueProgrammeRepository;
+    private final ProgrammeProgressionAnnuelleRepository progressionAnnuelleRepository;
+    private final ClasseProgressiveRepository classeProgressiveRepository;
     private final ProgrammeRepository programmeRepository;
-    private final HistoriqueProgrammeService historiqueProgrammeService; // NOUVEAU SERVICE
+    private final HistoriqueProgrammeService historiqueProgrammeService;
     
     // Constantes pour les statuts
     private static final String STATUS_EN_ATTENTE = "En attente";
@@ -50,6 +50,7 @@ public class ProgrammeStatusService {
     
     /**
      * Changer le statut d'un programme dans une CP
+     * NOUVELLE VERSION avec validation complète selon les règles métier
      */
     @Transactional
     public HistoriqueProgrammesResponse changeProgrammeStatus(ChangeProgrammeStatusRequest request) {
@@ -60,144 +61,69 @@ public class ProgrammeStatusService {
         Programme programme = programmeRepository.findById(request.getProgrammeId())
                 .orElseThrow(() -> new RuntimeException("Programme introuvable"));
         
+        // Vérifier que la CP existe
+        ClasseProgressive cp = classeProgressiveRepository.findById(request.getClasseProgressiveId())
+                .orElseThrow(() -> new RuntimeException("Classe Progressive introuvable"));
+        
+        // RÈGLE MÉTIER 1: Vérifier que la CP n'est pas clôturée
+        if (cp.getEtat() != null && cp.getEtat() == 1) {
+            throw new RuntimeException("Cette Classe Progressive est clôturée. Modification de statut interdite.");
+        }
+        
         // Vérifier que le nouveau statut existe
         ProgrammeStatus newStatus = programmeStatusRepository.findById(request.getNewStatusId())
                 .orElseThrow(() -> new RuntimeException("Statut introuvable"));
         
-        // Récupérer le statut actuel du programme dans cette CP (ancien système)
-        Optional<com.explorateur.backend.entity.HistoriqueProgrammes> currentHistorique = historiqueProgrammesRepository
-                .findLatestByProgrammeAndCP(request.getProgrammeId(), request.getClasseProgressiveId());
+        Long anneeExerciceId = cp.getAnneeExercice().getId();
         
-        String currentStatusName = currentHistorique
-                .map(h -> h.getStatus().getStatus())
-                .orElse(null);
+        // RÈGLE MÉTIER 2: Vérifier que le programme n'est pas déjà TERMINÉ pour cette année
+        boolean dejaTermine = historiqueProgrammeRepository
+                .isProgrammeTerminePourAnnee(request.getProgrammeId(), anneeExerciceId);
         
-        // Appliquer les règles métier
+        if (dejaTermine) {
+            throw new RuntimeException("Ce programme est déjà TERMINÉ pour cette année. Modification interdite.");
+        }
+        
+        // Récupérer le statut actuel du programme pour cette année
+        List<HistoriqueProgramme> historiquesAnnee = historiqueProgrammeRepository
+                .findLatestByProgrammeAndAnnee(request.getProgrammeId(), anneeExerciceId);
+        
+        String currentStatusName = historiquesAnnee.isEmpty() ? null 
+                : historiquesAnnee.get(0).getStatus().getStatus();
+        
+        // Valider la transition de statut
         validateStatusTransition(currentStatusName, newStatus.getStatus());
         
-        // NOUVELLE LOGIQUE: Enregistrer dans le nouveau système d'historique
+        // Enregistrer le changement dans l'historique via le service dédié
         historiqueProgrammeService.enregistrerChangementStatut(
-                request.getProgrammeId(),
-                request.getClasseProgressiveId(),
+                request.getProgrammeId(), 
+                request.getClasseProgressiveId(), 
                 request.getNewStatusId()
         );
         
-        // Garder la compatibilité avec l'ancien système
-        com.explorateur.backend.entity.HistoriqueProgrammes historique = com.explorateur.backend.entity.HistoriqueProgrammes.builder()
-                .programme(programme)
-                .classeProgressiveId(request.getClasseProgressiveId())
-                .status(newStatus)
-                .build();
+        // Récupérer l'historique créé pour le retour
+        List<HistoriqueProgramme> dernierHistorique = historiqueProgrammeRepository
+                .findByClasseProgressiveIdOrderByCreatedAtAsc(request.getClasseProgressiveId());
         
-        com.explorateur.backend.entity.HistoriqueProgrammes saved = historiqueProgrammesRepository.save(historique);
+        HistoriqueProgramme saved = dernierHistorique.isEmpty() ? null 
+                : dernierHistorique.get(dernierHistorique.size() - 1);
         
-        return mapHistoriqueToResponse(saved);
-    }
-    
-    /**
-     * Initialiser le statut d'un programme dans une CP (statut "En attente")
-     */
-    @Transactional
-    public HistoriqueProgrammesResponse initializeProgrammeStatus(Long programmeId, Long classeProgressiveId) {
-        log.info("Initialisation du statut du programme ID: {} dans CP ID: {}", programmeId, classeProgressiveId);
-        
-        // Vérifier que le programme existe
-        Programme programme = programmeRepository.findById(programmeId)
-                .com.explorateur.backend.entity.HistoriqueProgrammes> existing = historiqueProgrammesRepository
-                .findLatestByProgrammeAndCP(programmeId, classeProgressiveId);
-        
-        if (existing.isPresent()) {
-            throw new RuntimeException("Ce programme a déjà un statut dans cette CP");
-        }
-        
-        // NOUVELLE LOGIQUE: Enregistrer dans le nouveau système d'historique
-        historiqueProgrammeService.enregistrerChangementStatut(
-                programmeId,
-                classeProgressiveId,
-                statusEnAttente.getId()
-        );
-        
-        // Garder la compatibilité avec l'ancien système
-        com.explorateur.backend.entity.HistoriqueProgrammes historique = com.explorateur.backend.entity.HistoriqueProgrammes.builder()
-                .programme(programme)
-                .classeProgressiveId(classeProgressiveId)
-                .status(statusEnAttente)
-                .build();
-        
-        com.explorateur.backend.entity.// Créer l'entrée initiale dans l'historique
-        HistoriqueProgrammes historique = HistoriqueProgrammes.builder()
-                .programme(programme)
-                .classeProgressiveId(classeProgressiveId)
-                .status(statusEnAttente)
-                .build();
-        
-        HistoriqueProgrammes saved = historiqueProgrammesRepository.save(historique);
-        
-        return mapHistoriqueToResponse(saved);
-    }
-    
-    /**
-     * Obtenir l'historique d'un programme dans une CP
-     */
-    @Transactional(readOnly = true)
-    public List<HistoriqueProgrammesResponse> getHistoriqueByProgrammeAndCP(Long programmeId, Long classeProgressiveId) {
-        log.info("Récupération de l'historique du programme ID: {} dans CP ID: {}", programmeId, classeProgressiveId);
-        
-        return historiqueProgrammesRepository
-                .findByProgrammeIdAndClasseProgressiveIdOrderByCreatedAtDesc(programmeId, classeProgressiveId)
-                .stream()
-                .map(this::mapHistoriqueToResponse)
-                .collect(Collectors.toList());
-    }
-    
-    /**
-     * Obtenir l'historique complet d'un programme (toutes CP)
-     */
-    @Transactional(readOnly = true)
-    public List<HistoriqueProgrammesResponse> getHistoriqueByProgramme(Long programmeId) {
-        log.info("Récupération de l'historique complet du programme ID: {}", programmeId);
-        
-        return historiqueProgrammesRepository
-                .findByProgrammeIdOrderByCreatedAtDesc(programmeId)
-                .stream()
-                .map(this::mapHistoriqueToResponse)
-                .collect(Collectors.toList());
-    }
-    
-    /**com.explorateur.backend.entity.
-     * Obtenir le statut actuel d'un programme dans une CP
-     */
-    @Transactional(readOnly = true)
-    public HistoriqueProgrammesResponse getCurrentStatus(Long programmeId, Long classeProgressiveId) {
-        log.info("Récupération du statut actuel du programme ID: {} dans CP ID: {}", programmeId, classeProgressiveId);
-        
-        HistoriqueProgrammes current = historiqueProgrammesRepository
-                .findLatestByProgrammeAndCP(programmeId, classeProgressiveId)
-                .orElseThrow(() -> new RuntimeException("Aucun statut trouvé pour ce programme dans cette CP"));
-        
-        return mapHistoriqueToResponse(current);
+        return mapHistoriqueToResponseNew(saved);
     }
     
     /**
      * Valider la transition de statut selon les règles métier
+     * RÈGLE MÉTIER 3: Un programme TERMINÉ ne peut plus être modifié
      */
     private void validateStatusTransition(String currentStatus, String newStatus) {
-        // Si c'est le premier statut (pas de statut actuel), il doit être "En attente"
+        // Si c'est le premier statut, il peut être n'importe lequel (généralement "En cours" lors de l'ajout)
         if (currentStatus == null) {
-            if (!STATUS_EN_ATTENTE.equals(newStatus)) {
-                throw new RuntimeException("Le statut initial d'un programme doit être 'En attente'");
-            }
             return;
         }
         
         // Une fois "Terminé", on ne peut plus changer de statut
         if (STATUS_TERMINE.equals(currentStatus)) {
             throw new RuntimeException("Un programme terminé ne peut plus changer de statut");
-        }
-        
-        // Pour passer à "Terminé", il faut d'abord être "En cours"
-        if (STATUS_TERMINE.equals(newStatus) && !STATUS_EN_COURS.equals(currentStatus)) {
-            throw new RuntimeException("Un programme ne peut passer à 'Terminé' que s'il est 'En cours'");
         }
         
         // On ne peut pas revenir à "En attente" si on est déjà "En cours"
@@ -217,14 +143,18 @@ public class ProgrammeStatusService {
     }
     
     /**
-     * Mapper un historique vers un DTO de réponse
+     * Mapper un historique (nouveau système) vers un DTO de réponse
      */
-    private HistoriqueProgrammesResponse mapHistoriqueToResponse(com.explorateur.backend.entity.HistoriqueProgrammes historique) {
+    private HistoriqueProgrammesResponse mapHistoriqueToResponseNew(HistoriqueProgramme historique) {
+        if (historique == null) {
+            return null;
+        }
+        
         return HistoriqueProgrammesResponse.builder()
                 .id(historique.getId())
                 .programmeId(historique.getProgramme() != null ? historique.getProgramme().getId() : null)
                 .programmeNom(historique.getProgramme() != null ? historique.getProgramme().getNom() : null)
-                .classeProgressiveId(historique.getClasseProgressiveId())
+                .classeProgressiveId(historique.getClasseProgressive() != null ? historique.getClasseProgressive().getId() : null)
                 .statusId(historique.getStatus() != null ? historique.getStatus().getId() : null)
                 .statusNom(historique.getStatus() != null ? historique.getStatus().getStatus() : null)
                 .createdAt(historique.getCreatedAt())

@@ -42,11 +42,23 @@ public class ClasseProgressive {
     @JoinColumn(name = "annee_exercice_id", nullable = false)
     private AnneeExercice anneeExercice;
     
+    /**
+     * État de la CP
+     * 0 = ouverte (saisie présences et modification statuts autorisées)
+     * 1 = clôturée (tout verrouillé)
+     */
+    @Column(name = "etat", nullable = false)
+    @Builder.Default
+    private Integer etat = 0;
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (etat == null) {
+            etat = 0;
+        }
     }
 }

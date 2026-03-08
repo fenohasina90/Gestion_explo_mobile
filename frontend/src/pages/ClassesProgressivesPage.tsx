@@ -155,6 +155,25 @@ export function ClassesProgressivesPage() {
     }
   };
 
+  const handleCloturer = async (cp: ClasseProgressive) => {
+    if (cp.etat === 1) {
+      setError('Cette CP est déjà clôturée.');
+      return;
+    }
+
+    if (window.confirm('Voulez-vous clôturer cette CP ? Une fois clôturée, vous ne pourrez plus modifier les présences ni les statuts des programmes.')) {
+      try {
+        await classeProgressiveService.cloturerCP(cp.id);
+        setSuccess('CP clôturée avec succès !');
+        setError(null);
+        setTimeout(() => setSuccess(null), 3000);
+        handleResetFilters();
+      } catch (err: any) {
+        setError(err.response?.data?.message || 'Erreur lors de la clôture');
+      }
+    }
+  };
+
   const handleViewDetails = (cpId: number) => {
     navigate(`/cp/${cpId}/programmes`);
   };
@@ -240,6 +259,7 @@ export function ClassesProgressivesPage() {
               <th>Horaires</th>
               <th>Niveau</th>
               <th>Année d'exercice</th>
+              <th>État</th>
               <th>Date de création</th>
               <th>Actions</th>
             </tr>
@@ -247,7 +267,7 @@ export function ClassesProgressivesPage() {
           <tbody>
             {classesProgressives.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center">Aucune CP trouvée</td>
+                <td colSpan={7} className="text-center">Aucune CP trouvée</td>
               </tr>
             ) : (
               classesProgressives.map(cp => (
@@ -265,6 +285,13 @@ export function ClassesProgressivesPage() {
                     <span className="badge badge-primary">{cp.niveau || '-'}</span>
                   </td>
                   <td>{new Date(cp.anneeExercice).getFullYear()}</td>
+                  <td>
+                    {cp.etat === 1 ? (
+                      <span className="badge badge-danger">🔒 Clôturée</span>
+                    ) : (
+                      <span className="badge badge-success">🔓 Ouverte</span>
+                    )}
+                  </td>
                   <td>{new Date(cp.createdAt).toLocaleDateString('fr-FR')}</td>
                   <td className="actions">
                     <button
@@ -281,6 +308,15 @@ export function ClassesProgressivesPage() {
                     >
                       ✏️
                     </button>
+                    {cp.etat !== 1 && (user?.role === 'Directeur' || user?.role === 'Co_Directeur') && (
+                      <button
+                        className="btn btn-sm btn-warning"
+                        onClick={() => handleCloturer(cp)}
+                        title="Clôturer cette CP"
+                      >
+                        🔒
+                      </button>
+                    )}
                     <button
                       className="btn btn-sm btn-danger"
                       onClick={() => handleDelete(cp.id)}

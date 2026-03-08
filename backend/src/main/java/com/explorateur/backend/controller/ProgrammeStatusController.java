@@ -5,7 +5,6 @@ import com.explorateur.backend.dto.HistoriqueProgrammesResponse;
 import com.explorateur.backend.dto.ProgrammeStatusResponse;
 import com.explorateur.backend.service.ProgrammeStatusService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,6 +46,9 @@ public class ProgrammeStatusController {
         return ResponseEntity.ok(response);
     }
     
+    // NOTE: Endpoint obsolète - remplacé par HistoriqueProgrammeController
+    // L'initialisation automatique se fait via le scheduler ou l'endpoint /api/historique-programmes/initialiser-annee/{anneeId}
+    /*
     @PostMapping("/initialize")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
     @Operation(summary = "Initialiser le statut d'un programme",
@@ -57,7 +59,10 @@ public class ProgrammeStatusController {
         HistoriqueProgrammesResponse response = programmeStatusService.initializeProgrammeStatus(programmeId, classeProgressiveId);
         return ResponseEntity.ok(response);
     }
+    */
     
+    // NOTE: Endpoint obsolète - remplacé par /api/historique-programmes/cp/{cpId}
+    /*
     @GetMapping("/historique/programme/{programmeId}/cp/{classeProgressiveId}")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir l'historique d'un programme dans une CP",
@@ -69,7 +74,10 @@ public class ProgrammeStatusController {
                 .getHistoriqueByProgrammeAndCP(programmeId, classeProgressiveId);
         return ResponseEntity.ok(historique);
     }
+    */
     
+    // NOTE: Endpoint obsolète - remplacé par /api/historique-programmes/programme/{id}
+    /*
     @GetMapping("/historique/programme/{programmeId}")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir l'historique complet d'un programme",
@@ -79,7 +87,10 @@ public class ProgrammeStatusController {
         List<HistoriqueProgrammesResponse> historique = programmeStatusService.getHistoriqueByProgramme(programmeId);
         return ResponseEntity.ok(historique);
     }
+    */
     
+    // NOTE: Endpoint obsolète - le statut actuel peut être obtenu via /api/historique-programmes/avancement
+    /*
     @GetMapping("/current/programme/{programmeId}/cp/{classeProgressiveId}")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir le statut actuel d'un programme",
@@ -90,4 +101,5 @@ public class ProgrammeStatusController {
         HistoriqueProgrammesResponse current = programmeStatusService.getCurrentStatus(programmeId, classeProgressiveId);
         return ResponseEntity.ok(current);
     }
+    */
 }

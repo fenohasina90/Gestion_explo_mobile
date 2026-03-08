@@ -94,6 +94,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               🎯 Classes Progressives
             </Link>
           </li>
+          <li>
+            <Link to="/historique-programmes" className="nav-link">
+              📈 Historique Programmes
+            </Link>
+          </li>
           
           {/* Section Compte */}
           <li className="nav-divider">

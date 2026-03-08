@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 
 /**
  * Entité pour suivre la progression annuelle d'un programme.
- * Maintient le statut final d'un programme pour chaque année d'exercice.
+ * Enregistre le statut final d'un programme pour une année d'exercice donnée.
+ * Un programme ne peut avoir qu'une seule progression par année.
  */
 @Entity
 @Table(name = "programme_progression_annuelle",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"programme_id", "annee_exercice_id"}))
+    uniqueConstraints = @UniqueConstraint(columnNames = {"programme_id", "annee_exercice_id"}))
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,6 +34,12 @@ public class ProgrammeProgressionAnnuelle {
     @JoinColumn(name = "annee_exercice_id", nullable = false)
     private AnneeExercice anneeExercice;
     
+    /**
+     * Statut final du programme pour cette année
+     * - "En attente" : initialisé mais jamais traité
+     * - "En cours" : démarré mais pas terminé
+     * - "Terminé" : complètement terminé (définitif)
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statut_final_id")
     private ProgrammeStatus statutFinal;
@@ -40,7 +47,7 @@ public class ProgrammeProgressionAnnuelle {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
     @PrePersist

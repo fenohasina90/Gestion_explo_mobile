@@ -9,6 +9,7 @@ import com.explorateur.backend.entity.Programme;
 import com.explorateur.backend.repository.CategorieProgrammeRepository;
 import com.explorateur.backend.repository.ClasseRepository;
 import com.explorateur.backend.repository.ProgrammeRepository;
+import com.explorateur.backend.repository.HistoriqueProgrammeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class ProgrammeService {
     private final ProgrammeRepository programmeRepository;
     private final CategorieProgrammeRepository categorieProgrammeRepository;
     private final ClasseRepository classeRepository;
+    private final HistoriqueProgrammeRepository historiqueProgrammeRepository;
     private final JournalService journalService;
     
     /**
@@ -196,6 +198,62 @@ public class ProgrammeService {
         
         return programmeRepository.findByClasseId(classeId)
                 .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Obtenir les programmes DISPONIBLES pour une année d'exercice donnée
+     * (excluant les programmes déjà TERMINÉS pour cette année)
+     * 
+     * RÈGLE MÉTIER: Un programme terminé ne doit plus apparaître dans la liste
+     * des programmes sélectionnables pour les Classes Progressives de cette année.
+     * 
+     * @param anneeExerciceId ID de l'année d'exercice
+     * @return Liste des programmes disponibles (non terminés)
+     */
+    @Transactional(readOnly = true)
+    public List<ProgrammeResponse> getProgrammesDisponiblesParAnnee(Long anneeExerciceId) {
+        log.info("Récupération des programmes disponibles pour l'année d'exercice ID: {}", anneeExerciceId);
+        
+        // Récupérer tous les programmes
+        List<Programme> tousLesProgrammes = programmeRepository.findAll();
+        
+        // Filtrer pour exclure les programmes terminés
+        return tousLesProgrammes.stream()
+                .filter(programme -> {
+                    boolean estTermine = historiqueProgrammeRepository
+                            .isProgrammeTerminePourAnnee(programme.getId(), anneeExerciceId);
+                    return !estTermine; // Garder uniquement les programmes NON terminés
+                })
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Obtenir les programmes DISPONIBLES pour une année d'exercice ET une classe donnée
+     * (excluant les programmes déjà TERMINÉS pour cette année)
+     * 
+     * @param anneeExerciceId ID de l'année d'exercice
+     * @param classeId ID de la classe
+     * @return Liste des programmes disponibles (non terminés) pour cette classe
+     */
+    @Transactional(readOnly = true)
+    public List<ProgrammeResponse> getProgrammesDisponiblesParAnneeEtClasse(
+            Long anneeExerciceId, Long classeId) {
+        log.info("Récupération des programmes disponibles pour l'année {} et classe {}", 
+                anneeExerciceId, classeId);
+        
+        // Récupérer les programmes de la classe
+        List<Programme> programmesDeLaClasse = programmeRepository.findByClasseId(classeId);
+        
+        // Filtrer pour exclure les programmes terminés
+        return programmesDeLaClasse.stream()
+                .filter(programme -> {
+                    boolean estTermine = historiqueProgrammeRepository
+                            .isProgrammeTerminePourAnnee(programme.getId(), anneeExerciceId);
+                    return !estTermine; // Garder uniquement les programmes NON terminés
+                })
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

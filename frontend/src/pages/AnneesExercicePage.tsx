@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 import anneeExerciceService from '../services/annee-exercice.service';
+import historiqueProgrammeService from '../services/historique-programme.service';
+import { useAuth } from '../contexts/AuthContext';
 import type { AnneeExercice, CreateAnneeExerciceRequest } from '../types';
 import './AnneesExercicePage.css';
 
 export function AnneesExercicePage() {
+  const { user } = useAuth();
   const [anneesExercice, setAnneesExercice] = useState<AnneeExercice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [loadingInit, setLoadingInit] = useState<number | null>(null);
   const [formData, setFormData] = useState<CreateAnneeExerciceRequest>({
     annee: new Date().toISOString().split('T')[0],
   });
@@ -64,6 +68,36 @@ export function AnneesExercicePage() {
     }
   };
 
+  const handleInitialiserStatuts = async (annee: AnneeExercice) => {
+    if (annee.statutsInitialises) {
+      setError('Les statuts ont déjà été initialisés pour cette année');
+      setTimeout(() => setError(null), 3000);
+      return;
+    }
+
+    const anneeNum = new Date(annee.annee).getFullYear();
+    if (!window.confirm(
+      `Initialiser tous les programmes au statut "EN ATTENTE" pour l'année ${anneeNum} ?\n\n` +
+      `Cette action ne peut être effectuée qu'une seule fois par année.`
+    )) {
+      return;
+    }
+
+    try {
+      setLoadingInit(annee.id);
+      const response = await historiqueProgrammeService.initialiserAnnee(annee.id);
+      setSuccess(`Initialisation réussie ! ${response.nombreProgrammes} programmes initialisés à "EN ATTENTE"`);
+      setError(null);
+      setTimeout(() => setSuccess(null), 5000);
+      loadData(); // Recharger pour mettre à jour le statut
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Erreur lors de l\'initialisation des statuts');
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setLoadingInit(null);
+    }
+  };
+
   if (loading) return <div className="loading">Chargement...</div>;
 
   return (
@@ -105,6 +139,32 @@ export function AnneesExercicePage() {
             <div className="annee-card-body">
               <p><strong>Période:</strong> {new Date(annee.annee).toLocaleDateString()} - {new Date(annee.dateFin).toLocaleDateString()}</p>
               <p><strong>Créée le:</strong> {new Date(annee.createdAt).toLocaleDateString()}</p>
+              
+              {/* Statut d'initialisation */}
+              <div className="init-status">
+                {annee.statutsInitialises ? (
+                  <p className="status-badge initialized">🔒 Statuts initialisés</p>
+                ) : (
+                  <p className="status-badge not-initialized">⚠️ Statuts non initialisés</p>
+                )}
+              </div>
+
+              {/* Bouton d'initialisation (uniquement pour Directeur et année non initialisée) */}
+              {user?.role === 'Directeur' && !annee.statutsInitialises && (
+                <button
+                  className="btn btn-block btn-warning"
+                  onClick={() => handleInitialiserStatuts(annee)}
+                  disabled={loadingInit === annee.id}
+                  title="Initialiser tous les programmes à 'EN ATTENTE'"
+                >
+                  {loadingInit === annee.id ? (
+                    '⌛ Initialisation...'
+                  ) : (
+                    '🚀 Initialiser les statuts'
+                  )}
+                </button>
+              )}
+
               {new Date(annee.dateFin) < new Date() && (
                 <p className="status-badge expired"><strong>⚠️ Année expirée</strong></p>
               )}

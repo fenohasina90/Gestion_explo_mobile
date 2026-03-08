@@ -123,6 +123,8 @@ export interface AnneeExercice {
   id: number;
   annee: string;
   dateFin: string;
+  estActif: boolean;
+  statutsInitialises?: boolean;
   createdAt: string;
 }
 
@@ -524,6 +526,7 @@ export interface ClasseProgressive {
   heureDebut: string;
   heureFin: string;
   niveau: string;
+  etat?: number; // 0 = ouverte, 1 = clôturée
   anneeExerciceId: number;
   anneeExercice: string;
   createdAt: string;
@@ -561,7 +564,7 @@ export interface CpDetailsResponse {
   categorieName?: string;
   description?: string;
   instructeurs: InstructeurSimpleDto[];
-  statutActuel?: string;
+  statusNom?: string;
 }
 
 export interface AddProgrammeToCpRequest {
@@ -580,13 +583,82 @@ export interface UpdateCpDetailsInstructeurRequest {
  */
 export interface HistoriqueProgramme {
   id: number;
-  ancienStatut: string;
-  nouveauStatut: string;
+  programmeId: number;
+  programmeNom: string;
+  classeProgressiveId?: number;
+  classeProgressiveDate?: string;
+  statusId: number;
+  statusNom: string;
+  anneeExercice: string;
   dateChangement: string;
-  utilisateurId: number;
-  utilisateurNom: string;
+}
+
+export interface ProgressionAnnuelle {
+  programmeId: number;
+  programmeNom: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  statutFinalId: number;
+  statutFinalNom: string;
+  nombreChangements: number;
+  anneeExercice: string;
+}
+
+export interface StatistiquesAnnuelles {
+  anneeExercice: string;
+  totalProgrammesTravailles: number;
+  programmesEnAttente: number;
+  programmesEnCours: number;
+  programmesTermines: number;
+  totalChangements: number;
+  nombreCPs: number;
+  tauxCompletion: number;
+}
+
+export interface ProgrammeAvancement {
+  programmeId: number;
+  programmeNom: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  anneeExerciceId: number;
+  anneeExercice: string;
+  statutActuelId: number;
+  statutActuelNom: string;
+  nombreChangements: number;
+  datePremiereCP?: string;
+  dateDerniereCP?: string;
+  dateChangement?: string;
+  estDemarre: boolean;
+  estTermine: boolean;
+  pourcentageAvancement: number;
+  historique: HistoriqueProgramme[];
 }
 
 export interface UpdateProgrammeStatusRequest {
   nouveauStatut: string;
+}
+
+export interface ProgrammeStatus {
+  id: number;
+  status: string;
+}
+
+export interface ChangeProgrammeStatusRequest {
+  programmeId: number;
+  classeProgressiveId: number;
+  newStatusId: number;
+}
+
+export interface HistoriqueProgrammesResponse {
+  id: number;
+  programmeId: number;
+  programmeNom: string;
+  classeProgressiveId: number;
+  statusId: number;
+  statusNom: string;
+  createdAt: string;
 }
