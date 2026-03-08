@@ -6,9 +6,10 @@
           <ion-back-button :default-href="`/classes-progressives`"></ion-back-button>
           <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" />
         </ion-buttons>
-        <ion-title>Présence CP</ion-title>
+        <ion-title>{{ cp?.etat === 1 ? 'Participants' : 'Présence CP' }}</ion-title>
         <ion-buttons slot="end">
           <ion-button 
+            v-if="cp?.etat !== 1"
             @click="handleSave" 
             :disabled="saving"
             color="primary"
@@ -30,6 +31,13 @@
               {{ cp.heureDebut }} - {{ cp.heureFin }}
             </ion-card-subtitle>
           </ion-card-header>
+        </ion-card>
+        
+        <!-- Message d'information si clôturée -->
+        <ion-card v-if="cp.etat === 1" color="light">
+          <ion-card-content>
+            ℹ️ Mode consultation - Cette CP est clôturée.
+          </ion-card-content>
         </ion-card>
       </div>
 
@@ -76,6 +84,7 @@
             </ion-note>
           </ion-label>
           <ion-button 
+            v-if="cp?.etat !== 1"
             size="small" 
             fill="outline"
             @click="toggleSelectAllEnfants"
@@ -90,6 +99,7 @@
               slot="start" 
               :checked="isEnfantSelected(enfant.inscriptionId)"
               @ionChange="toggleEnfant(enfant.inscriptionId)"
+              :disabled="cp?.etat === 1"
             ></ion-checkbox>
             <ion-label>
               <h3>{{ enfant.prenom }} {{ enfant.nom }}</h3>
@@ -113,6 +123,7 @@
             </ion-note>
           </ion-label>
           <ion-button 
+            v-if="cp?.etat !== 1"
             size="small" 
             fill="outline"
             @click="toggleSelectAllStaff"
@@ -127,6 +138,7 @@
               slot="start" 
               :checked="isStaffSelected(staff.staffId)"
               @ionChange="toggleStaff(staff.staffId)"
+              :disabled="cp?.etat === 1"
             ></ion-checkbox>
             <ion-label>
               <h3>{{ staff.prenom }} {{ staff.nom }}</h3>
@@ -165,6 +177,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
+  IonCardContent,
   IonList,
   IonListHeader,
   IonItem,
@@ -336,6 +349,18 @@ const loadData = async () => {
 
 // Enregistrer la présence
 const handleSave = async () => {
+  // Vérifier si la CP est clôturée
+  if (cp.value?.etat === 1) {
+    const toast = await toastController.create({
+      message: 'Impossible d\'enregistrer la présence : la CP est clôturée',
+      duration: 2000,
+      color: 'warning',
+      position: 'top'
+    });
+    await toast.present();
+    return;
+  }
+  
   // Confirmation
   const alert = await alertController.create({
     header: 'Confirmer',

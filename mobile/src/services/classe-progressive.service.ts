@@ -58,6 +58,13 @@ class ClasseProgressiveService {
   async deleteCP(id: number): Promise<void> {
     await api.delete(`${this.BASE_URL}/${id}`);
   }
+
+  /**
+   * Clôturer une CP
+   */
+  async cloturerCP(id: number): Promise<ClasseProgressive> {
+    return await api.put<ClasseProgressive>(`${this.BASE_URL}/${id}/cloturer`);
+  }
 }
 
 export default new ClasseProgressiveService();

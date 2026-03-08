@@ -43,6 +43,12 @@ public class CpDetailsResponse {
     @Schema(description = "Nom de la catégorie (null pour activité libre)", example = "Lovan' ny fiangonana")
     private String categorieName;
     
+    @Schema(description = "ID de la classe du programme (null pour activité libre)", example = "1")
+    private Long classeId;
+    
+    @Schema(description = "Nom de la classe (null pour activité libre)", example = "6-8 ans")
+    private String classeNom;
+    
     @Schema(description = "Description de l'activité libre (null pour programme)", 
             example = "Atelier de bricolage pour la fête des pères")
     private String description;

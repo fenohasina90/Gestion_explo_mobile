@@ -512,6 +512,12 @@ export interface UpdateProgrammeStatusRequest {
   statusId: number;
 }
 
+export interface ChangeProgrammeStatusRequest {
+  programmeId: number;
+  classeProgressiveId: number;
+  newStatusId: number;
+}
+
 /**
  * Types pour les classes progressives (CP)
  */
@@ -521,6 +527,7 @@ export interface ClasseProgressive {
   heureDebut: string;
   heureFin: string;
   niveau?: string;
+  etat?: number; // 0 = ouverte, 1 = clôturée
   anneeExerciceId: number;
   anneeExercice: string;
   nombreProgrammes: number;
@@ -566,6 +573,8 @@ export interface CpDetails {
   programmeNom?: string;
   programmeDescription?: string;
   description?: string; // Pour activité libre
+  classeId?: number;
+  classeNom?: string;
   statusId?: number;
   statusNom?: string;
   instructeurs: CpDetailsInstructeurDto[];

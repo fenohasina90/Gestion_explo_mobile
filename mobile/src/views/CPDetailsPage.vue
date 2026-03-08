@@ -8,10 +8,10 @@
         </ion-buttons>
         <ion-title v-if="cp">{{ formatDate(cp.dateCp) }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button v-if="canModify" @click="goToPresence">
+          <ion-button @click="goToPresence">
             <ion-icon :icon="listOutline"></ion-icon>
           </ion-button>
-          <ion-button v-if="canModify" @click="openAddProgrammeModal">
+          <ion-button v-if="canModify && cp?.etat !== 1" @click="openAddProgrammeModal">
             <ion-icon :icon="addOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -35,6 +35,19 @@
           </ion-card-header>
           <ion-card-content>
             {{ cp.nombreProgrammes }} programme(s) planifié(s)
+            <ion-badge v-if="cp.etat === 1" color="danger" style="margin-left: 8px;">
+              🔒 Clôturée
+            </ion-badge>
+            <ion-badge v-else color="success" style="margin-left: 8px;">
+              🔓 Ouverte
+            </ion-badge>
+          </ion-card-content>
+        </ion-card>
+        
+        <!-- Message d'information si clôturée -->
+        <ion-card v-if="cp.etat === 1" color="light">
+          <ion-card-content>
+            ℹ️ Cette CP est clôturée. Consultation uniquement - aucune modification autorisée.
           </ion-card-content>
         </ion-card>
       </div>
@@ -54,10 +67,13 @@
             <p v-if="detail.programmeDescription" style="font-size: 0.85rem; color: var(--ion-color-medium);">
               {{ detail.programmeDescription }}
             </p>
+            <p v-if="detail.classeNom" style="font-size: 0.85rem; color: var(--ion-color-medium);">
+              🎯 {{ detail.classeNom }}
+            </p>
             <p style="font-size: 0.85rem; color: var(--ion-color-medium-shade);">
               <ion-icon :icon="people"></ion-icon>
               <span v-if="detail.instructeurs.length > 0">
-                {{ detail.instructeurs.map(i => i.nom + ' ' + i.prenom).join(', ') }}
+                {{ detail.instructeurs.map(i => i.prenom).join(', ') }}
               </span>
               <span v-else>Aucun instructeur assigné</span>
             </p>
@@ -69,20 +85,20 @@
           </ion-label>
           <ion-buttons slot="end">
             <ion-button 
-              v-if="canModify"
+              v-if="canModify && cp?.etat !== 1"
               @click.stop="openEditInstructeursModal(detail)"
             >
               <ion-icon :icon="createOutline"></ion-icon>
             </ion-button>
             <ion-button 
-              v-if="canModify && detail.statusNom && detail.statusNom !== 'Terminé'"
+              v-if="canModify && cp?.etat !== 1 && detail.statusNom && detail.statusNom !== 'Terminé'"
               color="primary"
               @click.stop="openChangeStatusModal(detail)"
             >
               <ion-icon :icon="checkmarkOutline"></ion-icon>
             </ion-button>
             <ion-button 
-              v-if="canModify && detail.statusNom !== 'Terminé'"
+              v-if="canModify && cp?.etat !== 1 && detail.statusNom !== 'Terminé'"
               color="danger" 
               @click.stop="confirmDelete(detail.id)"
             >
@@ -313,7 +329,7 @@ import instructeurService from '@/services/instructeur.service';
 import programmeStatusService from '@/services/programme-status.service';
 import categorieProgrammeService from '@/services/categorie-programme.service';
 import classeService from '@/services/classe.service';
-import type { ClasseProgressive, CpDetails, Programme, Instructeur, ProgrammeStatus, CategorieProgramme, Classe } from '@/types';
+import type { ClasseProgressive, CpDetails, Programme, Instructeur, CategorieProgramme, Classe } from '@/types';
 
 const route = useRoute();
 const router = useRouter();
@@ -323,7 +339,6 @@ const cp = ref<ClasseProgressive | null>(null);
 const cpDetails = ref<CpDetails[]>([]);
 const programmes = ref<Programme[]>([]);
 const instructeurs = ref<Instructeur[]>([]);
-const statuts = ref<ProgrammeStatus[]>([]);
 const categories = ref<CategorieProgramme[]>([]);
 const classes = ref<Classe[]>([]);
 
@@ -365,7 +380,6 @@ async function loadData() {
       loadCPDetails(cpId),
       loadProgrammes(),
       loadInstructeurs(),
-      loadStatuts(),
       loadCategories(),
       loadClasses()
     ]);
@@ -413,14 +427,6 @@ async function loadInstructeurs() {
     instructeurs.value = await instructeurService.getAllInstructeurs();
   } catch (error: any) {
     console.error('Erreur chargement instructeurs:', error);
-  }
-}
-
-async function loadStatuts() {
-  try {
-    statuts.value = await programmeStatusService.getAllStatuts();
-  } catch (error: any) {
-    console.error('Erreur chargement statuts:', error);
   }
 }
 
@@ -758,29 +764,34 @@ async function updateInstructeurs(cpDetailsId: number) {
 async function openChangeStatusModal(detail: CpDetails) {
   if (!detail.programmeId) return;
   
-  const buttons = statuts.value.map(status => ({
-    text: status.nom,
-    handler: () => changeStatus(detail.programmeId!, status.id)
-  }));
-  
-  buttons.push({
-    text: 'Annuler',
-    handler: async () => {}
+  const alert = await alertController.create({
+    header: 'Marquer comme terminé',
+    message: `Voulez-vous marquer "${detail.programmeNom || detail.description}" comme terminé ?`,
+    buttons: [
+      {
+        text: 'Annuler',
+        role: 'cancel'
+      },
+      {
+        text: 'Confirmer',
+        handler: () => changeStatusToTermine(detail.programmeId!)
+      }
+    ]
   });
-
-  const actionSheet = await actionSheetController.create({
-    header: 'Changer le statut',
-    buttons
-  });
-  await actionSheet.present();
+  await alert.present();
 }
 
-async function changeStatus(programmeId: number, statusId: number) {
+async function changeStatusToTermine(programmeId: number) {
   try {
     const cpId = parseInt(route.params.id as string);
-    await programmeStatusService.updateStatus(programmeId, cpId, { statusId });
+    // Statut ID 3 = Terminé
+    await programmeStatusService.changeProgrammeStatus({
+      programmeId,
+      classeProgressiveId: cpId,
+      newStatusId: 3
+    });
     const toast = await toastController.create({
-      message: 'Statut modifié',
+      message: 'Programme marqué comme terminé',
       duration: 2000,
       color: 'success'
     });

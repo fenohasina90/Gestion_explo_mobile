@@ -3,6 +3,7 @@ import type {
   ProgrammeStatus,
   ProgrammeStatusResponse,
   UpdateProgrammeStatusRequest,
+  ChangeProgrammeStatusRequest,
   HistoriqueProgramme
 } from '@/types';
 
@@ -16,18 +17,16 @@ class ProgrammeStatusService {
    * Récupérer tous les statuts disponibles
    */
   async getAllStatuts(): Promise<ProgrammeStatus[]> {
-    const response = await api.get<ProgrammeStatus[]>(`${this.BASE_URL}/statuts`);
-    return response.data;
+    return await api.get<ProgrammeStatus[]>(`${this.BASE_URL}/statuts`);
   }
 
   /**
    * Récupérer le statut d'un programme dans une CP
    */
   async getStatusByProgrammeAndCP(programmeId: number, classeProgressiveId: number): Promise<ProgrammeStatusResponse> {
-    const response = await api.get<ProgrammeStatusResponse>(
+    return await api.get<ProgrammeStatusResponse>(
       `${this.BASE_URL}/programme/${programmeId}/cp/${classeProgressiveId}`
     );
-    return response.data;
   }
 
   /**
@@ -38,27 +37,31 @@ class ProgrammeStatusService {
     classeProgressiveId: number,
     request: UpdateProgrammeStatusRequest
   ): Promise<ProgrammeStatusResponse> {
-    const response = await api.put<ProgrammeStatusResponse>(
+    return await api.put<ProgrammeStatusResponse>(
       `${this.BASE_URL}/programme/${programmeId}/cp/${classeProgressiveId}`,
       request
     );
-    return response.data;
+  }
+
+  /**
+   * Changer le statut d'un programme dans une CP (nouveau endpoint)
+   */
+  async changeProgrammeStatus(request: ChangeProgrammeStatusRequest): Promise<any> {
+    return await api.post<any>(`${this.BASE_URL}/change`, request);
   }
 
   /**
    * Récupérer l'historique d'un programme
    */
   async getHistoriqueByProgramme(programmeId: number): Promise<HistoriqueProgramme[]> {
-    const response = await api.get<HistoriqueProgramme[]>(`${this.BASE_URL}/programme/${programmeId}/historique`);
-    return response.data;
+    return await api.get<HistoriqueProgramme[]>(`${this.BASE_URL}/programme/${programmeId}/historique`);
   }
 
   /**
    * Récupérer tout l'historique
    */
   async getAllHistorique(): Promise<HistoriqueProgramme[]> {
-    const response = await api.get<HistoriqueProgramme[]>(`${this.BASE_URL}/historique`);
-    return response.data;
+    return await api.get<HistoriqueProgramme[]>(`${this.BASE_URL}/historique`);
   }
 }
 

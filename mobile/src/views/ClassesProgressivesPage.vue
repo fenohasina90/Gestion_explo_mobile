@@ -74,6 +74,12 @@
             </p>
             <p style="font-size: 0.8rem; color: var(--ion-color-medium-shade);">
               {{ cp.nombreProgrammes }} programme(s) • {{ getYear(cp.anneeExercice) }}
+              <ion-badge 
+                :color="cp.etat === 1 ? 'danger' : 'success'" 
+                style="margin-left: 8px; font-size: 0.7rem;"
+              >
+                {{ cp.etat === 1 ? '🔒 Clôturée' : '🔓 Ouverte' }}
+              </ion-badge>
             </p>
           </ion-label>
           <ion-buttons slot="end">
@@ -82,6 +88,13 @@
               @click.stop="openEditModal(cp)"
             >
               <ion-icon :icon="createOutline"></ion-icon>
+            </ion-button>
+            <ion-button 
+              v-if="canModify && cp.etat !== 1"
+              color="warning" 
+              @click.stop="confirmCloturer(cp)"
+            >
+              <ion-icon :icon="lockClosedOutline"></ion-icon>
             </ion-button>
             <ion-button 
               v-if="canModify"
@@ -132,6 +145,7 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonBadge,
   IonRefresher,
   IonRefresherContent,
   IonDatetime,
@@ -142,7 +156,7 @@ import {
   alertController,
   toastController
 } from '@ionic/vue';
-import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline, lockClosedOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 import classeProgressiveService from '@/services/classe-progressive.service';
 import type { ClasseProgressive } from '@/types';
@@ -417,6 +431,55 @@ async function deleteCP(id: number) {
   } catch (error: any) {
     const toast = await toastController.create({
       message: error.message || 'Erreur lors de la suppression',
+      duration: 3000,
+      color: 'danger'
+    });
+    await toast.present();
+  }
+}
+
+async function confirmCloturer(cp: ClasseProgressive) {
+  if (cp.etat === 1) {
+    const toast = await toastController.create({
+      message: 'Cette CP est déjà clôturée',
+      duration: 2000,
+      color: 'warning'
+    });
+    await toast.present();
+    return;
+  }
+
+  const alert = await alertController.create({
+    header: 'Clôturer la CP',
+    message: 'Voulez-vous clôturer cette CP ? Une fois clôturée, vous ne pourrez plus modifier les présences ni les statuts des programmes.',
+    buttons: [
+      {
+        text: 'Annuler',
+        role: 'cancel'
+      },
+      {
+        text: 'Clôturer',
+        role: 'destructive',
+        handler: () => cloturerCP(cp.id)
+      }
+    ]
+  });
+  await alert.present();
+}
+
+async function cloturerCP(id: number) {
+  try {
+    await classeProgressiveService.cloturerCP(id);
+    const toast = await toastController.create({
+      message: 'CP clôturée avec succès',
+      duration: 2000,
+      color: 'success'
+    });
+    await toast.present();
+    await loadCPs();
+  } catch (error: any) {
+    const toast = await toastController.create({
+      message: error.message || 'Erreur lors de la clôture',
       duration: 3000,
       color: 'danger'
     });

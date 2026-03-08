@@ -295,6 +295,8 @@ public class CpDetailsService {
         String programmeDescription = null;
         Long categorieId = null;
         String categorieName = null;
+        Long classeId = null;
+        String classeNom = null;
         Long statusId = null;
         String statusNom = null;
         
@@ -305,6 +307,12 @@ public class CpDetailsService {
             programmeDescription = cpDetails.getProgramme().getDescription();
             categorieId = cpDetails.getProgramme().getCategorie().getId();
             categorieName = cpDetails.getProgramme().getCategorie().getNom();
+            
+            // Récupérer la classe si elle existe
+            if (cpDetails.getProgramme().getClasse() != null) {
+                classeId = cpDetails.getProgramme().getClasse().getId();
+                classeNom = cpDetails.getProgramme().getClasse().getNom();
+            }
             
             // Récupérer le statut actuel du programme dans cette CP
             var statusInfo = getStatutActuel(
@@ -336,6 +344,8 @@ public class CpDetailsService {
                 .programmeDescription(programmeDescription)
                 .categorieId(categorieId)
                 .categorieName(categorieName)
+                .classeId(classeId)
+                .classeNom(classeNom)
                 .description(cpDetails.getDescription())
                 .instructeurs(instructeurs)
                 .statusId(statusId)
