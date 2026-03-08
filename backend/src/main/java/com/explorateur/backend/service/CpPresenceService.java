@@ -78,6 +78,7 @@ public class CpPresenceService {
      * - Un enfant ne peut être enregistré qu'une seule fois par CP (contrainte unique en base)
      * - Un staff ne peut être enregistré qu'une seule fois par CP (contrainte unique en base)
      * - La présence ne peut être saisie que pour une CP existante (vérification)
+     * - La CP ne doit pas être clôturée (vérification)
      * - Modification autorisée uniquement le jour même (optionnel - vérification commentée)
      */
     @Transactional
@@ -85,6 +86,11 @@ public class CpPresenceService {
         // Vérifier que la CP existe
         ClasseProgressive cp = classeProgressiveRepository.findById(request.getClasseProgressiveId())
                 .orElseThrow(() -> new RuntimeException("Classe progressive non trouvée"));
+        
+        // RÈGLE MÉTIER: Vérifier que la CP n'est pas clôturée
+        if (cp.getEtat() != null && cp.getEtat() == 1) {
+            throw new RuntimeException("Cette Classe Progressive est clôturée. Enregistrement de présence interdit.");
+        }
         
         // Optionnel: Vérifier que la modification est autorisée uniquement le jour même
         // LocalDate today = LocalDate.now();

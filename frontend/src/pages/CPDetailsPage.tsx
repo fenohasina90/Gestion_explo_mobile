@@ -199,6 +199,12 @@ export function CPDetailsPage() {
   const handleSubmitAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Vérifier si la CP est clôturée
+    if (cp?.etat === 1) {
+      setError('Impossible d\'ajouter une activité : la CP est clôturée');
+      return;
+    }
+    
     if (activityType === 'programme' && !addFormData.programmeId) {
       setError('Veuillez sélectionner un programme');
       return;
@@ -290,6 +296,12 @@ export function CPDetailsPage() {
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Vérifier si la CP est clôturée
+    if (cp?.etat === 1) {
+      setError('Impossible de modifier les instructeurs : la CP est clôturée');
+      return;
+    }
+
     if (editSelectedInstructeurs.length === 0) {
       setError('Veuillez sélectionner au moins un instructeur');
       return;
@@ -311,6 +323,12 @@ export function CPDetailsPage() {
   };
 
   const handleDelete = async (id: number) => {
+    // Vérifier si la CP est clôturée
+    if (cp?.etat === 1) {
+      setError('Impossible de retirer cette activité : la CP est clôturée');
+      return;
+    }
+    
     if (window.confirm('Êtes-vous sûr de vouloir retirer cette activité de la CP ?')) {
       try {
         await cpDetailsService.deleteCPDetail(id);
@@ -335,22 +353,39 @@ export function CPDetailsPage() {
           </button>
           <h1>📋 Programmes et Activités de la CP</h1>
           {cp && (
-            <p className="cp-info">
-              {new Date(cp.dateCp).toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })} - {cp.heureDebut} à {cp.heureFin}
-              {cp.niveau && <span className="badge badge-primary">{cp.niveau}</span>}
-            </p>
+            <>
+              <p className="cp-info">
+                {new Date(cp.dateCp).toLocaleDateString('fr-FR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })} - {cp.heureDebut} à {cp.heureFin}
+                {cp.niveau && <span className="badge badge-primary">{cp.niveau}</span>}
+                {cp.etat === 1 && <span className="badge badge-danger" style={{ marginLeft: '8px' }}>🔒 Clôturée</span>}
+              </p>
+              {cp.etat === 1 && (
+                <div className="alert alert-warning" style={{ marginTop: '8px' }}>
+                  ⚠️ Cette CP est clôturée. Consultation uniquement - aucune modification autorisée.
+                </div>
+              )}
+            </>
           )}
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button className="btn btn-info" onClick={() => setShowPresenceModal(true)}>
-            👥 Gérer présence
+          <button 
+            className="btn btn-info" 
+            onClick={() => setShowPresenceModal(true)}
+            title={cp?.etat === 1 ? "Voir les participants de cette CP" : "Gérer la présence"}
+          >
+            👥 {cp?.etat === 1 ? 'Voir participants' : 'Gérer présence'}
           </button>
-          <button className="btn btn-primary" onClick={handleAddActivity}>
+          <button 
+            className="btn btn-primary" 
+            onClick={handleAddActivity}
+            disabled={cp?.etat === 1}
+            title={cp?.etat === 1 ? "CP clôturée - ajout interdit" : "Ajouter une activité"}
+          >
             + Ajouter une activité
           </button>
         </div>
@@ -441,15 +476,16 @@ export function CPDetailsPage() {
                 <button
                   className="btn btn-sm btn-info"
                   onClick={() => handleEditInstructeurs(detail)}
-                  title="Modifier les instructeurs"
+                  disabled={cp?.etat === 1}
+                  title={cp?.etat === 1 ? "CP clôturée - modification interdite" : "Modifier les instructeurs"}
                 >
                   ✏️ Instructeurs
                 </button>
                 <button
                   className="btn btn-sm btn-danger"
                   onClick={() => handleDelete(detail.id)}
-                  title="Retirer de la CP"
-                  disabled={detail.statusNom === 'Terminé'}
+                  disabled={detail.statusNom === 'Terminé' || cp?.etat === 1}
+                  title={cp?.etat === 1 ? "CP clôturée - suppression interdite" : detail.statusNom === 'Terminé' ? "Programme terminé" : "Retirer de la CP"}
                 >
                   🗑️ Retirer
                 </button>
@@ -709,6 +745,7 @@ export function CPDetailsPage() {
         <CPPresenceModal
           classeProgressiveId={Number(cpId)}
           cpDate={cp.dateCp}
+          cpEtat={cp.etat}
           onClose={() => setShowPresenceModal(false)}
           onSuccess={() => {
             setSuccess('Présence enregistrée avec succès');

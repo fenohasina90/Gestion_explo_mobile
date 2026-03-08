@@ -7,13 +7,15 @@ import './CPPresenceModal.css';
 interface CPPresenceModalProps {
   classeProgressiveId: number;
   cpDate: string;
+  cpEtat?: number; // 0 = ouverte, 1 = clôturée
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({ 
   classeProgressiveId, 
-  cpDate, 
+  cpDate,
+  cpEtat, 
   onClose, 
   onSuccess 
 }) => {
@@ -127,6 +129,12 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
   };
 
   const handleSubmit = async () => {
+    // Vérifier si la CP est clôturée
+    if (cpEtat === 1) {
+      alert('Impossible d\'enregistrer la présence : la CP est clôturée');
+      return;
+    }
+    
     if (selectedEnfants.length === 0 && selectedStaff.length === 0) {
       alert('Veuillez sélectionner au moins un participant');
       return;
@@ -190,9 +198,15 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="cp-presence-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Gérer présence - CP du {new Date(cpDate).toLocaleDateString('fr-FR')}</h2>
+          <h2>{cpEtat === 1 ? '👥 Participants' : 'Gérer présence'} - CP du {new Date(cpDate).toLocaleDateString('fr-FR')}</h2>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
+
+        {cpEtat === 1 && (
+          <div className="alert alert-info" style={{ margin: '16px', marginBottom: '0' }}>
+            ℹ️ Mode consultation - Cette CP est clôturée.
+          </div>
+        )}
 
         <div className="modal-body">
           {/* Tabs */}
@@ -221,16 +235,18 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
           <div className="tab-content">
             {activeTab === 'tous' && (
               <div className="tous-section">
-                <div className="section-header">
-                  <button 
-                    className="btn btn-sm btn-secondary" 
-                    onClick={handleSelectAll}
-                  >
-                    {(selectedEnfants.length === filteredEnfants.length && selectedStaff.length === personnes?.staff.length && filteredEnfants.length > 0) 
-                      ? 'Tout désélectionner' 
-                      : 'Tout sélectionner'}
-                  </button>
-                </div>
+                {cpEtat !== 1 && (
+                  <div className="section-header">
+                    <button 
+                      className="btn btn-sm btn-secondary" 
+                      onClick={handleSelectAll}
+                    >
+                      {(selectedEnfants.length === filteredEnfants.length && selectedStaff.length === personnes?.staff.length && filteredEnfants.length > 0) 
+                        ? 'Tout désélectionner' 
+                        : 'Tout sélectionner'}
+                    </button>
+                  </div>
+                )}
 
                 {/* Filtre par classe pour enfants */}
                 <div className="filter-section">
@@ -259,6 +275,7 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
                         type="checkbox"
                         checked={selectedEnfants.includes(enfant.inscriptionId)}
                         onChange={() => handleToggleEnfant(enfant.inscriptionId)}
+                        disabled={cpEtat === 1}
                       />
                       <span className="checkbox-label">
                         {enfant.nom} {enfant.prenom}
@@ -283,6 +300,7 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
                         type="checkbox"
                         checked={selectedStaff.includes(staff.staffId)}
                         onChange={() => handleToggleStaff(staff.staffId)}
+                        disabled={cpEtat === 1}
                       />
                       <span className="checkbox-label">
                         {staff.nom} {staff.prenom}
@@ -300,16 +318,18 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
 
             {activeTab === 'enfants' && (
               <div className="enfants-section">
-                <div className="section-header">
-                  <button 
-                    className="btn btn-sm btn-secondary" 
-                    onClick={handleSelectAllEnfants}
-                  >
-                    {selectedEnfants.length === filteredEnfants.length && filteredEnfants.length > 0 
-                      ? 'Tout désélectionner' 
-                      : 'Tout sélectionner'}
-                  </button>
-                </div>
+                {cpEtat !== 1 && (
+                  <div className="section-header">
+                    <button 
+                      className="btn btn-sm btn-secondary" 
+                      onClick={handleSelectAllEnfants}
+                    >
+                      {selectedEnfants.length === filteredEnfants.length && filteredEnfants.length > 0 
+                        ? 'Tout désélectionner' 
+                        : 'Tout sélectionner'}
+                    </button>
+                  </div>
+                )}
 
                 {/* Filtre par classe */}
                 <div className="filter-section">
@@ -336,6 +356,7 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
                         type="checkbox"
                         checked={selectedEnfants.includes(enfant.inscriptionId)}
                         onChange={() => handleToggleEnfant(enfant.inscriptionId)}
+                        disabled={cpEtat === 1}
                       />
                       <span className="checkbox-label">
                         {enfant.nom} {enfant.prenom}
@@ -355,16 +376,18 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
 
             {activeTab === 'staff' && (
               <div className="staff-section">
-                <div className="section-header">
-                  <button 
-                    className="btn btn-sm btn-secondary" 
-                    onClick={handleSelectAllStaff}
-                  >
-                    {selectedStaff.length === personnes?.staff.length 
-                      ? 'Tout désélectionner' 
-                      : 'Tout sélectionner'}
-                  </button>
-                </div>
+                {cpEtat !== 1 && (
+                  <div className="section-header">
+                    <button 
+                      className="btn btn-sm btn-secondary" 
+                      onClick={handleSelectAllStaff}
+                    >
+                      {selectedStaff.length === personnes?.staff.length 
+                        ? 'Tout désélectionner' 
+                        : 'Tout sélectionner'}
+                    </button>
+                  </div>
+                )}
                 
                 <div className="checkbox-list">
                   {personnes?.staff.map((staff) => (
@@ -373,6 +396,7 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
                         type="checkbox"
                         checked={selectedStaff.includes(staff.staffId)}
                         onChange={() => handleToggleStaff(staff.staffId)}
+                        disabled={cpEtat === 1}
                       />
                       <span className="checkbox-label">
                         {staff.nom} {staff.prenom}
@@ -392,15 +416,18 @@ export const CPPresenceModal: React.FC<CPPresenceModalProps> = ({
 
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={onClose} disabled={loading}>
-            Annuler
+            {cpEtat === 1 ? 'Fermer' : 'Annuler'}
           </button>
-          <button 
-            className="btn btn-primary" 
-            onClick={handleSubmit} 
-            disabled={loading || (selectedEnfants.length === 0 && selectedStaff.length === 0)}
-          >
-            {loading ? 'Enregistrement...' : `Enregistrer (${selectedEnfants.length + selectedStaff.length})`}
-          </button>
+          {cpEtat !== 1 && (
+            <button 
+              className="btn btn-primary" 
+              onClick={handleSubmit} 
+              disabled={loading || (selectedEnfants.length === 0 && selectedStaff.length === 0)}
+              title="Enregistrer la présence"
+            >
+              {loading ? 'Enregistrement...' : `Enregistrer (${selectedEnfants.length + selectedStaff.length})`}
+            </button>
+          )}
         </div>
       </div>
     </div>

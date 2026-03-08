@@ -169,6 +169,11 @@ public class CpDetailsService {
         CpDetails cpDetails = cpDetailsRepository.findByIdWithInstructeurs(cpDetailsId)
                 .orElseThrow(() -> new RuntimeException("Affectation non trouvée avec l'ID: " + cpDetailsId));
         
+        // RÈGLE MÉTIER: Vérifier que la CP n'est pas clôturée
+        if (cpDetails.getClasseProgressive().getEtat() != null && cpDetails.getClasseProgressive().getEtat() == 1) {
+            throw new RuntimeException("Cette Classe Progressive est clôturée. Modification des instructeurs interdite.");
+        }
+        
         // Vider la collection (orphanRemoval supprimera automatiquement les entrées en base)
         cpDetails.getInstructeurs().clear();
         
@@ -220,7 +225,12 @@ public class CpDetailsService {
         CpDetails cpDetails = cpDetailsRepository.findById(cpDetailsId)
                 .orElseThrow(() -> new RuntimeException("Affectation non trouvée avec l'ID: " + cpDetailsId));
         
-        // Règle métier: Suppression impossible si statut = Terminé
+        // RÈGLE MÉTIER 1: Vérifier que la CP n'est pas clôturée
+        if (cpDetails.getClasseProgressive().getEtat() != null && cpDetails.getClasseProgressive().getEtat() == 1) {
+            throw new RuntimeException("Cette Classe Progressive est clôturée. Suppression de programme interdite.");
+        }
+        
+        // RÈGLE MÉTIER 2: Suppression impossible si statut = Terminé
         if (cpDetailsRepository.isProgrammeTermine(
                 cpDetails.getClasseProgressive().getId(), 
                 cpDetails.getProgramme().getId())) {
