@@ -98,6 +98,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/statistiques',
+    name: 'Statistiques',
+    component: () => import('@/views/StatistiquesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/mouvements-budgetaires',
     name: 'MouvementsBudgetaires',
     component: () => import('@/views/MouvementsBudgetairesPage.vue'),

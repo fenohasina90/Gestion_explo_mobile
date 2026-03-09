@@ -128,6 +128,17 @@
                 </ion-card>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <ion-card button @click="$router.push('/statistiques')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card-large">
+                    <ion-icon :icon="barChartOutline" class="action-icon"></ion-icon>
+                    <h3>Statistiques</h3>
+                    <p>Statistiques de participation des enfants et staffs</p>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
           </ion-grid>
         </div>
 
@@ -232,7 +243,8 @@ import {
   checkmarkOutline,
   statsChartOutline,
   walletOutline,
-  cashOutline
+  cashOutline,
+  barChartOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 

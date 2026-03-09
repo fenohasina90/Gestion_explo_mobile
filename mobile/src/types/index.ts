@@ -709,3 +709,48 @@ export interface EtatCaisse {
   anneeExercice: AnneeExercice;
 }
 
+/**
+ * Types pour les statistiques
+ */
+export interface StatistiqueEnfant {
+  enfantId: number;
+  anneeExerciceId: number;
+  nom: string;
+  prenom: string;
+  classe: string;
+  anneeExercice: string;
+  nombreProgrammesCompletes: number;
+  totalProgrammesClasse: number;
+  pourcentageProgrammes: number;
+  nombreParticipationsActivites: number;
+  totalActivites: number;
+  pourcentageActivites: number;
+  nombrePresencesCP: number;
+  totalCP: number;
+  pourcentageCP: number;
+  rangActivites: number;
+  rangCP: number;
+}
+
+export interface StatistiqueStaff {
+  staffId: number;
+  anneeExerciceId: number;
+  nom: string;
+  prenom: string;
+  role: string;
+  anneeExercice: string;
+  nombreParticipationsActivites: number;
+  totalActivites: number;
+  pourcentageActivites: number;
+  nombrePresencesCP: number;
+  totalCP: number;
+  pourcentageCP: number;
+  rangActivites: number;
+  rangCP: number;
+}
+
+export interface StatistiqueFilterRequest {
+  anneeExerciceId?: number;
+  classeId?: number;
+  genre?: string;
+}
