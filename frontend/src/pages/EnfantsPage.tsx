@@ -112,6 +112,7 @@ export const EnfantsPage = () => {
       }
     }, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enfantSearchQuery, inscriptionFormData.anneeExerciceId]);
   
   useEffect(() => {
@@ -125,6 +126,7 @@ export const EnfantsPage = () => {
       }
     }, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parentSearchQuery]);
   
   const loadData = async () => {
@@ -252,21 +254,32 @@ export const EnfantsPage = () => {
   };
   
   const searchEnfants = async () => {
+    if (!enfantSearchQuery || enfantSearchQuery.length < 1 || !inscriptionFormData.anneeExerciceId) {
+      return;
+    }
     try {
+      console.log('Recherche enfants - query:', enfantSearchQuery, 'anneeId:', inscriptionFormData.anneeExerciceId);
       const results = await enfantService.searchEnfants(
         enfantSearchQuery,
         inscriptionFormData.anneeExerciceId
       );
+      console.log('Résultats trouvés:', results.length, results);
       setEnfantSuggestions(results);
       setShowEnfantForm(results.length === 0);
+      console.log('État enfantSuggestions après setEnfantSuggestions');
     } catch (err: any) {
       console.error('Erreur lors de la recherche d\'enfants:', err);
     }
   };
   
   const searchParents = async () => {
+    if (!parentSearchQuery || parentSearchQuery.length < 1) {
+      return;
+    }
     try {
+      console.log('Recherche parents - query:', parentSearchQuery);
       const results = await parentService.searchParents(parentSearchQuery);
+      console.log('Résultats parents trouvés:', results.length);
       setParentSuggestions(results);
       setShowParentForm(results.length === 0);
     } catch (err: any) {
@@ -289,14 +302,23 @@ export const EnfantsPage = () => {
   const resetInscriptionForm = () => {
     // Définir automatiquement l'année d'exercice de l'utilisateur connecté
     let userAnneeId = 0;
-    if (currentUser?.anneeExercice) {
-      const userAnnee = anneesExercice.find(
-        annee => annee.annee === currentUser.anneeExercice
-      );
-      if (userAnnee) {
-        userAnneeId = userAnnee.id;
+    
+    // Essayer d'abord avec anneeExerciceId directement depuis l'utilisateur
+    if (currentUser?.anneeExerciceId) {
+      userAnneeId = currentUser.anneeExerciceId;
+    } 
+    // Sinon chercher l'année active
+    else if (anneesExercice.length > 0) {
+      const anneeActive = anneesExercice.find(annee => annee.estActif);
+      if (anneeActive) {
+        userAnneeId = anneeActive.id;
+      } else {
+        // Prendre la première année si aucune n'est active
+        userAnneeId = anneesExercice[0].id;
       }
     }
+    
+    console.log('Reset inscription form - anneeExerciceId:', userAnneeId);
     
     setInscriptionFormData({
       enfantId: 0,
@@ -487,6 +509,16 @@ export const EnfantsPage = () => {
     return currentUser?.role === 'Directeur';
   };
   
+  const formatAnnee = (annee: string) => {
+    // Extrait l'année de début (ex: "2023-2024" => "2023")
+    return annee.split('-')[0];
+  };
+  
+  const parseAnnee = (annee: string): number => {
+    // Extrait l'année de début comme nombre (ex: "2023-2024" => 2023)
+    return parseInt(annee.split('-')[0], 10);
+  };
+  
   if (loading) {
     return (
       <div className="page-container">
@@ -553,7 +585,7 @@ export const EnfantsPage = () => {
                       <option value="">Toutes</option>
                       {anneesExercice.map(annee => (
                         <option key={annee.id} value={annee.id}>
-                          {new Date(annee.annee).getFullYear()}
+                          {formatAnnee(annee.annee)}
                         </option>
                       ))}
                     </select>
@@ -669,7 +701,7 @@ export const EnfantsPage = () => {
                               <span className="badge badge-secondary">Non</span>
                             )}
                           </td>
-                          <td>{new Date(inscription.anneeExercice).getFullYear()}</td>
+                          <td>{formatAnnee(inscription.anneeExercice)}</td>
                           {(canModify() || canDelete()) && (
                             <td className="actions-cell">
                               {canModify() && (
@@ -716,7 +748,7 @@ export const EnfantsPage = () => {
                       <option value="">Toutes</option>
                       {anneesExercice.map(annee => (
                         <option key={annee.id} value={annee.id}>
-                          {new Date(annee.annee).getFullYear()}
+                          {formatAnnee(annee.annee)}
                         </option>
                       ))}
                     </select>
@@ -829,7 +861,12 @@ export const EnfantsPage = () => {
               <div className="modal-body">
                 {!editMode && (
                   <>
-                    {/* L'année d'exercice est automatiquement définie selon l'utilisateur connecté */}
+                    {/* L'année d'exercice est automatiquement celle de l'utilisateur connecté */}
+                    <div className="form-group" style={{ padding: '10px', backgroundColor: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', marginBottom: '15px' }}>
+                      <small style={{ color: '#1976d2' }}>
+                        📅 Année d'exercice : <strong>{anneesExercice.find(a => a.id === inscriptionFormData.anneeExerciceId)?.annee.split('-')[0] || 'Non définie'}</strong>
+                      </small>
+                    </div>
                     
                     {/* Auto-complétion enfant */}
                     {inscriptionFormData.anneeExerciceId > 0 && (
@@ -858,8 +895,25 @@ export const EnfantsPage = () => {
                           )}
                         </div>
                         
-                        {enfantSuggestions.length > 0 && (
-                          <div className="suggestions-list">
+                        {/* Logs debug */}
+                        {console.log('RENDER - enfantSuggestions.length:', enfantSuggestions.length, 'selectedEnfant:', selectedEnfant, 'condition:', enfantSuggestions.length > 0 && !selectedEnfant)}
+                        
+                        {enfantSuggestions.length > 0 && !selectedEnfant && (
+                          <div 
+                            className="suggestions-list" 
+                            style={{ 
+                              border: '2px solid red', 
+                              padding: '10px',
+                              backgroundColor: 'white',
+                              position: 'relative',
+                              zIndex: 9999,
+                              marginTop: '5px',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                            }}
+                          >
+                            <div style={{ color: 'green', fontWeight: 'bold', marginBottom: '10px' }}>
+                              ✅ SUGGESTIONS VISIBLE - {enfantSuggestions.length} résultats
+                            </div>
                             {enfantSuggestions.map(enfant => (
                               <div
                                 key={enfant.id}
@@ -911,7 +965,7 @@ export const EnfantsPage = () => {
                               )}
                             </div>
                             
-                            {parentSuggestions.length > 0 && (
+                            {parentSuggestions.length > 0 && !selectedParent && (
                               <div className="suggestions-list">
                                 {parentSuggestions.map(parent => (
                                   <div
@@ -1052,7 +1106,7 @@ export const EnfantsPage = () => {
                                       const anneeExercice = anneesExercice.find(a => a.id === inscriptionFormData.anneeExerciceId);
                                       if (!anneeExercice) return null;
                                       
-                                      const anneeEx = new Date(anneeExercice.annee).getFullYear();
+                                      const anneeEx = parseAnnee(anneeExercice.annee);
                                       const anneeNaissance = new Date(enfantFormData.dateNaissance).getFullYear();
                                       const age = anneeEx - anneeNaissance;
                                       

@@ -75,6 +75,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
           </li>
           <li>
+            <Link to="/statistiques" className="nav-link">
+              📊 Statistiques
+            </Link>
+          </li>
+          <li>
             <Link to="/rapports" className="nav-link">
               📈 Rapports
             </Link>

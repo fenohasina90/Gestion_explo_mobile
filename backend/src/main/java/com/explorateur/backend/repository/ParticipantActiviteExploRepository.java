@@ -25,7 +25,7 @@ public interface ParticipantActiviteExploRepository extends JpaRepository<Partic
     /**
      * Compte le nombre de participations aux activités pour une inscription dans une année d'exercice
      */
-    @Query("SELECT COUNT(p) FROM ParticipantActiviteExplo p WHERE p.inscription.id = :inscriptionId AND p.activite.anneeExercice.id = :anneeExerciceId")
+    @Query("SELECT COUNT(p) FROM ParticipantActiviteExplo p WHERE p.inscription.id = :inscriptionId AND p.activite.budgetGlobal.anneeExercice.id = :anneeExerciceId")
     Long countByInscriptionIdAndAnneeExerciceId(@Param("inscriptionId") Long inscriptionId, @Param("anneeExerciceId") Long anneeExerciceId);
     
     void deleteByActiviteId(Long activiteId);

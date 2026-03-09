@@ -22,7 +22,7 @@ public interface ParticipantActiviteStaffRepository extends JpaRepository<Partic
     /**
      * Compte le nombre de participations aux activités pour un staff dans une année d'exercice
      */
-    @Query("SELECT COUNT(p) FROM ParticipantActiviteStaff p WHERE p.staff.id = :staffId AND p.activite.anneeExercice.id = :anneeExerciceId")
+    @Query("SELECT COUNT(p) FROM ParticipantActiviteStaff p WHERE p.staff.id = :staffId AND p.activite.budgetGlobal.anneeExercice.id = :anneeExerciceId")
     Long countByStaffIdAndAnneeExerciceId(@Param("staffId") Long staffId, @Param("anneeExerciceId") Long anneeExerciceId);
     
     void deleteByActiviteId(Long activiteId);

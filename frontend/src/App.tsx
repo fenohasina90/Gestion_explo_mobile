@@ -18,6 +18,7 @@ import { ClassesProgressivesPage } from './pages/ClassesProgressivesPage';
 import { CPDetailsPage } from './pages/CPDetailsPage';
 import { HistoriqueProgrammesPage } from './pages/HistoriqueProgrammesPage';
 import { MouvementsBudgetairesPage } from './pages/MouvementsBudgetairesPage';
+import { StatistiquesPage } from './pages/StatistiquesPage';
 import { InscriptionsPage, RapportsPage } from './pages/PlaceholderPages';
 
 function App() {
@@ -95,6 +96,16 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <MouvementsBudgetairesPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/statistiques"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <StatistiquesPage />
                 </Layout>
               </PrivateRoute>
             }
