@@ -279,7 +279,7 @@ export const EnfantsPage = () => {
     try {
       console.log('Recherche parents - query:', parentSearchQuery);
       const results = await parentService.searchParents(parentSearchQuery);
-      console.log('Résultats parents trouvés:', results.length);
+      console.log('Résultats parents trouvés:', results.length, results);
       setParentSuggestions(results);
       setShowParentForm(results.length === 0);
     } catch (err: any) {
@@ -940,7 +940,7 @@ export const EnfantsPage = () => {
                           <div className="nested-form">
                             <h4>Créer un nouvel enfant</h4>
                             
-                            {/* Auto-complétion parent */}
+                            {/* /* Auto-complétion parent */}
                             <div className="form-group">
                               <label>Rechercher un parent *</label>
                               <input
@@ -965,8 +965,24 @@ export const EnfantsPage = () => {
                               )}
                             </div>
                             
+                            {/* {console.log('RENDER PARENT - parentSuggestions.length:', parentSuggestions.length, 'selectedParent:', selectedParent, 'condition:', parentSuggestions.length > 0 && !selectedParent)} */}
+                            
                             {parentSuggestions.length > 0 && !selectedParent && (
-                              <div className="suggestions-list">
+                              <div 
+                                className="suggestions-list"
+                                style={{ 
+                                  border: '2px solid red', 
+                                  padding: '10px',
+                                  backgroundColor: 'white',
+                                  position: 'relative',
+                                  zIndex: 9999,
+                                  marginTop: '5px',
+                                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                                }}
+                              >
+                                <div style={{ color: 'green', fontWeight: 'bold', marginBottom: '10px' }}>
+                                  ✅ SUGGESTIONS PARENTS - {parentSuggestions.length} résultats
+                                </div>
                                 {parentSuggestions.map(parent => (
                                   <div
                                     key={parent.id}
@@ -982,7 +998,7 @@ export const EnfantsPage = () => {
                               </div>
                             )}
                             
-                            {/* Formulaire création parent */}
+                            {/* Formulaire création parent  */}
                             {showParentForm && (
                               <div className="nested-form">
                                 <h5>Créer un nouveau parent</h5>
