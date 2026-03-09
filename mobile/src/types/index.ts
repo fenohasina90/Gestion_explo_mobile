@@ -665,3 +665,47 @@ export interface ProgrammeAvancement {
   historique: ProgrammeHistoriqueItem[];
 }
 
+/**
+ * Types pour les mouvements budgétaires
+ */
+export interface TypeMouvement {
+  id: number;
+  type: string;
+}
+
+export interface MouvementBudgetaire {
+  id: number;
+  anneeExercice: AnneeExercice;
+  type: TypeMouvement;
+  montant: number;
+  description?: string;
+  createdAt: string;
+}
+
+export interface CreateMouvementBudgetaireRequest {
+  typeId: number;
+  montant: number;
+  description?: string;
+}
+
+export interface UpdateMouvementBudgetaireRequest {
+  typeId: number;
+  montant: number;
+  description?: string;
+}
+
+export interface MouvementBudgetaireFilterRequest {
+  recherche?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  typeId?: number;
+  anneeExerciceId?: number;
+}
+
+export interface EtatCaisse {
+  totalRecettes: number;
+  totalDepenses: number;
+  solde: number;
+  anneeExercice: AnneeExercice;
+}
+

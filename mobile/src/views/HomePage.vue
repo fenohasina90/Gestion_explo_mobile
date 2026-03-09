@@ -131,6 +131,30 @@
           </ion-grid>
         </div>
 
+        <!-- Section Budget (Tous les utilisateurs) -->
+        <h2 class="section-title">Budget</h2>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-card button @click="$router.push('/tabs/budget')" class="action-card-wrapper">
+                <ion-card-content class="action-card">
+                  <ion-icon :icon="walletOutline" class="action-icon"></ion-icon>
+                  <h3>Budget Global</h3>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card button @click="$router.push('/mouvements-budgetaires')" class="action-card-wrapper">
+                <ion-card-content class="action-card">
+                  <ion-icon :icon="cashOutline" class="action-icon"></ion-icon>
+                  <h3>Mouvements</h3>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
         <!-- Section Administration (Directeur uniquement) -->
         <div v-if="authStore.isDirecteur">
           <h2 class="section-title">Administration</h2>
@@ -206,7 +230,9 @@ import {
   personCircleOutline,
   listOutline,
   checkmarkOutline,
-  statsChartOutline
+  statsChartOutline,
+  walletOutline,
+  cashOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 

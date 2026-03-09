@@ -98,6 +98,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/mouvements-budgetaires',
+    name: 'MouvementsBudgetaires',
+    component: () => import('@/views/MouvementsBudgetairesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/tabs/cp-details/:id',
     name: 'CPDetails',
     component: () => import('@/views/CPDetailsPage.vue'),
