@@ -69,7 +69,50 @@
         <div v-if="!loading && !error">
           <!-- Vue Statistiques -->
           <div v-if="viewMode === 'statistiques'">
-            <div v-if="statistiques.length === 0">
+            <!-- Filtres -->
+            <ion-card>
+              <ion-card-header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <ion-card-title>Filtres</ion-card-title>
+                  <ion-button fill="clear" @click="showStatFilters = !showStatFilters">
+                    <ion-icon :icon="chevronBackOutline" :class="{ 'rotate-up': showStatFilters, 'rotate-down': !showStatFilters }"></ion-icon>
+                  </ion-button>
+                </div>
+              </ion-card-header>
+              <ion-card-content v-if="showStatFilters">
+                <ion-item>
+                  <ion-label>Catégorie</ion-label>
+                  <ion-select v-model="filterStatCategorie" placeholder="Toutes">
+                    <ion-select-option :value="''">Toutes les catégories</ion-select-option>
+                    <ion-select-option v-for="cat in categories" :key="cat" :value="cat">
+                      {{ cat }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+                
+                <ion-item>
+                  <ion-label>Classe</ion-label>
+                  <ion-select v-model="filterStatClasse" placeholder="Toutes">
+                    <ion-select-option :value="''">Toutes les classes</ion-select-option>
+                    <ion-select-option v-for="cls in classes" :key="cls" :value="cls">
+                      {{ cls }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+                
+                <ion-item>
+                  <ion-label>Statut</ion-label>
+                  <ion-select v-model="filterStatStatut" placeholder="Tous">
+                    <ion-select-option :value="''">Tous les statuts</ion-select-option>
+                    <ion-select-option value="En attente">En attente</ion-select-option>
+                    <ion-select-option value="En cours">En cours</ion-select-option>
+                    <ion-select-option value="Terminé">Terminé</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+
+            <div v-if="filteredStatistiques.length === 0">
               <ion-card>
                 <ion-card-content>
                   <p class="ion-text-center">Aucune statistique disponible</p>
@@ -77,7 +120,7 @@
               </ion-card>
             </div>
             <div v-else>
-              <ion-card v-for="(stat, index) in statistiques" :key="index" class="stat-card">
+              <ion-card v-for="(stat, index) in filteredStatistiques" :key="index" class="stat-card">
                 <ion-card-header>
                   <ion-card-title>
                     📅 Année {{ formatAnneeExercice(stat.anneeExercice) }}
@@ -459,6 +502,12 @@ const statistiques = ref<StatistiquesAnnuelles[]>([]);
 const progression = ref<ProgressionAnnuelle[]>([]);
 const avancement = ref<ProgrammeAvancement[]>([]);
 
+// Filtres Statistiques
+const filterStatCategorie = ref('');
+const filterStatClasse = ref('');
+const filterStatStatut = ref('');
+const showStatFilters = ref(true);
+
 // Filtres Progression
 const filterSearch = ref('');
 const filterCategorie = ref('');
@@ -494,10 +543,17 @@ const loadAnnees = async () => {
 const loadStatistiques = async () => {
   try {
     loading.value = true;
-    const data = await historiqueProgrammeService.getStatistiquesAnnuelles(
-      selectedAnneeId.value || undefined
-    );
-    statistiques.value = data;
+    // Charger à la fois les statistiques et la progression pour le filtrage
+    const [statsData, progData] = await Promise.all([
+      historiqueProgrammeService.getStatistiquesAnnuelles(
+        selectedAnneeId.value || undefined
+      ),
+      historiqueProgrammeService.getProgressionAnnuelle(
+        selectedAnneeId.value || undefined
+      )
+    ]);
+    statistiques.value = statsData;
+    progression.value = progData;
     error.value = null;
   } catch (err: any) {
     error.value = err.message || 'Erreur lors du chargement des statistiques';
@@ -551,6 +607,54 @@ const categoriesAvancement = computed(() => {
 
 const classesAvancement = computed(() => {
   return Array.from(new Set(avancement.value.map(p => p.classeNom))).sort();
+});
+// Statistiques filtrées calculées à partir de la progression
+const filteredStatistiques = computed(() => {
+  // Filtrer la progression selon les critères
+  const filtered = progression.value.filter((prog) => {
+    const matchCategorie = !filterStatCategorie.value || prog.categorieNom === filterStatCategorie.value;
+    const matchClasse = !filterStatClasse.value || prog.classeNom === filterStatClasse.value;
+    const matchStatut = !filterStatStatut.value || prog.statutFinalNom === filterStatStatut.value;
+    return matchCategorie && matchClasse && matchStatut;
+  });
+
+  // Grouper par année et calculer les statistiques
+  const statsMap = new Map<string, any>();
+  
+  filtered.forEach(prog => {
+    const annee = prog.anneeExercice;
+    if (!statsMap.has(annee)) {
+      statsMap.set(annee, {
+        anneeExercice: annee,
+        totalProgrammesTravailles: 0,
+        programmesTermines: 0,
+        programmesEnCours: 0,
+        programmesEnAttente: 0,
+        tauxCompletion: 0
+      });
+    }
+    
+    const stat = statsMap.get(annee);
+    stat.totalProgrammesTravailles++;
+    
+    const statutNorm = prog.statutFinalNom.toLowerCase();
+    if (statutNorm.includes('termin')) {
+      stat.programmesTermines++;
+    } else if (statutNorm.includes('cours')) {
+      stat.programmesEnCours++;
+    } else if (statutNorm.includes('attente')) {
+      stat.programmesEnAttente++;
+    }
+  });
+
+  // Calculer le taux de complétion
+  statsMap.forEach(stat => {
+    if (stat.totalProgrammesTravailles > 0) {
+      stat.tauxCompletion = (stat.programmesTermines / stat.totalProgrammesTravailles) * 100;
+    }
+  });
+
+  return Array.from(statsMap.values());
 });
 
 const filteredProgression = computed(() => {
