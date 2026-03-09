@@ -8,13 +8,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Controller pour la gestion des mouvements budgétaires
@@ -33,8 +36,9 @@ public class MouvementBudgetaireController {
     @Operation(summary = "Créer un mouvement budgétaire", 
                description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur uniquement")
     public ResponseEntity<MouvementBudgetaireResponse> createMouvement(
-            @Valid @RequestBody CreateMouvementBudgetaireRequest request) {
-        MouvementBudgetaireResponse response = mouvementBudgetaireService.createMouvement(request);
+            @Valid @RequestBody CreateMouvementBudgetaireRequest request,
+            Authentication authentication) {
+        MouvementBudgetaireResponse response = mouvementBudgetaireService.createMouvement(request, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
@@ -58,6 +62,17 @@ public class MouvementBudgetaireController {
         return ResponseEntity.noContent().build();
     }
     
+    @GetMapping("/etat-caisse")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @Operation(summary = "Obtenir l'état de caisse",
+               description = "Calcule l'état de caisse (total recettes, total dépenses, solde) pour une année d'exercice")
+    public ResponseEntity<EtatCaisseResponse> getEtatCaisse(
+            @Parameter(description = "ID de l'année d'exercice (si non spécifié, prend l'année active)") 
+            @RequestParam(required = false) Long anneeExerciceId) {
+        EtatCaisseResponse etatCaisse = mouvementBudgetaireService.getEtatCaisse(anneeExerciceId);
+        return ResponseEntity.ok(etatCaisse);
+    }
+    
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir un mouvement par ID",
@@ -69,14 +84,18 @@ public class MouvementBudgetaireController {
     
     @GetMapping
     @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
-    @Operation(summary = "Consulter l'état de caisse avec filtres",
-               description = "Récupère la liste des mouvements budgétaires avec filtres optionnels")
-    public ResponseEntity<List<MouvementBudgetaireResponse>> getMouvementsWithFilters(
+    @Operation(summary = "Consulter l'état de caisse avec filtres et pagination",
+               description = "Récupère la liste paginée des mouvements budgétaires avec filtres optionnels")
+    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvementsWithFilters(
             @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
             @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
             @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
             @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
-            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId) {
+            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId,
+            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
+            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
         
         MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
                 .recherche(recherche)
@@ -86,18 +105,10 @@ public class MouvementBudgetaireController {
                 .anneeExerciceId(anneeExerciceId)
                 .build();
         
-        List<MouvementBudgetaireResponse> mouvements = mouvementBudgetaireService.getMouvementsWithFilters(filters);
-        return ResponseEntity.ok(mouvements);
-    }
-    
-    @GetMapping("/etat-caisse")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
-    @Operation(summary = "Obtenir l'état de caisse",
-               description = "Calcule l'état de caisse (total recettes, total dépenses, solde) pour une année d'exercice")
-    public ResponseEntity<EtatCaisseResponse> getEtatCaisse(
-            @Parameter(description = "ID de l'année d'exercice (si non spécifié, prend l'année active)") 
-            @RequestParam(required = false) Long anneeExerciceId) {
-        EtatCaisseResponse etatCaisse = mouvementBudgetaireService.getEtatCaisse(anneeExerciceId);
-        return ResponseEntity.ok(etatCaisse);
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        
+        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
+        return ResponseEntity.ok(mouvementsPage);
     }
 }

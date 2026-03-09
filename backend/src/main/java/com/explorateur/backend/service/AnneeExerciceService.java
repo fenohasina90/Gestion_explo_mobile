@@ -118,7 +118,7 @@ public class AnneeExerciceService {
     /**
      * Convertit une entité en DTO de réponse
      */
-    private AnneeExerciceResponse mapToResponse(AnneeExercice anneeExercice) {
+    public AnneeExerciceResponse mapToResponse(AnneeExercice anneeExercice) {
         return AnneeExerciceResponse.builder()
                 .id(anneeExercice.getId())
                 .annee(anneeExercice.getAnnee())

@@ -3,6 +3,8 @@ package com.explorateur.backend.repository;
 import com.explorateur.backend.entity.MouvementBudgetaire;
 import com.explorateur.backend.entity.AnneeExercice;
 import com.explorateur.backend.entity.Type;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,6 +48,24 @@ public interface MouvementBudgetaireRepository extends JpaRepository<MouvementBu
             @Param("recherche") String recherche,
             @Param("dateDebut") LocalDateTime dateDebut,
             @Param("dateFin") LocalDateTime dateFin
+    );
+    
+    /**
+     * Recherche paginée avec filtres multiples
+     */
+    @Query("SELECT m FROM MouvementBudgetaire m WHERE " +
+           "(:anneeExerciceId IS NULL OR m.anneeExercice.id = :anneeExerciceId) AND " +
+           "(:typeId IS NULL OR m.type.id = :typeId) AND " +
+           "(:recherche IS NULL OR LOWER(m.description) LIKE LOWER(CONCAT('%', :recherche, '%'))) AND " +
+           "(:dateDebut IS NULL OR m.createdAt >= :dateDebut) AND " +
+           "(:dateFin IS NULL OR m.createdAt <= :dateFin)")
+    Page<MouvementBudgetaire> findWithFiltersPaginated(
+            @Param("anneeExerciceId") Long anneeExerciceId,
+            @Param("typeId") Long typeId,
+            @Param("recherche") String recherche,
+            @Param("dateDebut") LocalDateTime dateDebut,
+            @Param("dateFin") LocalDateTime dateFin,
+            Pageable pageable
     );
     
     /**

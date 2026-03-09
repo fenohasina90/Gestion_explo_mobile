@@ -14,10 +14,6 @@ import java.math.BigDecimal;
 @Schema(description = "Requête pour créer un mouvement budgétaire")
 public class CreateMouvementBudgetaireRequest {
 
-    @NotNull(message = "L'année d'exercice est obligatoire")
-    @Schema(description = "ID de l'année d'exercice", example = "1", required = true)
-    private Long anneeExerciceId;
-
     @NotNull(message = "Le type de mouvement est obligatoire")
     @Schema(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)", example = "1", required = true)
     private Long typeId;

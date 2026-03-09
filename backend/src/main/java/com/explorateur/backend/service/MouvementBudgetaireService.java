@@ -4,11 +4,15 @@ import com.explorateur.backend.dto.*;
 import com.explorateur.backend.entity.AnneeExercice;
 import com.explorateur.backend.entity.MouvementBudgetaire;
 import com.explorateur.backend.entity.Type;
+import com.explorateur.backend.entity.Utilisateur;
 import com.explorateur.backend.repository.AnneeExerciceRepository;
 import com.explorateur.backend.repository.MouvementBudgetaireRepository;
 import com.explorateur.backend.repository.TypeRepository;
+import com.explorateur.backend.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +33,7 @@ public class MouvementBudgetaireService {
     private final MouvementBudgetaireRepository mouvementBudgetaireRepository;
     private final AnneeExerciceRepository anneeExerciceRepository;
     private final TypeRepository typeRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final JournalService journalService;
     private final AnneeExerciceService anneeExerciceService;
     
@@ -36,13 +41,16 @@ public class MouvementBudgetaireService {
      * Créer un nouveau mouvement budgétaire (Directeur uniquement)
      */
     @Transactional
-    public MouvementBudgetaireResponse createMouvement(CreateMouvementBudgetaireRequest request) {
+    public MouvementBudgetaireResponse createMouvement(CreateMouvementBudgetaireRequest request, String username) {
         log.info("Création d'un mouvement budgétaire de type {} pour le montant {}", 
                 request.getTypeId(), request.getMontant());
         
-        // Récupérer l'année d'exercice
-        AnneeExercice anneeExercice = anneeExerciceRepository.findById(request.getAnneeExerciceId())
-                .orElseThrow(() -> new RuntimeException("Année d'exercice introuvable"));
+        // Récupérer l'utilisateur connecté
+        Utilisateur currentUser = utilisateurRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+        
+        // Récupérer l'année d'exercice de l'utilisateur
+        AnneeExercice anneeExercice = currentUser.getAnneeExercice();
         
         // Récupérer le type
         Type type = typeRepository.findById(request.getTypeId())
@@ -86,7 +94,6 @@ public class MouvementBudgetaireService {
         // Sauvegarder les anciennes valeurs pour le journal
         String ancienType = mouvement.getType().getType();
         BigDecimal ancienMontant = mouvement.getMontant();
-        String ancienneDescription = mouvement.getDescription();
         
         // Mettre à jour le mouvement
         mouvement.setType(type);
@@ -129,7 +136,7 @@ public class MouvementBudgetaireService {
     }
     
     /**
-     * Obtenir tous les mouvements budgétaires avec filtres
+     * Obtenir tous les mouvements budgétaires avec filtres (sans pagination)
      */
     @Transactional(readOnly = true)
     public List<MouvementBudgetaireResponse> getMouvementsWithFilters(MouvementBudgetaireFilterRequest filters) {
@@ -157,6 +164,51 @@ public class MouvementBudgetaireService {
         return mouvements.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * Obtenir tous les mouvements budgétaires avec filtres et pagination
+     */
+    @Transactional(readOnly = true)
+    public PageResponse<MouvementBudgetaireResponse> getMouvementsWithFiltersPaginated(
+            MouvementBudgetaireFilterRequest filters, Pageable pageable) {
+        log.info("Récupération des mouvements budgétaires avec filtres et pagination");
+        
+        LocalDateTime dateDebut = null;
+        LocalDateTime dateFin = null;
+        
+        if (filters.getDateDebut() != null) {
+            dateDebut = filters.getDateDebut().atStartOfDay();
+        }
+        
+        if (filters.getDateFin() != null) {
+            dateFin = filters.getDateFin().atTime(LocalTime.MAX);
+        }
+        
+        Page<MouvementBudgetaire> page = mouvementBudgetaireRepository.findWithFiltersPaginated(
+                filters.getAnneeExerciceId(),
+                filters.getTypeId(),
+                filters.getRecherche(),
+                dateDebut,
+                dateFin,
+                pageable
+        );
+        
+        List<MouvementBudgetaireResponse> content = page.getContent().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+        
+        return PageResponse.<MouvementBudgetaireResponse>builder()
+                .content(content)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
+                .build();
     }
     
     /**
