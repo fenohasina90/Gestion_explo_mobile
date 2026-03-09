@@ -40,6 +40,23 @@ public interface ProgrammeProgressionAnnuelleRepository extends JpaRepository<Pr
     Long countProgrammesTerminesParAnnee(@Param("anneeExerciceId") Long anneeExerciceId);
     
     /**
+     * Compte les programmes terminés pour une classe et une année d'exercice
+     */
+    @Query("SELECT COUNT(p) FROM ProgrammeProgressionAnnuelle p " +
+           "WHERE p.anneeExercice.id = :anneeExerciceId " +
+           "AND p.programme.classe.id = :classeId " +
+           "AND p.statutFinal.status = 'Terminé'")
+    Long countProgrammesTerminesParClasseEtAnnee(@Param("classeId") Long classeId, @Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
+     * Compte le total de programmes pour une classe et une année d'exercice
+     */
+    @Query("SELECT COUNT(p) FROM ProgrammeProgressionAnnuelle p " +
+           "WHERE p.anneeExercice.id = :anneeExerciceId " +
+           "AND p.programme.classe.id = :classeId")
+    Long countProgrammesTotalParClasseEtAnnee(@Param("classeId") Long classeId, @Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
      * Compte les programmes en cours pour une année
      */
     @Query("SELECT COUNT(p) FROM ProgrammeProgressionAnnuelle p " +

@@ -22,6 +22,12 @@ public interface ClasseProgressiveRepository extends JpaRepository<ClasseProgres
     List<ClasseProgressive> findByAnneeExerciceId(Long anneeExerciceId);
     
     /**
+     * Compter le nombre total de CP pour une année d'exercice
+     */
+    @Query("SELECT COUNT(cp) FROM ClasseProgressive cp WHERE cp.anneeExercice.id = :anneeExerciceId")
+    Long countByAnneeExerciceId(@Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
      * Filtrer les CP par plage de dates
      */
     @Query("SELECT cp FROM ClasseProgressive cp WHERE cp.dateCp BETWEEN :dateDebut AND :dateFin")

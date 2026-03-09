@@ -16,5 +16,17 @@ public interface ParticipantActiviteExploRepository extends JpaRepository<Partic
     @Query("SELECT p FROM ParticipantActiviteExplo p WHERE p.activite.id = :activiteId AND p.inscription.classe.id = :classeId")
     List<ParticipantActiviteExplo> findByActiviteIdAndClasseId(@Param("activiteId") Long activiteId, @Param("classeId") Long classeId);
     
+    /**
+     * Compte le nombre de participations aux activités pour une inscription donnée
+     */
+    @Query("SELECT COUNT(p) FROM ParticipantActiviteExplo p WHERE p.inscription.id = :inscriptionId")
+    Long countByInscriptionId(@Param("inscriptionId") Long inscriptionId);
+    
+    /**
+     * Compte le nombre de participations aux activités pour une inscription dans une année d'exercice
+     */
+    @Query("SELECT COUNT(p) FROM ParticipantActiviteExplo p WHERE p.inscription.id = :inscriptionId AND p.activite.anneeExercice.id = :anneeExerciceId")
+    Long countByInscriptionIdAndAnneeExerciceId(@Param("inscriptionId") Long inscriptionId, @Param("anneeExerciceId") Long anneeExerciceId);
+    
     void deleteByActiviteId(Long activiteId);
 }

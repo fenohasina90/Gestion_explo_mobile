@@ -21,4 +21,10 @@ public interface ActiviteRepository extends JpaRepository<Activite, Long> {
      */
     @Query("SELECT a FROM Activite a WHERE a.budgetGlobal.anneeExercice.id = :anneeExerciceId ORDER BY a.dateDebut DESC")
     List<Activite> findByAnneeExerciceId(@Param("anneeExerciceId") Long anneeExerciceId);
+    
+    /**
+     * Compter le nombre total d'activités pour une année d'exercice
+     */
+    @Query("SELECT COUNT(a) FROM Activite a WHERE a.budgetGlobal.anneeExercice.id = :anneeExerciceId")
+    Long countByAnneeExerciceId(@Param("anneeExerciceId") Long anneeExerciceId);
 }
