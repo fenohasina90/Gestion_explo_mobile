@@ -23,6 +23,11 @@ export function HistoriqueProgrammesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Filtres pour la vue Statistiques
+  const [filterStatCategorie, setFilterStatCategorie] = useState<string>('');
+  const [filterStatClasse, setFilterStatClasse] = useState<string>('');
+  const [filterStatStatut, setFilterStatStatut] = useState<string>('');
+  
   // Filtres pour la vue Progression
   const [filterStatut, setFilterStatut] = useState<string>('');
   const [filterSearch, setFilterSearch] = useState<string>('');
@@ -69,10 +74,17 @@ export function HistoriqueProgrammesPage() {
   const loadStatistiques = async () => {
     try {
       setLoading(true);
-      const data = await historiqueProgrammeService.getStatistiquesAnnuelles(
-        selectedAnneeId || undefined
-      );
-      setStatistiques(data);
+      // Charger à la fois les statistiques et la progression pour le filtrage
+      const [statsData, progData] = await Promise.all([
+        historiqueProgrammeService.getStatistiquesAnnuelles(
+          selectedAnneeId || undefined
+        ),
+        historiqueProgrammeService.getProgressionAnnuelle(
+          selectedAnneeId || undefined
+        )
+      ]);
+      setStatistiques(statsData);
+      setProgression(progData);
       setError(null);
     } catch (err: any) {
       setError(err.message || 'Erreur lors du chargement des statistiques');
@@ -228,12 +240,97 @@ export function HistoriqueProgrammesPage() {
     return matchCategorie && matchClasse && matchStatut;
   });
 
+  // Statistiques filtrées calculées à partir de la progression
+  const filteredStatistiques = (() => {
+    // Filtrer la progression selon les critères
+    const filtered = progression.filter((prog) => {
+      const matchCategorie = !filterStatCategorie || prog.categorieNom === filterStatCategorie;
+      const matchClasse = !filterStatClasse || prog.classeNom === filterStatClasse;
+      const matchStatut = !filterStatStatut || prog.statutFinalNom === filterStatStatut;
+      return matchCategorie && matchClasse && matchStatut;
+    });
+
+    // Grouper par année et calculer les statistiques
+    const statsMap = new Map<string, StatistiquesAnnuelles>();
+    
+    filtered.forEach(prog => {
+      const annee = prog.anneeExercice;
+      if (!statsMap.has(annee)) {
+        statsMap.set(annee, {
+          anneeExercice: annee,
+          totalProgrammesTravailles: 0,
+          programmesTermines: 0,
+          programmesEnCours: 0,
+          programmesEnAttente: 0,
+          tauxCompletion: 0,
+          totalChangements: 0,
+          nombreCPs: 0
+        });
+      }
+      
+      const stat = statsMap.get(annee)!;
+      stat.totalProgrammesTravailles++;
+      
+      const statutNorm = prog.statutFinalNom.toLowerCase();
+      if (statutNorm.includes('termin')) {
+        stat.programmesTermines++;
+      } else if (statutNorm.includes('cours')) {
+        stat.programmesEnCours++;
+      } else if (statutNorm.includes('attente')) {
+        stat.programmesEnAttente++;
+      }
+    });
+
+    // Calculer le taux de complétion
+    statsMap.forEach(stat => {
+      if (stat.totalProgrammesTravailles > 0) {
+        stat.tauxCompletion = (stat.programmesTermines / stat.totalProgrammesTravailles) * 100;
+      }
+    });
+
+    return Array.from(statsMap.values());
+  })();
+
   const renderStatistiques = () => (
     <div className="statistiques-container">
-      {statistiques.length === 0 ? (
+      {/* Filtres */}
+      <div className="filters">
+        <select
+          value={filterStatCategorie}
+          onChange={(e) => setFilterStatCategorie(e.target.value)}
+          className="filter-select"
+        >
+          <option value="">Toutes les catégories</option>
+          {categories.map((cat, idx) => (
+            <option key={idx} value={cat}>{cat}</option>
+          ))}
+        </select>
+        <select
+          value={filterStatClasse}
+          onChange={(e) => setFilterStatClasse(e.target.value)}
+          className="filter-select"
+        >
+          <option value="">Toutes les classes</option>
+          {classes.map((cls, idx) => (
+            <option key={idx} value={cls}>{cls}</option>
+          ))}
+        </select>
+        <select
+          value={filterStatStatut}
+          onChange={(e) => setFilterStatStatut(e.target.value)}
+          className="filter-select"
+        >
+          <option value="">Tous les statuts</option>
+          <option value="En attente">En attente</option>
+          <option value="En cours">En cours</option>
+          <option value="Terminé">Terminé</option>
+        </select>
+      </div>
+
+      {filteredStatistiques.length === 0 ? (
         <p className="no-data">Aucune statistique disponible</p>
       ) : (
-        statistiques.map((stat, index) => (
+        filteredStatistiques.map((stat, index) => (
           <div key={index} className="stats-year-section">
             <div className="stats-year-header">
               <h2>📅 Année d'exercice {formatAnneeExercice(stat.anneeExercice)}</h2>
