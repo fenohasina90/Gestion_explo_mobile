@@ -66,6 +66,7 @@ export interface AnneeExercice {
   annee: string;
   dateFin: string;
   createdAt: string;
+  estActif?: boolean;
 }
 
 export interface CreateAnneeExerciceRequest {
@@ -607,5 +608,60 @@ export interface HistoriqueProgramme {
   dateChangement: string;
   utilisateurId: number;
   username: string;
+}
+
+/**
+ * Types pour les statistiques annuelles des programmes
+ */
+export interface StatistiquesAnnuelles {
+  anneeExercice: string;
+  totalProgrammesTravailles: number;
+  programmesEnAttente: number;
+  programmesEnCours: number;
+  programmesTermines: number;
+  tauxCompletion: number;
+}
+
+/**
+ * Types pour la progression annuelle des programmes
+ */
+export interface ProgressionAnnuelle {
+  programmeId: number;
+  programmeNom: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  anneeExercice: string;
+  statutFinalId: number;
+  statutFinalNom: string;
+}
+
+/**
+ * Types pour l'avancement détaillé des programmes
+ */
+export interface ProgrammeHistoriqueItem {
+  id: number;
+  statusId: number;
+  statusNom: string;
+  dateChangement: string;
+  classeProgressiveId?: number;
+  classeProgressiveDate?: string;
+}
+
+export interface ProgrammeAvancement {
+  programmeId: number;
+  programmeNom: string;
+  categorieId: number;
+  categorieNom: string;
+  classeId: number;
+  classeNom: string;
+  anneeExercice: string;
+  statutActuelId: number;
+  statutActuelNom: string;
+  nombreChangements: number;
+  datePremiereCP?: string;
+  dateDerniereCP?: string;
+  historique: ProgrammeHistoriqueItem[];
 }
 

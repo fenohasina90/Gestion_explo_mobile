@@ -92,6 +92,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/historique-programmes',
+    name: 'HistoriqueProgrammes',
+    component: () => import('@/views/HistoriqueProgrammesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/tabs/cp-details/:id',
     name: 'CPDetails',
     component: () => import('@/views/CPDetailsPage.vue'),

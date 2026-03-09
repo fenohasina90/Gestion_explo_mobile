@@ -117,6 +117,17 @@
                 </ion-card>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <ion-card button @click="$router.push('/historique-programmes')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card-large">
+                    <ion-icon :icon="statsChartOutline" class="action-icon"></ion-icon>
+                    <h3>Historique des Programmes</h3>
+                    <p>Statistiques et suivi détaillé</p>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
           </ion-grid>
         </div>
 
@@ -194,7 +205,8 @@ import {
   documentTextOutline,
   personCircleOutline,
   listOutline,
-  checkmarkOutline
+  checkmarkOutline,
+  statsChartOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 
