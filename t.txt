@@ -1,0 +1,146 @@
+📌 Contexte du projet
+
+Je souhaite développer une application web et mobile offline destinée à la gestion du Club des Explorateurs (type scout de l’Église Adventiste).
+
+ 🛠️ Stack technique
+- Backend : Spring Boot
+- Frontend Web : Vue.js
+- Base de données : SQLite
+- L’application doit fonctionner hors ligne, avec synchronisation des données en réseau local pour la version mobile.
+
+🎯 Fonctionnalités attendues
+ 1️⃣ Gestion des utilisateurs et des rôles
+- Authentification sécurisée obligatoire à l’ouverture de l’application.
+- Seul un utilisateur ayant le rôle Directeur peut créer un nouvel utilisateur.
+- Seuls les utilisateurs actifs peuvent se connecter et effectuer des actions.
+- Tous les utilisateurs créés sont actifs uniquement durant leur année d’exercice, sauf le Directeur.
+- Un Directeur devient automatiquement inactif lorsqu’il crée un nouveau Directeur pour l’année d’exercice suivante.
+- Les actions (création, modification, suppression) sont visibles selon le rôle de l’utilisateur connecté.
+
+ 2️⃣ Gestion des audits (journalisation)
+- Chaque action effectuée dans le système doit être enregistrée dans un journal.
+- Consultation du journal avec filtres :
+    - Date de début
+    - Date de fin
+
+ 3️⃣ Gestion des instructeurs et staffs
+Instructeurs :
+- Création avec système d’auto-complétion (suggestion nom/prénom pour éviter les doublons).
+- Si l’instructeur existe déjà, sélection via suggestion.
+- Sinon, possibilité de créer un nouveau.
+
+Staff :
+- Création à partir des instructeurs existant: 
+    - Création avec système d’auto-complétion (suggestion nom/prénom pour éviter les doublons).
+    - Si l’instructeur existe déjà, sélection via suggestion.
+    - Sinon, possibilité de créer un nouveau.
+- Système de suggestion également présent.
+
+
+- Liste des staffs avec filtres multiples :
+    - Année d’exercice
+    - Genre
+    - Rôle
+- Suppression staff: visible uniquement pour le Directeur.
+- Modification staff: visible pour le Directeur et le Co-directeur.
+
+
+ 4️⃣ Gestion des parents, enfants et inscriptions
+Inscription des enfants:
+- Suggestion automatique selon nom/prénom (10 à 15 ans uniquement).
+- Vérification automatique de l’âge par rapport à l’année d’exercice.
+- Si l’enfant n’existe pas :
+    - Création avec système d’auto-complétion pour éviter les doublons.
+- Création du parent associée à la création de l’enfant.
+- Suggestion automatique également pour les parents.
+
+Listes et actions:
+- Liste des enfants inscrits avec filtres :
+    - Année d’exercice (début et fin)
+    - Classe
+    - Genre
+- Suppression : Directeur uniquement.
+- Modification et mise à jour assurance : Directeur et Co-directeur.
+- Liste des parents avec filtres :
+    - Année d’exercice
+    - Classe de l’enfant
+- Affichage des enfants associés à chaque parent.
+- Export PDF selon les filtres appliqués.
+
+
+ 5️⃣ Gestion du budget et des activités
+Structure budgétaire:
+- Budget global = somme des budgets des activités.
+- Budget activité = somme des détails d’activité.
+
+Activités:
+- Création via formulaire dynamique.
+- Liste avec filtre par année d’exercice.
+- Modification du statut :
+    - Directeur et Co-directeur uniquement.
+    - Impossible de modifier une activité en statut TERMINÉ.
+- Export PDF du budget avec possibilité de choisir les colonnes à exporter.
+
+Présence aux activités
+- Bouton “Faire présence” :
+    - Liste déroulante : Enfant / Staff
+    - Affichage dynamique selon sélection
+    - Cases à cocher pour les présents
+- Après validation :
+    - Statut de l’activité → TERMINÉ
+    - Bouton devient “Voir participants”
+- Consultation des participants avec filtres :
+    - Staff
+    - Enfant
+    - Classe (affiché si filtre enfant activé)
+
+
+ 6️⃣ Gestion des programmes
+- Liste des programmes avec filtres multiples :
+    - Catégorie
+    - Statut
+    - Classe
+- Bouton pour consulter l’historique d’un programme.
+
+
+
+
+ 7️⃣ Gestion budgétaire (mouvements financiers)
+- Création d’un mouvement budgétaire : Directeur uniquement.
+- Modification : Directeur et Co-directeur.
+- Suppression : Directeur uniquement.
+- Consultation de l’état de caisse avec filtres :
+    - Recherche
+    - Date de début
+    - Date de fin
+    - Type de mouvement.
+
+
+
+📌 Règle importante
+Le Directeur et le Co-directeur peuvent uniquement créer, modifier ou supprimer des données appartenant à leur année d’exercice.
+
+
+📱 Fonctionnalité spécifique à l’application mobile
+- Bouton de synchronisation.
+- Synchronisation des données entre les deux applications mobiles lorsqu’elles sont connectées au même réseau local.
+
+
+
+Je souhaite maintenant ajouter une page de statistiques pour les enfants et les staffs, avec des filtres.
+
+1. Statistiques pour les enfants
+- Pourcentage de programmes complétés : proportion des programmes terminés par un enfant par rapport à la liste totale des programmes de sa classe pour une année d’exercice donnée.
+- Pourcentage de participation aux activités avec classement.
+- Pourcentage de présence aux classes progressives avec classement.
+
+2. Statistiques pour les staffs
+- Pourcentage de participation aux activités avec classement.
+- Pourcentage de présence aux classes progressives avec classement.
+
+
+
+
+
+
+/snap/android-studio/209/bin/studio.sh
