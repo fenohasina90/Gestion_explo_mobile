@@ -11,14 +11,6 @@ CREATE TABLE classes (
     age INTEGER
 );
 
-INSERT INTO classes (nom, logo, age) VALUES
-('Ami', 'Ami.png', 10),
-('Compagnon', 'Compagnon.png', 11),
-('Eclaireur', 'Eclaireur.png', 12),
-('Pionnier', 'Pionnier.png', 13),
-('Voyageur', 'Voyageur.png', 14),
-('Guide', 'Guide.png', 15);
-
 CREATE TABLE annee_exercice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee DATE NOT NULL,
@@ -36,28 +28,12 @@ CREATE TABLE roles_staff (
     role_name TEXT NOT NULL
 );
 
-INSERT INTO roles_staff (role_name) VALUES
-('Directeur'),
-('Co_Directeur'),
-('Secrétaire'),
-('Instructeur');
-
 CREATE TABLE roles_action (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role_id INTEGER,
     action TEXT NOT NULL,
     FOREIGN KEY (role_id) REFERENCES roles_staff(id)
 );
-
-INSERT INTO roles_action (role_id, action) VALUES
-(1, 'CREER'),
-(1, 'MODIFIER'),
-(1, 'SUPPRIMER'),
-(1, 'CONSULTER'),
-(2, 'MODIFIER'),
-(2, 'CONSULTER'),
-(3, 'CONSULTER'),
-(4, 'CONSULTER');
 
 CREATE TABLE utilisateur (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -148,10 +124,6 @@ CREATE TABLE budget_status (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO budget_status (nom) VALUES
-('Créé'),
-('Approuvé comité');
-
 CREATE TABLE budget_global (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee_exercice_id INTEGER,
@@ -168,11 +140,6 @@ CREATE TABLE activite_status (
     status TEXT NOT NULL
 );
 
-INSERT INTO activite_status (status) VALUES
-('En attente'),
-('Terminé'),
-('Annulé'),
-('Rejeté');
 
 CREATE TABLE activites (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -232,16 +199,6 @@ CREATE TABLE categorie_programme (
     nom TEXT NOT NULL
 );
 
-INSERT INTO categorie_programme (nom) VALUES
-('Lovan'' ny fiangonana'),
-('Ankapobeny'),
-('Fikarohana ara-panahy'),
-('Fanompoana ny hafa'),
-('Fahasalamana sy toe-batana tomady'),
-('Fiainana ankalamanjana'),
-('Lalindalina kokoa'),
-('Asa manavanana');
-
 CREATE TABLE programmes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT NOT NULL,
@@ -254,84 +211,10 @@ CREATE TABLE programmes (
     FOREIGN KEY (classes_id) REFERENCES classes(id)
 );
 
--- Données de test pour la table programmes
-INSERT INTO programmes (nom, description, categorie_id, classes_id) VALUES
--- Catégorie 1: Lovan' ny fiangonana (id=1)
-('Boky miara-mihira', 'Mianara hira 10 vaovao ao amin''ny boky fiangonana', 1, 1), -- Ami
-('Tantara ara-baiboly', 'Mitantara tantara ara-baiboly 3', 1, 1), -- Ami
-('Hira fiderana', 'Mianara hira fiderana 5', 1, 2), -- Compagnon
-('Lesona Alahady', 'Mandray anjara amin''ny lesona Alahady mandritra ny 3 volana', 1, 3), -- Eclaireur
-('Fampianarana Baiboly', 'Manomana fampianarana Baiboly ho an''ny kilasy kely', 1, 4), -- Pionnier
-('Toriteny', 'Manome toriteny fohy mandritra ny fanompoam-pivavahana', 1, 5), -- Voyageur
-('Fitarika ny fiankohofana', 'Mitari-piankohofana mandritra ny 1 volana', 1, 6), -- Guide
-
--- Catégorie 2: Ankapobeny (id=2)
-('Fivoriana sy fandaminana', 'Mandray anjara amin''ny fivoriana fandaminana', 2, 1), -- Ami
-('Fiaraha-miasa', 'Miara-miasa amin''ny namana 3', 2, 2), -- Compagnon
-('Tetibola', 'Mianatra mitantana tetibola', 2, 3), -- Eclaireur
-('Fitantanana fotoana', 'Mamorona agenda isan-kerinandro', 2, 4), -- Pionnier
-('Fanatanterahana tetikasa', 'Manatanteraka tetikasa iray', 2, 5), -- Voyageur
-('Fitarika ekipa', 'Mitondra ekipa mandritra ny 1 volana', 2, 6), -- Guide
-
--- Catégorie 3: Fikarohana ara-panahy (id=3)
-('Vakiteny Baiboly', 'Mamaky Baiboly isanandro mandritra ny 1 volana', 3, 1), -- Ami
-('Salamo', 'Mianatra Salamo 3', 3, 2), -- Compagnon
-('Bokin''ny Baiboly', 'Mianatra momba ny bokin''ny Baiboly 5', 3, 2), -- Compagnon
-('Toetran''Andriamanitra', 'Mianatra toetran''Andriamanitra 5', 3, 3), -- Eclaireur
-('Vavaka', 'Manoratra diary vavaka mandritra ny 1 volana', 3, 4), -- Pionnier
-('Famakiana andinin-teny', 'Mamakiteny andinin-teny 20', 3, 5), -- Voyageur
-('Fandalinana lalina', 'Manao fandalinana lalina momba ny toko iray', 3, 6), -- Guide
-
--- Catégorie 4: Fanompoana ny hafa (id=4)
-('Fanampiana ray aman-dreny', 'Manampy ray aman-dreny ao an-trano', 4, 1), -- Ami
-('Fitsidihana marary', 'Mitsidika olona marary', 4, 2), -- Compagnon
-('Fanadiovana manodidina', 'Manadio ny manodidina ny fiangonana', 4, 2), -- Compagnon
-('Fanampiana ny mpianatra kely', 'Manampy ny mpianatra kely hianatra', 4, 3), -- Eclaireur
-('Fanomezana', 'Manome fanomezana ho an''ny sahirana', 4, 4), -- Pionnier
-('Fikarakarana hetsika', 'Manampy amin''ny fikarakarana hetsika', 4, 5), -- Voyageur
-('Tetikasa ho an''ny fokontany', 'Manatanteraka tetikasa ho an''ny fokontany', 4, 6), -- Guide
-
--- Catégorie 5: Fahasalamana sy toe-batana tomady (id=5)
-('Fanatanjahan-tena', 'Manao fanatanjahan-tena 3 isan-kerinandro', 5, 1), -- Ami
-('Fisakafoana ara-pahasalamana', 'Mianatra momba ny sakafo mahasalama', 5, 2), -- Compagnon
-('Fidiovana', 'Mianatra mikarakara tena', 5, 3), -- Eclaireur
-('Torimaso', 'Mianatra momba ny torimaso ara-pahasalamana', 5, 4), -- Pionnier
-('Fanatanjahan-tena mahery', 'Manao fanatanjahan-tena 5 isan-kerinandro', 5, 5), -- Voyageur
-('Fitsaboana voalohany', 'Mianatra fitsaboana voalohany', 5, 6), -- Guide
-
--- Catégorie 6: Fiainana ankalamanjana (id=6)
-('Fambolena', 'Mamboly voninkazo na legioma', 6, 1), -- Ami
-('Fitsangatsanganana', 'Manao fitsangatsanganana 2', 6, 2), -- Compagnon
-('Fanjonoana', 'Mianatra manjono', 6, 3), -- Eclaireur
-('Fampiana tranolay', 'Mianatra mampianatra tranolay', 6, 4), -- Pionnier
-('Fahavelomana any an''ala', 'Mianatra fomba fahavelomana any an''ala', 6, 5), -- Voyageur
-('Lalan-kizorana', 'Manomana sy manao lalan-kizorana', 6, 6), -- Guide
-
--- Catégorie 7: Lalindalina kokoa (id=7)
-('Zava-kanto', 'Mamorona zavakanto iray', 7, 1), -- Ami
-('Mozika', 'Mianatra mozika', 7, 2), -- Compagnon
-('Dihy', 'Mianatra dihy vaovao', 7, 3), -- Eclaireur
-('Sary', 'Manao sary 3', 7, 4), -- Pionnier
-('Tononkalo', 'Manoratra tononkalo 2', 7, 5), -- Voyageur
-('Hai-tao an-tanana', 'Manao asa tanana sarotra', 7, 6), -- Guide
-
--- Catégorie 8: Asa manavanana (id=8)
-('Asa fanjairana', 'Mianatra manjaitra', 8, 1), -- Ami
-('Fandrahoan-tsakafo', 'Mahandro sakafo tsotra', 8, 2), -- Compagnon
-('Asa hazo', 'Mianatra asa hazo', 8, 3), -- Eclaireur
-('Fanjairana mandroso', 'Manjaitra akanjo tsotra', 8, 4), -- Pionnier
-('Fambolena mandroso', 'Mikarakara zaridaina', 8, 5), -- Voyageur
-('Asa vy', 'Mianatra asa vy', 8, 6); -- Guide
-
 CREATE TABLE programme_status (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     status TEXT NOT NULL
 );
-
-INSERT INTO programme_status (status) VALUES
-('En attente'),
-('En cours'),
-('Terminé');
 
 -- =========================
 -- Classe Progressive (CP)
@@ -423,10 +306,6 @@ CREATE TABLE type (
     type TEXT
 );
 
-INSERT INTO type (type) VALUES
-('RECETTE'),
-('DEPENSE');
-
 CREATE TABLE mouvement_budgetaire (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     annee_exercice_id INTEGER,
@@ -452,6 +331,119 @@ CREATE TABLE journal (
 -- =========================
 -- Données initiales
 -- =========================
+
+INSERT INTO roles_staff (role_name) VALUES
+('Directeur'),
+('Co_Directeur'),
+('Secrétaire'),
+('Instructeur');
+
+INSERT INTO classes (nom, logo, age) VALUES
+('Ami', 'Ami.png', 10),
+('Compagnon', 'Compagnon.png', 11),
+('Eclaireur', 'Eclaireur.png', 12),
+('Pionnier', 'Pionnier.png', 13),
+('Voyageur', 'Voyageur.png', 14),
+('Guide', 'Guide.png', 15);
+
+INSERT INTO roles_action (role_id, action) VALUES
+(1, 'CREER'),
+(1, 'MODIFIER'),
+(1, 'SUPPRIMER'),
+(1, 'CONSULTER'),
+(2, 'MODIFIER'),
+(2, 'CONSULTER'),
+(3, 'CONSULTER'),
+(4, 'CONSULTER');
+
+INSERT INTO budget_status (nom) VALUES
+('Créé'),
+('Approuvé comité');
+
+INSERT INTO activite_status (status) VALUES
+('En attente'),
+('Terminé'),
+('Annulé'),
+('Rejeté');
+
+INSERT INTO categorie_programme (nom) VALUES
+('Lovan'' ny fiangonana'),
+('Ankapobeny'),
+('Fikarohana ara-panahy'),
+('Fanompoana ny hafa'),
+('Fahasalamana sy toe-batana tomady'),
+('Fiainana ankalamanjana'),
+('Lalindalina kokoa'),
+('Asa manavanana');
+
+INSERT INTO programmes (nom, description, categorie_id, classes_id) VALUES
+('Boky miara-mihira', 'Mianara hira 10 vaovao ao amin''ny boky fiangonana', 1, 1), -- Ami
+('Tantara ara-baiboly', 'Mitantara tantara ara-baiboly 3', 1, 1), -- Ami
+('Hira fiderana', 'Mianara hira fiderana 5', 1, 2), -- Compagnon
+('Lesona Alahady', 'Mandray anjara amin''ny lesona Alahady mandritra ny 3 volana', 1, 3), -- Eclaireur
+('Fampianarana Baiboly', 'Manomana fampianarana Baiboly ho an''ny kilasy kely', 1, 4), -- Pionnier
+('Toriteny', 'Manome toriteny fohy mandritra ny fanompoam-pivavahana', 1, 5), -- Voyageur
+('Fitarika ny fiankohofana', 'Mitari-piankohofana mandritra ny 1 volana', 1, 6), -- Guide
+
+('Fivoriana sy fandaminana', 'Mandray anjara amin''ny fivoriana fandaminana', 2, 1), -- Ami
+('Fiaraha-miasa', 'Miara-miasa amin''ny namana 3', 2, 2), -- Compagnon
+('Tetibola', 'Mianatra mitantana tetibola', 2, 3), -- Eclaireur
+('Fitantanana fotoana', 'Mamorona agenda isan-kerinandro', 2, 4), -- Pionnier
+('Fanatanterahana tetikasa', 'Manatanteraka tetikasa iray', 2, 5), -- Voyageur
+('Fitarika ekipa', 'Mitondra ekipa mandritra ny 1 volana', 2, 6), -- Guide
+
+('Vakiteny Baiboly', 'Mamaky Baiboly isanandro mandritra ny 1 volana', 3, 1), -- Ami
+('Salamo', 'Mianatra Salamo 3', 3, 2), -- Compagnon
+('Bokin''ny Baiboly', 'Mianatra momba ny bokin''ny Baiboly 5', 3, 2), -- Compagnon
+('Toetran''Andriamanitra', 'Mianatra toetran''Andriamanitra 5', 3, 3), -- Eclaireur
+('Vavaka', 'Manoratra diary vavaka mandritra ny 1 volana', 3, 4), -- Pionnier
+('Famakiana andinin-teny', 'Mamakiteny andinin-teny 20', 3, 5), -- Voyageur
+('Fandalinana lalina', 'Manao fandalinana lalina momba ny toko iray', 3, 6), -- Guide
+
+('Fanampiana ray aman-dreny', 'Manampy ray aman-dreny ao an-trano', 4, 1), -- Ami
+('Fitsidihana marary', 'Mitsidika olona marary', 4, 2), -- Compagnon
+('Fanadiovana manodidina', 'Manadio ny manodidina ny fiangonana', 4, 2), -- Compagnon
+('Fanampiana ny mpianatra kely', 'Manampy ny mpianatra kely hianatra', 4, 3), -- Eclaireur
+('Fanomezana', 'Manome fanomezana ho an''ny sahirana', 4, 4), -- Pionnier
+('Fikarakarana hetsika', 'Manampy amin''ny fikarakarana hetsika', 4, 5), -- Voyageur
+('Tetikasa ho an''ny fokontany', 'Manatanteraka tetikasa ho an''ny fokontany', 4, 6), -- Guide
+
+('Fanatanjahan-tena', 'Manao fanatanjahan-tena 3 isan-kerinandro', 5, 1), -- Ami
+('Fisakafoana ara-pahasalamana', 'Mianatra momba ny sakafo mahasalama', 5, 2), -- Compagnon
+('Fidiovana', 'Mianatra mikarakara tena', 5, 3), -- Eclaireur
+('Torimaso', 'Mianatra momba ny torimaso ara-pahasalamana', 5, 4), -- Pionnier
+('Fanatanjahan-tena mahery', 'Manao fanatanjahan-tena 5 isan-kerinandro', 5, 5), -- Voyageur
+('Fitsaboana voalohany', 'Mianatra fitsaboana voalohany', 5, 6), -- Guide
+
+('Fambolena', 'Mamboly voninkazo na legioma', 6, 1), -- Ami
+('Fitsangatsanganana', 'Manao fitsangatsanganana 2', 6, 2), -- Compagnon
+('Fanjonoana', 'Mianatra manjono', 6, 3), -- Eclaireur
+('Fampiana tranolay', 'Mianatra mampianatra tranolay', 6, 4), -- Pionnier
+('Fahavelomana any an''ala', 'Mianatra fomba fahavelomana any an''ala', 6, 5), -- Voyageur
+('Lalan-kizorana', 'Manomana sy manao lalan-kizorana', 6, 6), -- Guide
+
+('Zava-kanto', 'Mamorona zavakanto iray', 7, 1), -- Ami
+('Mozika', 'Mianatra mozika', 7, 2), -- Compagnon
+('Dihy', 'Mianatra dihy vaovao', 7, 3), -- Eclaireur
+('Sary', 'Manao sary 3', 7, 4), -- Pionnier
+('Tononkalo', 'Manoratra tononkalo 2', 7, 5), -- Voyageur
+('Hai-tao an-tanana', 'Manao asa tanana sarotra', 7, 6), -- Guide
+
+('Asa fanjairana', 'Mianatra manjaitra', 8, 1), -- Ami
+('Fandrahoan-tsakafo', 'Mahandro sakafo tsotra', 8, 2), -- Compagnon
+('Asa hazo', 'Mianatra asa hazo', 8, 3), -- Eclaireur
+('Fanjairana mandroso', 'Manjaitra akanjo tsotra', 8, 4), -- Pionnier
+('Fambolena mandroso', 'Mikarakara zaridaina', 8, 5), -- Voyageur
+('Asa vy', 'Mianatra asa vy', 8, 6); -- Guide
+
+INSERT INTO programme_status (status) VALUES
+('En attente'),
+('En cours'),
+('Terminé');
+
+INSERT INTO type (type) VALUES
+('RECETTE'),
+('DEPENSE');
 
 -- Année d'exercice en cours (année actuelle de l'appareil)
 INSERT INTO annee_exercice (annee, date_fin, created_at) VALUES

@@ -26,16 +26,22 @@ public class DatabaseInitializer {
             String dbPath = datasourceUrl.replace("jdbc:sqlite:", "");
             File dbFile = new File(dbPath);
 
+            // Créer le répertoire parent s'il n'existe pas
+            File dataDir = dbFile.getParentFile();
+            if (dataDir != null && !dataDir.exists()) {
+                boolean created = dataDir.mkdirs();
+                if (created) {
+                    System.out.println("✅ Répertoire créé : " + dataDir.getAbsolutePath());
+                } else {
+                    System.err.println("❌ Impossible de créer le répertoire : " + dataDir.getAbsolutePath());
+                    System.err.println("   Vérifiez les permissions ou utilisez un autre chemin");
+                    return;
+                }
+            }
+
             // Vérifier si la base de données existe déjà
             if (!dbFile.exists() || dbFile.length() == 0) {
                 System.out.println("🔧 Base de données non trouvée. Initialisation en cours...");
-                
-                // Créer le répertoire /data s'il n'existe pas
-                File dataDir = dbFile.getParentFile();
-                if (dataDir != null && !dataDir.exists()) {
-                    dataDir.mkdirs();
-                    System.out.println("✅ Répertoire créé : " + dataDir.getAbsolutePath());
-                }
 
                 try {
                     // Lire le script SQL
@@ -43,22 +49,47 @@ public class DatabaseInitializer {
                     String sqlScript = new BufferedReader(
                         new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
                         .lines()
+                        // Filtrer les commentaires et lignes vides AVANT de joindre
+                        .filter(line -> {
+                            String trimmed = line.trim();
+                            return !trimmed.isEmpty() && !trimmed.startsWith("--");
+                        })
                         .collect(Collectors.joining("\n"));
 
                     // Séparer et exécuter les commandes SQL
                     String[] sqlStatements = sqlScript.split(";");
                     
+                    int successCount = 0;
+                    int errorCount = 0;
+                    
                     for (String statement : sqlStatements) {
                         String trimmed = statement.trim();
-                        if (!trimmed.isEmpty() && !trimmed.startsWith("--")) {
+                        if (!trimmed.isEmpty()) {
                             try {
                                 jdbcTemplate.execute(trimmed);
+                                successCount++;
+                                
+                                // Logger les CREATE TABLE pour debug
+                                if (trimmed.toUpperCase().startsWith("CREATE TABLE")) {
+                                    String tableName = trimmed.substring(13).split("\\s+|\\(")[0].trim();
+                                    System.out.println("  ✓ Table créée: " + tableName);
+                                }
                             } catch (Exception e) {
-                                System.err.println("⚠️  Erreur lors de l'exécution : " + trimmed);
-                                System.err.println("   Message : " + e.getMessage());
+                                errorCount++;
+                                String preview = trimmed.length() > 80 ? trimmed.substring(0, 80) + "..." : trimmed;
+                                System.err.println("⚠️  Erreur #" + errorCount + ": " + preview);
+                                System.err.println("   " + e.getMessage());
+                                
+                                // Arrêter si trop d'erreurs critiques
+                                if (errorCount > 10) {
+                                    System.err.println("❌ Trop d'erreurs, arrêt de l'initialisation");
+                                    throw new RuntimeException("Initialisation échouée: " + errorCount + " erreurs");
+                                }
                             }
                         }
                     }
+                    
+                    System.out.println("📈 Statistiques: " + successCount + " commandes réussies, " + errorCount + " erreurs");
 
                     System.out.println("✅ Base de données initialisée avec succès !");
                     System.out.println("📍 Emplacement : " + dbFile.getAbsolutePath());
