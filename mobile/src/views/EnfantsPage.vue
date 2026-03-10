@@ -69,7 +69,7 @@
           </ion-card-header>
           <ion-card-content v-if="showFilters">
             <ion-item>
-              <ion-label>Année d'exercice</ion-label>
+              <ion-label>Année</ion-label>
               <ion-select v-model="filterAnneeId" placeholder="Toutes">
                 <ion-select-option :value="null">Toutes</ion-select-option>
                 <ion-select-option v-for="annee in anneesExercice" :key="annee.id" :value="annee.id">
@@ -200,7 +200,7 @@
           </ion-card-header>
           <ion-card-content v-if="showParentFilters">
             <ion-item>
-              <ion-label>Année d'exercice</ion-label>
+              <ion-label>Année</ion-label>
               <ion-select v-model="filterParentAnneeId" placeholder="Toutes">
                 <ion-select-option :value="null">Toutes</ion-select-option>
                 <ion-select-option v-for="annee in anneesExercice" :key="annee.id" :value="annee.id">

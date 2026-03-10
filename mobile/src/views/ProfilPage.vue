@@ -39,7 +39,7 @@
               </ion-item>
               <ion-item>
                 <ion-label>
-                  <h3>Année d'exercice</h3>
+                  <h3>Année</h3>
                   <p>{{ new Date(userData.anneeExercice).getFullYear() }}</p>
                 </ion-label>
               </ion-item>

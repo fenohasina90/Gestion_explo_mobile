@@ -50,7 +50,7 @@
 
       <!-- Année d'exercice -->
       <ion-item v-if="mode === 'create' || (mode === 'edit' && isAdminEditingOther)">
-        <ion-label position="stacked">Année d'exercice *</ion-label>
+        <ion-label position="stacked">Année *</ion-label>
         <ion-select v-model="formData.anneeExerciceId" interface="action-sheet" placeholder="Sélectionner">
           <ion-select-option 
             v-for="annee in anneesExercice" 

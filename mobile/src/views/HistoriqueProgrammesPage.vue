@@ -22,7 +22,7 @@
         <ion-card>
           <ion-card-content>
             <ion-item>
-              <ion-label>Année d'exercice</ion-label>
+              <ion-label>Année</ion-label>
               <ion-select v-model="selectedAnneeId" placeholder="Toutes les années">
                 <ion-select-option :value="null">Toutes les années</ion-select-option>
                 <ion-select-option 

@@ -97,7 +97,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label>Année d'exercice</ion-label>
+            <ion-label>Année</ion-label>
             <ion-select 
               v-model="filters.anneeExerciceId" 
               @ionChange="applyFilters"

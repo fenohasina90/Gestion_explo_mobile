@@ -26,7 +26,7 @@
       <!-- Filtres -->
       <div v-if="showFilters" class="ion-padding-horizontal ion-margin-top">
         <ion-item>
-          <ion-label>Année d'exercice</ion-label>
+          <ion-label>Année</ion-label>
           <ion-select v-model="filterAnneeId" interface="action-sheet" placeholder="Toutes">
             <ion-select-option :value="null">Toutes les années</ion-select-option>
             <ion-select-option 

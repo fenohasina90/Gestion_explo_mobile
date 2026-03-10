@@ -47,7 +47,7 @@
         <!-- Sélection année d'exercice -->
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Année d'exercice</ion-card-title>
+            <ion-card-title>Année</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-item>
