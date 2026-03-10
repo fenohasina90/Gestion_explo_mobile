@@ -25,6 +25,9 @@ declare module 'ionicons/icons' {
   export const chevronBackOutline: string;
   export const chevronForward: string;
   export const chevronForwardOutline: string;
+  export const code: string;
+  export const codeSlash: string;
+  export const codeSlashOutline: string;
   export const close: string;
   export const closeCircle: string;
   export const closeCircleOutline: string;
@@ -50,6 +53,9 @@ declare module 'ionicons/icons' {
   export const location: string;
   export const locationOutline: string;
   export const logIn: string;
+  export const logoJavascript: string;
+  export const logoVue: string;
+  export const logoWhatsapp: string;
   export const logInOutline: string;
   export const logOut: string;
   export const logOutOutline: string;
@@ -67,8 +73,14 @@ declare module 'ionicons/icons' {
   export const personCircle: string;
   export const personCircleOutline: string;
   export const personOutline: string;
+  export const phonePortrait: string;
+  export const phonePortraitOutline: string;
+  export const ribbon: string;
+  export const ribbonOutline: string;
   export const search: string;
   export const searchOutline: string;
+  export const server: string;
+  export const serverOutline: string;
   export const settings: string;
   export const settingsOutline: string;
   export const sync: string;
@@ -77,5 +89,6 @@ declare module 'ionicons/icons' {
   export const trashOutline: string;
   export const warning: string;
   export const warningOutline: string;
+  export const analyticsOutline: string;
   // Add more icons as needed
 }

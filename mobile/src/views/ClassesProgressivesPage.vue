@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/tabs/home"></ion-back-button>
+          <!-- <ion-back-button default-href="/tabs/home"></ion-back-button> -->
           <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" />
         </ion-buttons>
         <ion-title>Classes Progressives</ion-title>
@@ -94,7 +94,7 @@
               color="warning" 
               @click.stop="confirmCloturer(cp)"
             >
-              <ion-icon :icon="lockClosedOutline"></ion-icon>
+              <ion-icon :icon="closeCircleOutline"></ion-icon>
             </ion-button>
             <ion-button 
               v-if="canModify"
@@ -156,7 +156,7 @@ import {
   alertController,
   toastController
 } from '@ionic/vue';
-import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline, lockClosedOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, filterOutline, chevronForwardOutline, closeCircleOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 import classeProgressiveService from '@/services/classe-progressive.service';
 import type { ClasseProgressive } from '@/types';

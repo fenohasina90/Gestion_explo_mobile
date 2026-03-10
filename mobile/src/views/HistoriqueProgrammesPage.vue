@@ -3,21 +3,19 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <img src="/assets/logo.png" alt="Logo" class="header-logo" />
-        </ion-buttons>
-        <ion-buttons slot="start">
           <ion-back-button default-href="/tabs/home"></ion-back-button>
+          <!-- <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" /> -->
         </ion-buttons>
-        <ion-title>Historique des Programmes</ion-title>
+        <ion-title>Historique</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
+      <!-- <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Historique des Programmes</ion-title>
         </ion-toolbar>
-      </ion-header>
+      </ion-header> -->
 
       <div class="historique-container">
         <!-- Sélecteur d'année -->
@@ -1037,6 +1035,13 @@ ion-card-title {
 .rotate-up {
   transform: rotate(-90deg);
   transition: transform 0.3s ease;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .rotate-down {

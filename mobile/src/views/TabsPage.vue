@@ -10,11 +10,16 @@
 
         <ion-tab-button tab="enfants" href="/tabs/enfants">
           <ion-icon aria-hidden="true" :icon="peopleOutline" />
-          <ion-label>Enfants</ion-label>
+          <ion-label>Explorateurs</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="cp" href="/tabs/cp">
+          <ion-icon aria-hidden="true" :icon="ribbonOutline" />
+          <ion-label>CP</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="budget" href="/tabs/budget">
-          <ion-icon aria-hidden="true" :icon="walletOutline" />
+          <ion-icon aria-hidden="true" :icon="cashOutline" />
           <ion-label>Budget</ion-label>
         </ion-tab-button>
 
@@ -29,5 +34,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { homeOutline, peopleOutline, walletOutline, personOutline } from 'ionicons/icons';
+import { homeOutline, peopleOutline, ribbonOutline, cashOutline, personOutline } from 'ionicons/icons';
 </script>

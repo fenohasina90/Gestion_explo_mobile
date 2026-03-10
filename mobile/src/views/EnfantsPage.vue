@@ -246,7 +246,7 @@
           
           <ion-card-content>
             <ion-label>
-              <h3>Enfants inscrits :</h3>
+              <h3>Explorateurs inscrits :</h3>
             </ion-label>
             <ion-list v-if="parentEnfants[parent.id] && parentEnfants[parent.id].length > 0">
               <ion-item v-for="enfant in parentEnfants[parent.id]" :key="enfant.id">
@@ -256,7 +256,7 @@
                 </ion-label>
               </ion-item>
             </ion-list>
-            <p v-else class="ion-text-center">Aucun enfant inscrit</p>
+            <p v-else class="ion-text-center">Aucun explorateur inscrit</p>
           </ion-card-content>
         </ion-card>
 

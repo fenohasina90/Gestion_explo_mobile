@@ -18,7 +18,7 @@
         <!-- Auto-complétion enfant -->
         <div v-if="!editMode && formData.anneeExerciceId > 0">
           <ion-item>
-            <ion-label position="stacked">Rechercher un enfant (10-15 ans) *</ion-label>
+            <ion-label position="stacked">Rechercher un Explorateur (10-15 ans) *</ion-label>
             <ion-input
               v-model="enfantSearchQuery"
               placeholder="Nom ou prénom..."
@@ -60,7 +60,7 @@
           <!-- Formulaire création enfant -->
           <ion-card v-if="showEnfantForm">
             <ion-card-header>
-              <ion-card-title>Créer un nouvel enfant</ion-card-title>
+              <ion-card-title>Créer un nouvel Explorateur</ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <!-- Auto-complétion parent -->
@@ -447,7 +447,7 @@ const searchEnfants = async () => {
     enfantSuggestions.value = results;
     showEnfantForm.value = results.length === 0;
   } catch (error) {
-    console.error('Erreur lors de la recherche d\'enfants:', error);
+    console.error('Erreur lors de la recherche d\'explorateurs:', error);
   }
 };
 
@@ -552,9 +552,9 @@ const createEnfant = async () => {
     enfantSearchQuery.value = `${newEnfant.nom} ${newEnfant.prenom}`;
     formData.value.enfantId = newEnfant.id;
     showEnfantForm.value = false;
-    emit('success', 'Enfant créé avec succès');
+    emit('success', 'Explorateur créé avec succès');
   } catch (error: any) {
-    emit('error', error.response?.data?.message || 'Erreur lors de la création de l\'enfant');
+    emit('error', error.response?.data?.message || 'Erreur lors de la création de l\'explorateur');
   }
 };
 

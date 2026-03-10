@@ -3,7 +3,8 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <img src="/assets/logo.png" alt="Logo" class="header-logo" />
+          <ion-back-button default-href="/tabs/home"></ion-back-button>
+          <!-- <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" /> -->
         </ion-buttons>
         <ion-title>Statistiques</ion-title>
         <ion-buttons slot="end">
@@ -17,7 +18,7 @@
       <ion-toolbar>
         <ion-segment :value="activeTab" @ionChange="onTabChange($event)">
           <ion-segment-button value="enfants">
-            <ion-label>Enfants</ion-label>
+            <ion-label>Explorateurs</ion-label>
           </ion-segment-button>
           <ion-segment-button value="staffs">
             <ion-label>Staffs</ion-label>
@@ -57,7 +58,7 @@
           </ion-card-header>
           <ion-card-content v-if="showFilters">
             <ion-item>
-              <ion-label>Année d'exercice</ion-label>
+              <ion-label>Année</ion-label>
               <ion-select v-model="filterAnneeId" placeholder="Toutes">
                 <ion-select-option :value="null">Toutes</ion-select-option>
                 <ion-select-option v-for="annee in anneesExercice" :key="annee.id" :value="annee.id">
@@ -164,7 +165,7 @@
           </ion-card-header>
           <ion-card-content v-if="showFiltersStaff">
             <ion-item>
-              <ion-label>Année d'exercice</ion-label>
+              <ion-label>Année</ion-label>
               <ion-select v-model="filterStaffAnneeId" placeholder="Toutes">
                 <ion-select-option :value="null">Toutes</ion-select-option>
                 <ion-select-option v-for="annee in anneesExercice" :key="annee.id" :value="annee.id">
@@ -240,6 +241,7 @@ import {
   IonContent,
   IonButtons,
   IonButton,
+  IonBackButton,
   IonIcon,
   IonCard,
   IonCardHeader,

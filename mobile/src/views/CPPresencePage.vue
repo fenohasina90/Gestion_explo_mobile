@@ -48,7 +48,7 @@
             <ion-label>Tous</ion-label>
           </ion-segment-button>
           <ion-segment-button value="enfants">
-            <ion-label>Enfants ({{ selectedEnfants.length }})</ion-label>
+            <ion-label>Explorateurs ({{ selectedEnfants.length }})</ion-label>
           </ion-segment-button>
           <ion-segment-button value="staff">
             <ion-label>Staff ({{ selectedStaff.length }})</ion-label>
@@ -78,7 +78,7 @@
       <div v-if="filtreType === 'tous' || filtreType === 'enfants'">
         <ion-list-header>
           <ion-label>
-            Enfants
+            Explorateurs
             <ion-note style="margin-left: 8px;">
               ({{ selectedEnfants.length }}/{{ filteredEnfants.length }})
             </ion-note>
@@ -108,7 +108,7 @@
           </ion-item>
 
           <div v-if="filteredEnfants.length === 0" class="ion-padding ion-text-center">
-            <ion-note>Aucun enfant disponible</ion-note>
+            <ion-note>Aucun explorateur disponible</ion-note>
           </div>
         </ion-list>
       </div>

@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button default-href="/tabs/classes-progressives"></ion-back-button>
-          <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" />
+          <!-- <img src="/assets/logo.png" alt="Logo" class="header-logo" style="margin-left: 8px;" /> -->
         </ion-buttons>
         <ion-title v-if="cp">{{ formatDate(cp.dateCp) }}</ion-title>
         <ion-buttons slot="end">

@@ -46,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'profil',
         name: 'Profil',
         component: () => import('@/views/ProfilPage.vue')
+      },
+      {
+        path: 'cp',
+        name: 'CP',
+        component: () => import('@/views/ClassesProgressivesPage.vue')
       }
     ]
   },
@@ -102,6 +107,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Statistiques',
     component: () => import('@/views/StatistiquesPage.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/a-propos',
+    name: 'APropos',
+    component: () => import('@/views/AProposPage.vue'),
+    meta: { requiresAuth: false }
   },
   {
     path: '/mouvements-budgetaires',

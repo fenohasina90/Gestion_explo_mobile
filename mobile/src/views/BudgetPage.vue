@@ -260,7 +260,7 @@
 
             <ion-item>
               <ion-label position="stacked">Description</ion-label>
-              <ion-textarea v-model="activiteForm.description" rows="3" placeholder="Description"></ion-textarea>
+              <ion-textarea v-model="activiteForm.description" :rows="3" placeholder="Description"></ion-textarea>
             </ion-item>
 
             <ion-item>
@@ -307,9 +307,9 @@
             </ion-buttons>
           </ion-toolbar>
           <ion-toolbar>
-            <ion-segment :value="presenceTab" @ionChange="presenceTab = $event.detail.value">
+            <ion-segment :value="presenceTab" @ionChange="presenceTab = $event.detail.value as string">
               <ion-segment-button value="enfants">
-                <ion-label>👶 Enfants ({{ selectedEnfants.length }}/{{ personnesDisponibles?.enfants.length || 0 }})</ion-label>
+                <ion-label>🏕️ Explorateurs ({{ selectedEnfants.length }}/{{ personnesDisponibles?.enfants.length || 0 }})</ion-label>
               </ion-segment-button>
               <ion-segment-button value="staff">
                 <ion-label>👨‍🏫 Staff ({{ selectedStaff.length }}/{{ personnesDisponibles?.staff.length || 0 }})</ion-label>
@@ -400,7 +400,7 @@
             <ion-card-content>
               <ion-item>
                 <ion-checkbox v-model="filtreEnfant"></ion-checkbox>
-                <ion-label class="ion-margin-start">👶 Enfants</ion-label>
+                <ion-label class="ion-margin-start">🏕️ Explorateurs</ion-label>
               </ion-item>
               <ion-item>
                 <ion-checkbox v-model="filtreStaff"></ion-checkbox>
@@ -416,7 +416,7 @@
                 </ion-select>
               </ion-item>
               <ion-text color="primary">
-                <p>Total: <strong>{{ participants?.enfants?.length || 0 + participants?.staff?.length || 0 }}</strong> participant(s)</p>
+                <p>Total: <strong>{{ (participants?.enfants?.length || 0) + (participants?.staff?.length || 0) }}</strong> participant(s)</p>
               </ion-text>
             </ion-card-content>
           </ion-card>
@@ -424,7 +424,7 @@
           <!-- Liste des participants -->
           <div v-if="filtreEnfant && participants?.enfants && participants.enfants.length > 0">
             <ion-text color="primary">
-              <h4>Enfants ({{ participants.enfants.length }})</h4>
+              <h4>Explorateurs ({{ participants.enfants.length }})</h4>
             </ion-text>
             <ion-list>
               <ion-item v-for="enfant in participants.enfants" :key="enfant.inscriptionId">

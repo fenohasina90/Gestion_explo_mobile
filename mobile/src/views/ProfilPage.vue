@@ -67,6 +67,12 @@
           Modifier mon profil
         </ion-button>
 
+        <!-- Bouton À propos -->
+        <ion-button expand="block" fill="outline" @click="$router.push('/a-propos')" class="ion-margin-top">
+          <ion-icon :icon="informationCircleOutline" slot="start"></ion-icon>
+          À propos de l'application
+        </ion-button>
+
         <!-- Bouton déconnexion -->
         <ion-button expand="block" color="danger" @click="handleLogout" class="ion-margin-top">
           <ion-icon :icon="logOutOutline" slot="start"></ion-icon>
@@ -104,7 +110,7 @@ import {
   modalController,
   toastController
 } from '@ionic/vue';
-import { personCircleOutline, logOutOutline, createOutline } from 'ionicons/icons';
+import { personCircleOutline, logOutOutline, createOutline, informationCircleOutline } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 import utilisateurService from '@/services/utilisateur.service';
 import UtilisateurModal from '@/components/UtilisateurModal.vue';

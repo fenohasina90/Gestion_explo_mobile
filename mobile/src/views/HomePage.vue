@@ -2,23 +2,23 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-buttons slot="start">
+        <div style="display: flex; align-items: center; width: 100%;">
           <img src="/assets/logo.png" alt="Logo" class="header-logo" />
-        </ion-buttons>
-        <ion-title>Tableau de bord</ion-title>
+          <ion-title class="always-visible-title">Tableau de bord</ion-title>
+        </div>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
+      <!-- <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Tableau de bord</ion-title>
+          <ion-title >Tableau de bord</ion-title>
         </ion-toolbar>
-      </ion-header>
+      </ion-header> -->
 
       <div class="ion-padding">
         <!-- Carte de bienvenue -->
-        <ion-card class="welcome-card">
+        <!-- <ion-card class="welcome-card">
           <ion-card-header>
             <ion-card-subtitle>Bienvenue</ion-card-subtitle>
             <ion-card-title>{{ authStore.user?.username }}</ion-card-title>
@@ -38,30 +38,34 @@
               {{ authStore.user?.active ? 'Actif' : 'Inactif' }}
             </ion-badge>
           </ion-card-content>
-        </ion-card>
+        </ion-card> -->
 
         <!-- Actions principales -->
-        <h2 class="section-title">Actions rapides</h2>
+        <h2 class="section-title">Statistiques</h2>
         
         <ion-grid>
-          <ion-row>
-            <ion-col size="6">
+          <!-- <ion-row>
+            <ion-col size="12">
               <ion-card button @click="$router.push('/tabs/enfants')" class="action-card-wrapper">
                 <ion-card-content class="action-card">
                   <ion-icon :icon="peopleOutline" class="action-icon"></ion-icon>
-                  <h3>Enfants</h3>
+                  <h3>Explorateurs</h3>
                 </ion-card-content>
               </ion-card>
             </ion-col>
-            <ion-col size="6">
-              <ion-card button @click="$router.push('/tabs/activites')" class="action-card-wrapper">
-                <ion-card-content class="action-card">
-                  <ion-icon :icon="calendarOutline" class="action-icon"></ion-icon>
-                  <h3>Activités</h3>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-          </ion-row>
+            
+          </ion-row> -->
+          <ion-row>
+              <ion-col size="12">
+                <ion-card button @click="$router.push('/statistiques')" class="action-card-wrapper">
+                  <ion-card-content class="action-card programme-card-large">
+                    <ion-icon :icon="analyticsOutline" class="action-icon"></ion-icon>
+                    <h3>Statistiques</h3>
+                    <p>Statistiques de participation des Explorateurs et staffs</p>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
         </ion-grid>
 
         <!-- Section Gestion du Staff (Directeur et Co-Directeur) -->
@@ -106,7 +110,7 @@
                 </ion-card>
               </ion-col>
             </ion-row>
-            <ion-row>
+            <!-- <ion-row>
               <ion-col size="12">
                 <ion-card button @click="$router.push('/classes-progressives')" class="action-card-wrapper">
                   <ion-card-content class="action-card programme-card-large">
@@ -116,29 +120,29 @@
                   </ion-card-content>
                 </ion-card>
               </ion-col>
-            </ion-row>
+            </ion-row> -->
             <ion-row>
               <ion-col size="12">
                 <ion-card button @click="$router.push('/historique-programmes')" class="action-card-wrapper">
                   <ion-card-content class="action-card programme-card-large">
-                    <ion-icon :icon="statsChartOutline" class="action-icon"></ion-icon>
+                    <ion-icon :icon="checkmarkOutline" class="action-icon"></ion-icon>
                     <h3>Historique des Programmes</h3>
                     <p>Statistiques et suivi détaillé</p>
                   </ion-card-content>
                 </ion-card>
               </ion-col>
             </ion-row>
-            <ion-row>
+            <!-- <ion-row>
               <ion-col size="12">
                 <ion-card button @click="$router.push('/statistiques')" class="action-card-wrapper">
                   <ion-card-content class="action-card programme-card-large">
-                    <ion-icon :icon="barChartOutline" class="action-icon"></ion-icon>
+                    <ion-icon :icon="listOutline" class="action-icon"></ion-icon>
                     <h3>Statistiques</h3>
-                    <p>Statistiques de participation des enfants et staffs</p>
+                    <p>Statistiques de participation des Explorateurs et staffs</p>
                   </ion-card-content>
                 </ion-card>
               </ion-col>
-            </ion-row>
+            </ion-row> -->
           </ion-grid>
         </div>
 
@@ -150,7 +154,7 @@
             <ion-col size="6">
               <ion-card button @click="$router.push('/tabs/budget')" class="action-card-wrapper">
                 <ion-card-content class="action-card">
-                  <ion-icon :icon="walletOutline" class="action-icon"></ion-icon>
+                  <ion-icon :icon="cashOutline" class="action-icon"></ion-icon>
                   <h3>Budget Global</h3>
                 </ion-card-content>
               </ion-card>
@@ -241,10 +245,8 @@ import {
   personCircleOutline,
   listOutline,
   checkmarkOutline,
-  statsChartOutline,
-  walletOutline,
   cashOutline,
-  barChartOutline
+  analyticsOutline
 } from 'ionicons/icons';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -398,4 +400,22 @@ const canManageStaff = computed(() => {
   font-weight: 500;
   color: var(--ion-color-dark);
 }
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* .always-visible-title {
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding-left: 0;
+  margin-left: 0;
+  position: relative;
+  transform: none;
+  left: 0;
+} */
 </style>
