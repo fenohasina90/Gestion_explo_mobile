@@ -21,6 +21,11 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI explorateurOpenAPI() {
+        // Serveur de production
+        Server prodServer = new Server();
+        prodServer.setUrl("https://explorateurs-backend.onrender.com");
+        prodServer.setDescription("Serveur de production (Render.com)");
+        
         // Serveur local
         Server localServer = new Server();
         localServer.setUrl("http://localhost:8080");
@@ -59,7 +64,7 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(localServer))
+                .servers(List.of(prodServer, localServer))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .addSecurityItem(securityRequirement);
     }
