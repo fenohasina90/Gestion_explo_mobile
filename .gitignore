@@ -1,0 +1,30 @@
+# Base de données SQLite
+*.db
+*.db-shm
+*.db-wal
+explorateurs.db
+
+# Fichiers APK
+*.apk
+*.aab
+
+# Logs
+*.log
+
+# Secrets
+JWT_SECRET.md
+
+# Builds
+target/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+/node_modules

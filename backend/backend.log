@@ -1,4 +1,3 @@
-nohup: les entrées sont ignorées
 [[1;34mINFO[m] Scanning for projects...
 [[1;34mINFO[m] 
 [[1;34mINFO[m] [1m----------------------< [0;36mcom.explorateur:backend[0;1m >-----------------------[m
@@ -18,8 +17,7 @@ nohup: les entrées sont ignorées
 [[1;34mINFO[m] skip non existing resourceDirectory /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/src/test/resources
 [[1;34mINFO[m] 
 [[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.14.1:testCompile[m [1m(default-testCompile)[m @ [36mbackend[0;1m ---[m
-[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
-[[1;34mINFO[m] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[[1;34mINFO[m] Nothing to compile - all classes are up to date.
 [[1;34mINFO[m] 
 [[1;34mINFO[m] [1m<<< [0;32mspring-boot-maven-plugin:4.0.3:run[m [1m(default-cli)[0;1m < [0;1mtest-compile[m @ [36mbackend[0;1m <<<[m
 [[1;34mINFO[m] 
@@ -36,23 +34,23 @@ nohup: les entrées sont ignorées
 
  :: Spring Boot ::                (v4.0.3)
 
-2026-02-26T09:10:05.499+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Starting BackendApplication using Java 21.0.10 with PID 24908 (/home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/target/classes started by mangalahy in /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend)
-2026-02-26T09:10:05.505+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : No active profile set, falling back to 1 default profile: "default"
-2026-02-26T09:10:05.589+03:00  INFO 24908 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-02-26T09:10:05.589+03:00  INFO 24908 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-02-26T09:10:07.309+03:00  INFO 24908 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-02-26T09:10:07.559+03:00  INFO 24908 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 223 ms. Found 15 JPA repository interfaces.
-2026-02-26T09:10:09.168+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-02-26T09:10:09.181+03:00  INFO 24908 --- [backend] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-02-26T09:10:09.181+03:00  INFO 24908 --- [backend] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-02-26T09:10:09.221+03:00  INFO 24908 --- [backend] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3629 ms
-2026-02-26T09:10:09.612+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-02-26T09:10:09.676+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
-2026-02-26T09:10:10.162+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-02-26T09:10:10.196+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-02-26T09:10:10.363+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@68f57ba4
-2026-02-26T09:10:10.365+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-02-26T09:10:10.411+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-02-26T10:35:44.121+03:00  INFO 55214 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Starting BackendApplication using Java 21.0.10 with PID 55214 (/home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/target/classes started by mangalahy in /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend)
+2026-02-26T10:35:44.123+03:00  INFO 55214 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-02-26T10:35:44.178+03:00  INFO 55214 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-26T10:35:44.178+03:00  INFO 55214 --- [backend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-26T10:35:44.974+03:00  INFO 55214 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-26T10:35:45.058+03:00  INFO 55214 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 17 JPA repository interfaces.
+2026-02-26T10:35:45.811+03:00  INFO 55214 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-26T10:35:45.822+03:00  INFO 55214 --- [backend] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-26T10:35:45.823+03:00  INFO 55214 --- [backend] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-02-26T10:35:45.851+03:00  INFO 55214 --- [backend] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1671 ms
+2026-02-26T10:35:46.070+03:00  INFO 55214 --- [backend] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-26T10:35:46.112+03:00  INFO 55214 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-02-26T10:35:46.511+03:00  INFO 55214 --- [backend] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-26T10:35:46.535+03:00  INFO 55214 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-26T10:35:46.665+03:00  INFO 55214 --- [backend] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@6b8bb216
+2026-02-26T10:35:46.666+03:00  INFO 55214 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-26T10:35:46.697+03:00  INFO 55214 --- [backend] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [jdbc:sqlite:explorateurs.db]
 	Database driver: SQLite JDBC
 	Database dialect: SQLiteDialect
@@ -64,94 +62,75 @@ nohup: les entrées sont ignorées
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-02-26T09:10:11.727+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-02-26T09:10:11.733+03:00  INFO 24908 --- [backend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-02-26T09:10:11.878+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-02-26T09:10:13.964+03:00  WARN 24908 --- [backend] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-02-26T09:10:14.116+03:00  WARN 24908 --- [backend] [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+2026-02-26T10:35:47.751+03:00  INFO 55214 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-26T10:35:47.757+03:00  INFO 55214 --- [backend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26T10:35:47.947+03:00  INFO 55214 --- [backend] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-26T10:35:50.192+03:00  WARN 55214 --- [backend] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-26T10:35:50.353+03:00  WARN 55214 --- [backend] [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: 24087729-7606-4fa4-83a3-ff8268603e58
-
-This generated password is for development use only. Your security configuration must be updated before running your application in production.
-
-2026-02-26T09:10:14.126+03:00  INFO 24908 --- [backend] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui.html]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-resources/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/webjars/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.310+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/configuration/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:10:14.974+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-02-26T09:10:14.983+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Started BackendApplication in 9.993 seconds (process running for 10.573)
-2026-02-26T09:10:15.087+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.b.service.AnneeExerciceInitService   : ✅ Année d'exercice 2026 déjà existante (ID: 1)
-2026-02-26T09:10:22.502+03:00  INFO 24908 --- [backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-02-26T09:10:22.503+03:00  INFO 24908 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-02-26T09:10:22.504+03:00  INFO 24908 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-02-26T09:11:21.383+03:00  INFO 24908 --- [backend] [nio-8080-exec-8] c.e.backend.service.ActiviteService      : Création d'une activité: Quasdfgh
-2026-02-26T09:13:29.120+03:00  INFO 24908 --- [backend] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
-2026-02-26T09:13:29.125+03:00  INFO 24908 --- [backend] [       Thread-1] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-02-26T09:13:29.137+03:00  INFO 24908 --- [backend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-02-26T09:13:29.142+03:00  INFO 24908 --- [backend] [       Thread-1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-02-26T09:13:29.145+03:00  INFO 24908 --- [backend] [       Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-02-26T09:13:29.149+03:00  INFO 24908 --- [backend] [       Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v4.0.3)
-
-2026-02-26T09:13:29.286+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Starting BackendApplication using Java 21.0.10 with PID 24908 (/home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend/target/classes started by mangalahy in /home/mangalahy/PERSO/AUTRE/Explo/Gestion_explo_mobile/backend)
-2026-02-26T09:13:29.287+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : No active profile set, falling back to 1 default profile: "default"
-2026-02-26T09:13:29.611+03:00  INFO 24908 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-02-26T09:13:29.635+03:00  INFO 24908 --- [backend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 21 ms. Found 15 JPA repository interfaces.
-2026-02-26T09:13:29.799+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-02-26T09:13:29.800+03:00  INFO 24908 --- [backend] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-02-26T09:13:29.800+03:00  INFO 24908 --- [backend] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-02-26T09:13:29.809+03:00  INFO 24908 --- [backend] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 520 ms
-2026-02-26T09:13:29.978+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-02-26T09:13:30.001+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-02-26T09:13:30.003+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
-2026-02-26T09:13:30.004+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.sqlite.jdbc4.JDBC4Connection@33419c2
-2026-02-26T09:13:30.004+03:00  INFO 24908 --- [backend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
-2026-02-26T09:13:30.005+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:sqlite:explorateurs.db]
-	Database driver: SQLite JDBC
-	Database dialect: SQLiteDialect
-	Database version: 3.45.1
-	Default catalog/schema: undefined/undefined
-	Autocommit mode: undefined/unknown
-	Isolation level: SERIALIZABLE [default SERIALIZABLE]
-	JDBC fetch size: none
-	Pool: DataSourceConnectionProvider
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-02-26T09:13:30.217+03:00  INFO 24908 --- [backend] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-02-26T09:13:30.217+03:00  INFO 24908 --- [backend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-02-26T09:13:30.988+03:00  WARN 24908 --- [backend] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-02-26T09:13:31.106+03:00  WARN 24908 --- [backend] [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
-
-Using generated security password: 84efde6a-0489-4ae4-9c4f-e540f22f563c
+Using generated security password: ac0de762-fdf5-4f16-9c08-0a5658e90415
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-02-26T09:13:31.109+03:00  INFO 24908 --- [backend] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-02-26T09:13:31.265+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui.html]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-resources/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/webjars/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.266+03:00  WARN 24908 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/configuration/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2026-02-26T09:13:31.876+03:00  INFO 24908 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-02-26T09:13:31.887+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Started BackendApplication in 2.633 seconds (process running for 207.478)
-2026-02-26T09:13:31.890+03:00  INFO 24908 --- [backend] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-2026-02-26T09:13:31.896+03:00  INFO 24908 --- [backend] [  restartedMain] c.e.b.service.AnneeExerciceInitService   : ✅ Année d'exercice 2026 déjà existante (ID: 1)
+2026-02-26T10:35:50.361+03:00  INFO 55214 --- [backend] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-ui.html]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/v3/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/api-docs]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/swagger-resources/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/webjars/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:50.559+03:00  WARN 55214 --- [backend] [  restartedMain] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore PathPattern [/configuration/**]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2026-02-26T10:35:51.240+03:00  INFO 55214 --- [backend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-26T10:35:51.250+03:00  INFO 55214 --- [backend] [  restartedMain] c.e.backend.BackendApplication           : Started BackendApplication in 7.505 seconds (process running for 8.047)
+2026-02-26T10:35:51.360+03:00  INFO 55214 --- [backend] [  restartedMain] c.e.b.service.AnneeExerciceInitService   : ✅ Année d'exercice 2026 déjà existante (ID: 1)
+2026-02-26T10:37:33.842+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-26T10:37:33.843+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-26T10:37:33.848+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2026-02-26T10:45:11.146+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:45:11.147+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 2
+2026-02-26T10:52:25.721+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:52:25.723+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 2
+2026-02-26T10:52:25.856+03:00  INFO 55214 --- [backend] [nio-8080-exec-2] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:52:25.858+03:00  INFO 55214 --- [backend] [nio-8080-exec-2] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 2
+2026-02-26T10:53:32.123+03:00  INFO 55214 --- [backend] [nio-8080-exec-5] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:53:32.125+03:00  INFO 55214 --- [backend] [nio-8080-exec-5] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 2
+2026-02-26T10:53:32.260+03:00  INFO 55214 --- [backend] [nio-8080-exec-6] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:53:32.262+03:00  INFO 55214 --- [backend] [nio-8080-exec-6] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 2
+2026-02-26T10:53:53.071+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.c.ParticipantActiviteController    : Enregistrement de présence pour l'activité ID: 2 par Goupil placide
+2026-02-26T10:53:53.074+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.s.ParticipantActiviteService       : Enregistrement de la présence pour l'activité ID: 2
+2026-02-26T10:53:53.299+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.s.ParticipantActiviteService       : Présence enregistrée avec succès: 9 enfants, 3 staff
+2026-02-26T10:53:59.094+03:00  INFO 55214 --- [backend] [nio-8080-exec-7] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:53:59.098+03:00  INFO 55214 --- [backend] [nio-8080-exec-7] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:53:59.212+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:53:59.216+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:04.967+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:04.968+03:00  INFO 55214 --- [backend] [nio-8080-exec-1] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:09.220+03:00  INFO 55214 --- [backend] [nio-8080-exec-2] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:09.222+03:00  INFO 55214 --- [backend] [nio-8080-exec-2] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:13.695+03:00  INFO 55214 --- [backend] [nio-8080-exec-3] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:13.696+03:00  INFO 55214 --- [backend] [nio-8080-exec-3] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:17.112+03:00  INFO 55214 --- [backend] [nio-8080-exec-4] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:17.115+03:00  INFO 55214 --- [backend] [nio-8080-exec-4] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:18.251+03:00  INFO 55214 --- [backend] [nio-8080-exec-6] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:18.253+03:00  INFO 55214 --- [backend] [nio-8080-exec-6] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:22.670+03:00  INFO 55214 --- [backend] [nio-8080-exec-5] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:22.671+03:00  INFO 55214 --- [backend] [nio-8080-exec-5] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:24.753+03:00  INFO 55214 --- [backend] [nio-8080-exec-8] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:24.754+03:00  INFO 55214 --- [backend] [nio-8080-exec-8] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:25.856+03:00  INFO 55214 --- [backend] [nio-8080-exec-9] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:25.858+03:00  INFO 55214 --- [backend] [nio-8080-exec-9] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:34.243+03:00  INFO 55214 --- [backend] [nio-8080-exec-7] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:34.244+03:00  INFO 55214 --- [backend] [nio-8080-exec-7] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:36.118+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.c.ParticipantActiviteController    : Consultation des participants de l'activité ID: 2 par Goupil placide (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:36.121+03:00  INFO 55214 --- [backend] [io-8080-exec-10] c.e.b.s.ParticipantActiviteService       : Consultation des participants pour l'activité ID: 2 (filtreEnfant: true, filtreStaff: true, classeId: null)
+2026-02-26T10:54:46.843+03:00  INFO 55214 --- [backend] [nio-8080-exec-3] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 3 par Goupil placide
+2026-02-26T10:54:46.845+03:00  INFO 55214 --- [backend] [nio-8080-exec-3] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 3
+2026-02-26T10:54:46.926+03:00  INFO 55214 --- [backend] [nio-8080-exec-4] c.e.b.c.ParticipantActiviteController    : Requête de personnes disponibles pour l'activité ID: 3 par Goupil placide
+2026-02-26T10:54:46.928+03:00  INFO 55214 --- [backend] [nio-8080-exec-4] c.e.b.s.ParticipantActiviteService       : Récupération des personnes disponibles pour l'activité ID: 3
+2026-02-26T10:55:18.797+03:00  INFO 55214 --- [backend] [ionShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-26T10:55:18.810+03:00  INFO 55214 --- [backend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-02-26T10:55:18.820+03:00  INFO 55214 --- [backend] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26T10:55:18.823+03:00  INFO 55214 --- [backend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-26T10:55:18.825+03:00  INFO 55214 --- [backend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
