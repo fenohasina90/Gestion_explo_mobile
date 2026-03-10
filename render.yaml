@@ -1,0 +1,22 @@
+# Configuration pour déploiement sur Render.com
+services:
+  # Service Web pour le backend Spring Boot
+  - type: web
+    name: explorateurs-backend
+    env: java
+    region: frankfurt # ou oregon, singapore selon votre localisation
+    plan: free
+    buildCommand: cd backend && mvn clean package -DskipTests
+    startCommand: cd backend && java -Dspring.profiles.active=prod -jar target/*.jar
+    envVars:
+      - key: PORT
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+        sync: false
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx512m"
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1

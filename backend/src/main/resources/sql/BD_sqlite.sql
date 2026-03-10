@@ -254,6 +254,75 @@ CREATE TABLE programmes (
     FOREIGN KEY (classes_id) REFERENCES classes(id)
 );
 
+-- Données de test pour la table programmes
+INSERT INTO programmes (nom, description, categorie_id, classes_id) VALUES
+-- Catégorie 1: Lovan' ny fiangonana (id=1)
+('Boky miara-mihira', 'Mianara hira 10 vaovao ao amin''ny boky fiangonana', 1, 1), -- Ami
+('Tantara ara-baiboly', 'Mitantara tantara ara-baiboly 3', 1, 1), -- Ami
+('Hira fiderana', 'Mianara hira fiderana 5', 1, 2), -- Compagnon
+('Lesona Alahady', 'Mandray anjara amin''ny lesona Alahady mandritra ny 3 volana', 1, 3), -- Eclaireur
+('Fampianarana Baiboly', 'Manomana fampianarana Baiboly ho an''ny kilasy kely', 1, 4), -- Pionnier
+('Toriteny', 'Manome toriteny fohy mandritra ny fanompoam-pivavahana', 1, 5), -- Voyageur
+('Fitarika ny fiankohofana', 'Mitari-piankohofana mandritra ny 1 volana', 1, 6), -- Guide
+
+-- Catégorie 2: Ankapobeny (id=2)
+('Fivoriana sy fandaminana', 'Mandray anjara amin''ny fivoriana fandaminana', 2, 1), -- Ami
+('Fiaraha-miasa', 'Miara-miasa amin''ny namana 3', 2, 2), -- Compagnon
+('Tetibola', 'Mianatra mitantana tetibola', 2, 3), -- Eclaireur
+('Fitantanana fotoana', 'Mamorona agenda isan-kerinandro', 2, 4), -- Pionnier
+('Fanatanterahana tetikasa', 'Manatanteraka tetikasa iray', 2, 5), -- Voyageur
+('Fitarika ekipa', 'Mitondra ekipa mandritra ny 1 volana', 2, 6), -- Guide
+
+-- Catégorie 3: Fikarohana ara-panahy (id=3)
+('Vakiteny Baiboly', 'Mamaky Baiboly isanandro mandritra ny 1 volana', 3, 1), -- Ami
+('Salamo', 'Mianatra Salamo 3', 3, 2), -- Compagnon
+('Bokin''ny Baiboly', 'Mianatra momba ny bokin''ny Baiboly 5', 3, 2), -- Compagnon
+('Toetran''Andriamanitra', 'Mianatra toetran''Andriamanitra 5', 3, 3), -- Eclaireur
+('Vavaka', 'Manoratra diary vavaka mandritra ny 1 volana', 3, 4), -- Pionnier
+('Famakiana andinin-teny', 'Mamakiteny andinin-teny 20', 3, 5), -- Voyageur
+('Fandalinana lalina', 'Manao fandalinana lalina momba ny toko iray', 3, 6), -- Guide
+
+-- Catégorie 4: Fanompoana ny hafa (id=4)
+('Fanampiana ray aman-dreny', 'Manampy ray aman-dreny ao an-trano', 4, 1), -- Ami
+('Fitsidihana marary', 'Mitsidika olona marary', 4, 2), -- Compagnon
+('Fanadiovana manodidina', 'Manadio ny manodidina ny fiangonana', 4, 2), -- Compagnon
+('Fanampiana ny mpianatra kely', 'Manampy ny mpianatra kely hianatra', 4, 3), -- Eclaireur
+('Fanomezana', 'Manome fanomezana ho an''ny sahirana', 4, 4), -- Pionnier
+('Fikarakarana hetsika', 'Manampy amin''ny fikarakarana hetsika', 4, 5), -- Voyageur
+('Tetikasa ho an''ny fokontany', 'Manatanteraka tetikasa ho an''ny fokontany', 4, 6), -- Guide
+
+-- Catégorie 5: Fahasalamana sy toe-batana tomady (id=5)
+('Fanatanjahan-tena', 'Manao fanatanjahan-tena 3 isan-kerinandro', 5, 1), -- Ami
+('Fisakafoana ara-pahasalamana', 'Mianatra momba ny sakafo mahasalama', 5, 2), -- Compagnon
+('Fidiovana', 'Mianatra mikarakara tena', 5, 3), -- Eclaireur
+('Torimaso', 'Mianatra momba ny torimaso ara-pahasalamana', 5, 4), -- Pionnier
+('Fanatanjahan-tena mahery', 'Manao fanatanjahan-tena 5 isan-kerinandro', 5, 5), -- Voyageur
+('Fitsaboana voalohany', 'Mianatra fitsaboana voalohany', 5, 6), -- Guide
+
+-- Catégorie 6: Fiainana ankalamanjana (id=6)
+('Fambolena', 'Mamboly voninkazo na legioma', 6, 1), -- Ami
+('Fitsangatsanganana', 'Manao fitsangatsanganana 2', 6, 2), -- Compagnon
+('Fanjonoana', 'Mianatra manjono', 6, 3), -- Eclaireur
+('Fampiana tranolay', 'Mianatra mampianatra tranolay', 6, 4), -- Pionnier
+('Fahavelomana any an''ala', 'Mianatra fomba fahavelomana any an''ala', 6, 5), -- Voyageur
+('Lalan-kizorana', 'Manomana sy manao lalan-kizorana', 6, 6), -- Guide
+
+-- Catégorie 7: Lalindalina kokoa (id=7)
+('Zava-kanto', 'Mamorona zavakanto iray', 7, 1), -- Ami
+('Mozika', 'Mianatra mozika', 7, 2), -- Compagnon
+('Dihy', 'Mianatra dihy vaovao', 7, 3), -- Eclaireur
+('Sary', 'Manao sary 3', 7, 4), -- Pionnier
+('Tononkalo', 'Manoratra tononkalo 2', 7, 5), -- Voyageur
+('Hai-tao an-tanana', 'Manao asa tanana sarotra', 7, 6), -- Guide
+
+-- Catégorie 8: Asa manavanana (id=8)
+('Asa fanjairana', 'Mianatra manjaitra', 8, 1), -- Ami
+('Fandrahoan-tsakafo', 'Mahandro sakafo tsotra', 8, 2), -- Compagnon
+('Asa hazo', 'Mianatra asa hazo', 8, 3), -- Eclaireur
+('Fanjairana mandroso', 'Manjaitra akanjo tsotra', 8, 4), -- Pionnier
+('Fambolena mandroso', 'Mikarakara zaridaina', 8, 5), -- Voyageur
+('Asa vy', 'Mianatra asa vy', 8, 6); -- Guide
+
 CREATE TABLE programme_status (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     status TEXT NOT NULL
