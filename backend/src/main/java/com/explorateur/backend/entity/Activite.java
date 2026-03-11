@@ -1,6 +1,5 @@
 package com.explorateur.backend.entity;
 
-import com.explorateur.backend.config.LocalDateAttributeConverter;
 import com.explorateur.backend.config.LocalDateTimeConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,11 +29,9 @@ public class Activite {
     private String description;
     
     @Column(name = "date_debut")
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate dateDebut;
     
     @Column(name = "date_fin")
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate dateFin;
     
     @Column
@@ -49,11 +46,9 @@ public class Activite {
     private ActiviteStatus status;
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
     
     @PrePersist

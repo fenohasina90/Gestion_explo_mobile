@@ -23,7 +23,6 @@ public class BudgetStatus {
     private String nom;
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @PrePersist

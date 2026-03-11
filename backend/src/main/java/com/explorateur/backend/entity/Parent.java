@@ -32,11 +32,9 @@ public class Parent {
     private String telephone;
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
     
     @PrePersist

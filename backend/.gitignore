@@ -32,6 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 
+### Environment Variables ###
+.env
+.env.local
+.env.production
+.env.example
+
 ### SQLite Database ###
 *.db
 *.db-journal

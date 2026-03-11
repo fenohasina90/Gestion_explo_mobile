@@ -40,11 +40,9 @@ public class Utilisateur {
     private Integer etat = 1; // 1 = actif, 11 = supprimé
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
     
     @PrePersist

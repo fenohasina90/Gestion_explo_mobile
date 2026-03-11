@@ -35,7 +35,6 @@ public class Inscription {
     private Classe classe;
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @PrePersist

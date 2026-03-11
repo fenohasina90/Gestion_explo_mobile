@@ -22,7 +22,7 @@
 
       <!-- Filtres -->
       <div v-if="showFilters" class="filters-section ion-padding">
-        <ion-item>
+        <!-- <ion-item>
           <ion-label position="stacked">Date de début</ion-label>
           <ion-datetime-button datetime="dateDebut"></ion-datetime-button>
         </ion-item>
@@ -48,7 +48,24 @@
             presentation="date"
             :max="new Date().toISOString()"
           ></ion-datetime>
-        </ion-modal>
+        </ion-modal> -->
+        <ion-item>
+          <ion-label position="stacked">Date de début</ion-label>
+          <ion-input 
+            v-model="filters.dateDebut" 
+            type="date"
+            placeholder="AAAA-MM-JJ"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Date de fin</ion-label>
+          <ion-input 
+            v-model="filters.dateFin" 
+            type="date"
+            placeholder="AAAA-MM-JJ"
+          ></ion-input>
+        </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Recherche</ion-label>

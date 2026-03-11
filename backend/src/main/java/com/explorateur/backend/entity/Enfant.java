@@ -1,6 +1,5 @@
 package com.explorateur.backend.entity;
 
-import com.explorateur.backend.config.LocalDateAttributeConverter;
 import com.explorateur.backend.config.LocalDateTimeConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,6 @@ public class Enfant {
     private String genre;
     
     @Column(name = "date_naissance")
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate dateNaissance;
     
     @Column
@@ -42,15 +40,12 @@ public class Enfant {
     private Parent parent;
     
     @Column
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate bapteme;
     
     @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
     
     @PrePersist

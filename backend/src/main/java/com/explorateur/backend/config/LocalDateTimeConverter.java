@@ -10,8 +10,11 @@ import java.time.format.DateTimeFormatter;
 /**
  * Convertisseur JPA pour stocker LocalDateTime au format TEXT dans SQLite
  * Format: yyyy-MM-dd HH:mm:ss
+ * 
+ * ⚠️ DÉSACTIVÉ pour PostgreSQL (autoApply = false)
+ * PostgreSQL gère nativement les types TIMESTAMP, pas besoin de conversion String
  */
-@Converter(autoApply = true)
+@Converter(autoApply = false)
 public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, String> {
     
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

@@ -1,6 +1,5 @@
 package com.explorateur.backend.entity;
 
-import com.explorateur.backend.config.LocalDateAttributeConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,12 +24,10 @@ public class AnneeExercice {
     private Long id;
 
     @Column(nullable = false)
-    @Convert(converter = LocalDateAttributeConverter.class)
     @Schema(description = "Date de début de l'année d'exercice (1er janvier)", example = "2026-01-01", required = true)
     private LocalDate annee;
 
     @Column(name = "date_fin", nullable = false)
-    @Convert(converter = LocalDateAttributeConverter.class)
     @Schema(description = "Date de fin de l'année d'exercice (31 décembre)", example = "2026-12-31", required = true)
     private LocalDate dateFin;
 

@@ -129,7 +129,7 @@ create table budget_status (
 );
 
 insert into budget_status (nom) values 
-('Créé');,
+('Créé'),
 ('Approuvé comite');
 
 create table budget_global(

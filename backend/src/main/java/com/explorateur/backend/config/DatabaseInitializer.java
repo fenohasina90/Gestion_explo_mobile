@@ -19,7 +19,11 @@ public class DatabaseInitializer {
     @Value("${spring.datasource.url}")
     private String datasourceUrl;
 
-    @Bean
+    // ⚠️ DatabaseInitializer désactivé pour PostgreSQL/Supabase
+    // La base de données est initialisée manuellement via BD_postgres.sql dans Supabase
+    // Décommentez seulement si vous revenez à SQLite
+    
+    // @Bean
     public CommandLineRunner initDatabase(JdbcTemplate jdbcTemplate) {
         return args -> {
             // Extraire le chemin du fichier de la datasource URL
