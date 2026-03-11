@@ -31,7 +31,7 @@ public class ActiviteController {
     private final ActiviteService activiteService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Créer une nouvelle activité",
                description = "Crée une nouvelle activité avec ses détails (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<ActiviteResponse> createActivite(
@@ -42,7 +42,7 @@ public class ActiviteController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier une activité",
                description = "Modifie une activité existante si le budget est en statut 'Créé'")
     public ResponseEntity<ActiviteResponse> updateActivite(
@@ -54,7 +54,7 @@ public class ActiviteController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Supprimer une activité",
                description = "Supprime une activité si le budget est en statut 'Créé'")
     public ResponseEntity<Void> deleteActivite(
@@ -65,7 +65,7 @@ public class ActiviteController {
     }
     
     @PutMapping("/{id}/annuler")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Annuler une activité",
                description = "Annule une activité si le budget est 'Approuvé comité' et l'activité n'est pas terminée")
     public ResponseEntity<ActiviteResponse> annulerActivite(
@@ -76,7 +76,7 @@ public class ActiviteController {
     }
     
     @GetMapping("/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir les activités d'une année",
                description = "Récupère toutes les activités pour une année d'exercice spécifique")
     public ResponseEntity<List<ActiviteResponse>> getActivitesByAnnee(@PathVariable Long anneeExerciceId) {
@@ -85,7 +85,7 @@ public class ActiviteController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir une activité par ID",
                description = "Récupère une activité spécifique avec tous ses détails")
     public ResponseEntity<ActiviteResponse> getActiviteById(@PathVariable Long id) {
@@ -94,7 +94,7 @@ public class ActiviteController {
     }
     
     @GetMapping("/statuts")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir tous les statuts d'activités",
                description = "Récupère la liste de tous les statuts possibles pour une activité")
     public ResponseEntity<List<ActiviteStatusResponse>> getAllStatuts() {

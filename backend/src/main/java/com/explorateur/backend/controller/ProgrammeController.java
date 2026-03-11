@@ -30,7 +30,7 @@ public class ProgrammeController {
     private final ProgrammeService programmeService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Créer un programme", 
                description = "Crée un nouveau programme pédagogique (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<ProgrammeResponse> createProgramme(
@@ -40,7 +40,7 @@ public class ProgrammeController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier un programme",
                description = "Modifie un programme existant (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<ProgrammeResponse> updateProgramme(
@@ -51,7 +51,7 @@ public class ProgrammeController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Supprimer un programme",
                description = "Supprime un programme s'il n'est pas utilisé dans une CP (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<Void> deleteProgramme(@PathVariable Long id) {
@@ -60,7 +60,7 @@ public class ProgrammeController {
     }
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Lister tous les programmes",
                description = "Récupère la liste de tous les programmes")
     public ResponseEntity<List<ProgrammeResponse>> getAllProgrammes() {
@@ -69,7 +69,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir un programme par ID",
                description = "Récupère les détails complets d'un programme")
     public ResponseEntity<ProgrammeResponse> getProgrammeById(@PathVariable Long id) {
@@ -78,7 +78,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/filter")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Filtrer les programmes",
                description = "Filtre les programmes par catégorie, classe et/ou nom")
     public ResponseEntity<List<ProgrammeResponse>> filterProgrammes(
@@ -93,7 +93,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Rechercher/Filtrer des programmes",
                description = "Recherche et filtre les programmes par catégorie, classe et/ou nom (tous les paramètres sont optionnels)")
     public ResponseEntity<List<ProgrammeResponse>> searchByNom(
@@ -108,7 +108,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/categorie/{categorieId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir les programmes d'une catégorie",
                description = "Récupère tous les programmes d'une catégorie spécifique")
     public ResponseEntity<List<ProgrammeResponse>> getProgrammesByCategorie(
@@ -118,7 +118,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/classe/{classeId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir les programmes d'une classe",
                description = "Récupère tous les programmes d'une classe spécifique")
     public ResponseEntity<List<ProgrammeResponse>> getProgrammesByClasse(
@@ -128,7 +128,7 @@ public class ProgrammeController {
     }
     
     @GetMapping("/disponibles/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir les programmes disponibles pour une année",
                description = "Récupère tous les programmes qui ne sont pas TERMINÉ pour l'année spécifiée. " +
                              "Utilisé pour afficher uniquement les programmes qui peuvent être ajoutés aux CP.")

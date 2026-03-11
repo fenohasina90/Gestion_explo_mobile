@@ -31,7 +31,7 @@ public class InscriptionController {
     private final PdfExportService pdfExportService;
     
     @PostMapping
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(
             summary = "Créer une nouvelle inscription",
             description = "Inscrit un enfant pour une année d'exercice. Accessible uniquement au Directeur et Co-Directeur."
@@ -83,7 +83,7 @@ public class InscriptionController {
     }
     
     @PatchMapping("/{id}/assurance")
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(
             summary = "Mettre à jour le statut d'assurance",
             description = "Met à jour le statut d'assurance d'une inscription. Accessible au Directeur et Co-Directeur."

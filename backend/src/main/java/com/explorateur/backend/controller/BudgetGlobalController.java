@@ -33,7 +33,7 @@ public class BudgetGlobalController {
     private final BudgetPdfExportService budgetPdfExportService;
     
     @GetMapping("/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir le budget global d'une année",
                description = "Récupère ou crée le budget global pour une année d'exercice spécifique")
     public ResponseEntity<BudgetGlobalResponse> getBudgetByAnneeExercice(@PathVariable Long anneeExerciceId) {
@@ -42,7 +42,7 @@ public class BudgetGlobalController {
     }
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir tous les budgets globaux",
                description = "Récupère tous les budgets globaux triés par année décroissante")
     public ResponseEntity<List<BudgetGlobalResponse>> getAllBudgets() {
@@ -51,7 +51,7 @@ public class BudgetGlobalController {
     }
     
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier le statut d'un budget",
                description = "Modifie le statut du budget global (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<BudgetGlobalResponse> updateBudgetStatus(
@@ -63,7 +63,7 @@ public class BudgetGlobalController {
     }
     
     @PostMapping("/export-pdf")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Exporter le budget en PDF",
                description = "Génère un PDF du budget avec les colonnes sélectionnées")
     public ResponseEntity<byte[]> exportBudgetPdf(@Valid @RequestBody ExportBudgetPdfRequest request) {

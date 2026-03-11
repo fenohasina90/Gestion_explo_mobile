@@ -29,7 +29,7 @@ public class CategorieProgrammeController {
     private final CategorieProgrammeService categorieProgrammeService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Créer une catégorie de programme", 
                description = "Crée une nouvelle catégorie de programme (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<CategorieProgrammeResponse> createCategorie(
@@ -39,7 +39,7 @@ public class CategorieProgrammeController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier une catégorie de programme",
                description = "Modifie une catégorie de programme existante (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<CategorieProgrammeResponse> updateCategorie(
@@ -50,7 +50,7 @@ public class CategorieProgrammeController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Supprimer une catégorie de programme",
                description = "Supprime une catégorie de programme si elle n'est pas utilisée (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<Void> deleteCategorie(@PathVariable Long id) {
@@ -59,7 +59,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Lister toutes les catégories de programme",
                description = "Récupère la liste de toutes les catégories de programme")
     public ResponseEntity<List<CategorieProgrammeResponse>> getAllCategories() {
@@ -68,7 +68,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir une catégorie par ID",
                description = "Récupère les détails d'une catégorie de programme")
     public ResponseEntity<CategorieProgrammeResponse> getCategorieById(@PathVariable Long id) {
@@ -77,7 +77,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping("/{id}/count-programmes")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Compter les programmes d'une catégorie",
                description = "Compte le nombre de programmes associés à une catégorie")
     public ResponseEntity<Long> countProgrammesByCategorie(@PathVariable Long id) {

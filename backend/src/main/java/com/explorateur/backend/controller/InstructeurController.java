@@ -38,7 +38,7 @@ public class InstructeurController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(summary = "Modifier un instructeur",
                description = "Met à jour les informations d'un instructeur (Directeur et Co-directeur uniquement)")
     public ResponseEntity<InstructeurResponse> updateInstructeur(

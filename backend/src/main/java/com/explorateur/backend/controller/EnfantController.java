@@ -45,7 +45,7 @@ public class EnfantController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(
             summary = "Créer un nouvel enfant",
             description = "Crée un nouvel enfant. L'âge doit être entre 10 et 15 ans. Accessible uniquement au Directeur et Co-Directeur."

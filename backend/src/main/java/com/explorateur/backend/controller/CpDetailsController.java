@@ -31,7 +31,7 @@ public class CpDetailsController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Ajouter un programme à une CP", 
                description = "Ajoute un programme à une CP avec un ou plusieurs instructeurs et initialisation automatique du statut 'En attente'. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<CpDetailsResponse> addProgrammeToCP(
@@ -45,7 +45,7 @@ public class CpDetailsController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PutMapping("/{id}/instructeur")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier les instructeurs", 
                description = "Modifie les instructeurs assignés à un programme dans une CP (remplace tous les instructeurs existants). Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<CpDetailsResponse> updateInstructeur(
@@ -60,7 +60,7 @@ public class CpDetailsController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Supprimer un programme d'une CP", 
                description = "Retire un programme d'une CP. Impossible si le statut est 'Terminé'. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<Void> removeProgrammeFromCP(@PathVariable Long id) {

@@ -43,7 +43,7 @@ public class ParentController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(
             summary = "Créer un nouveau parent",
             description = "Crée un nouveau parent. Accessible uniquement au Directeur et Co-Directeur."

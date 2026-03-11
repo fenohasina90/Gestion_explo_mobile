@@ -28,7 +28,7 @@ public class StatistiqueController {
      * Récupère les statistiques de tous les enfants avec filtres
      */
     @GetMapping("/enfants")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Récupérer les statistiques des enfants", 
                description = "Retourne les statistiques de tous les enfants selon les filtres (année d'exercice, classe, genre)")
     public ResponseEntity<List<StatistiqueEnfantResponse>> getStatistiquesEnfants(
@@ -50,7 +50,7 @@ public class StatistiqueController {
      * Récupère les statistiques d'un enfant spécifique
      */
     @GetMapping("/enfants/{inscriptionId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Récupérer les statistiques d'un enfant", 
                description = "Retourne les statistiques détaillées d'un enfant spécifique")
     public ResponseEntity<StatistiqueEnfantResponse> getStatistiqueEnfant(
@@ -64,7 +64,7 @@ public class StatistiqueController {
      * Récupère les statistiques de tous les staffs avec filtres
      */
     @GetMapping("/staffs")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Récupérer les statistiques des staffs", 
                description = "Retourne les statistiques de tous les staffs selon les filtres (année d'exercice)")
     public ResponseEntity<List<StatistiqueStaffResponse>> getStatistiquesStaffs(
@@ -82,7 +82,7 @@ public class StatistiqueController {
      * Récupère les statistiques d'un staff spécifique
      */
     @GetMapping("/staffs/{staffId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Récupérer les statistiques d'un staff", 
                description = "Retourne les statistiques détaillées d'un staff spécifique")
     public ResponseEntity<StatistiqueStaffResponse> getStatistiqueStaff(

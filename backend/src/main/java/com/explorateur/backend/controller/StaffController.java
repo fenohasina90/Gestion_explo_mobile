@@ -39,7 +39,7 @@ public class StaffController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('Directeur') or hasRole('Co_Directeur')")
+    @PreAuthorize("hasRole('Directeur') or hasRole('Co-Directeur')")
     @Operation(summary = "Modifier un staff",
                description = "Met à jour les informations d'un staff (Directeur et Co-directeur uniquement)")
     public ResponseEntity<StaffResponse> updateStaff(

@@ -29,7 +29,7 @@ public class ParticipantActiviteController {
      * Récupérer les personnes disponibles pour faire la présence
      */
     @GetMapping("/disponibles/{activiteId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Obtenir la liste des personnes disponibles",
                description = "Retourne tous les enfants et staff inscrits pour l'année de l'activité")
     public ResponseEntity<PersonnesDisponiblesResponse> getPersonnesDisponibles(
@@ -47,7 +47,7 @@ public class ParticipantActiviteController {
      * Enregistrer la présence à une activité
      */
     @PostMapping("/presence")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Enregistrer la présence",
                description = "Enregistre les participants présents et change le statut de l'activité à 'Terminé'")
     public ResponseEntity<String> enregistrerPresence(

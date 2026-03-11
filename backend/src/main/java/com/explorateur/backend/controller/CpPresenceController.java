@@ -29,7 +29,7 @@ public class CpPresenceController {
      * Récupérer les personnes disponibles pour faire la présence à une CP
      */
     @GetMapping("/disponibles/{classeProgressiveId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Obtenir la liste des personnes disponibles",
                description = "Retourne tous les enfants et staff inscrits pour l'année de la classe progressive")
     public ResponseEntity<PersonnesDisponiblesResponse> getPersonnesDisponibles(
@@ -47,7 +47,7 @@ public class CpPresenceController {
      * Enregistrer la présence à une classe progressive
      */
     @PostMapping("/presence")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Enregistrer la présence",
                description = "Enregistre les participants présents à la classe progressive. " +
                            "Règles: un enfant/staff ne peut être enregistré qu'une seule fois par CP, " +

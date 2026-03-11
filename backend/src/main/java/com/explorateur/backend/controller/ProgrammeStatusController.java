@@ -28,7 +28,7 @@ public class ProgrammeStatusController {
     private final ProgrammeStatusService programmeStatusService;
     
     @GetMapping("/statuts")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Lister tous les statuts disponibles",
                description = "Récupère la liste de tous les statuts possibles (En attente, En cours, Terminé)")
     public ResponseEntity<List<ProgrammeStatusResponse>> getAllStatuts() {
@@ -37,7 +37,7 @@ public class ProgrammeStatusController {
     }
     
     @PostMapping("/change")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Changer le statut d'un programme",
                description = "Change le statut d'un programme dans une CP (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<HistoriqueProgrammesResponse> changeProgrammeStatus(
@@ -50,7 +50,7 @@ public class ProgrammeStatusController {
     // L'initialisation automatique se fait via le scheduler ou l'endpoint /api/historique-programmes/initialiser-annee/{anneeId}
     /*
     @PostMapping("/initialize")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Initialiser le statut d'un programme",
                description = "Initialise le statut d'un programme dans une CP à 'En attente' (Directeur et Co-Directeur uniquement)")
     public ResponseEntity<HistoriqueProgrammesResponse> initializeProgrammeStatus(
@@ -64,7 +64,7 @@ public class ProgrammeStatusController {
     // NOTE: Endpoint obsolète - remplacé par /api/historique-programmes/cp/{cpId}
     /*
     @GetMapping("/historique/programme/{programmeId}/cp/{classeProgressiveId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir l'historique d'un programme dans une CP",
                description = "Récupère l'historique complet des changements de statut d'un programme dans une CP")
     public ResponseEntity<List<HistoriqueProgrammesResponse>> getHistoriqueByProgrammeAndCP(
@@ -79,7 +79,7 @@ public class ProgrammeStatusController {
     // NOTE: Endpoint obsolète - remplacé par /api/historique-programmes/programme/{id}
     /*
     @GetMapping("/historique/programme/{programmeId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir l'historique complet d'un programme",
                description = "Récupère l'historique complet d'un programme dans toutes les CP")
     public ResponseEntity<List<HistoriqueProgrammesResponse>> getHistoriqueByProgramme(
@@ -92,7 +92,7 @@ public class ProgrammeStatusController {
     // NOTE: Endpoint obsolète - le statut actuel peut être obtenu via /api/historique-programmes/avancement
     /*
     @GetMapping("/current/programme/{programmeId}/cp/{classeProgressiveId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir le statut actuel d'un programme",
                description = "Récupère le statut actuel d'un programme dans une CP spécifique")
     public ResponseEntity<HistoriqueProgrammesResponse> getCurrentStatus(

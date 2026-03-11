@@ -33,7 +33,7 @@ public class ClasseProgressiveController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Créer une nouvelle CP", 
                description = "Crée une nouvelle Classe Progressive. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<ClasseProgressiveResponse> createClasseProgressive(
@@ -47,7 +47,7 @@ public class ClasseProgressiveController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Modifier une CP", 
                description = "Modifie une Classe Progressive existante. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<ClasseProgressiveResponse> updateClasseProgressive(
@@ -181,7 +181,7 @@ public class ClasseProgressiveController {
      * Accessible uniquement au Directeur et Co-Directeur
      */
     @PutMapping("/{id}/cloturer")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Clôturer une CP", 
                description = "Met l'état de la CP à clôturé (etat=1). Une fois clôturée, les présences et changements de statuts sont interdits. Réservé au Directeur et Co-Directeur.")
     public ResponseEntity<ClasseProgressiveResponse> cloturerCP(@PathVariable Long id) {
