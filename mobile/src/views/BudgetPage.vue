@@ -547,6 +547,7 @@ import budgetService from '@/services/budget-global.service';
 import activiteService from '@/services/activite.service';
 import anneeExerciceService from '@/services/annee-exercice.service';
 import participantService from '@/services/participant-activite.service';
+import { PdfService } from '@/services/pdf.service';
 import type {
   BudgetGlobalResponse, ActiviteResponse, AnneeExercice, CreateActiviteRequest,
   UpdateActiviteRequest, DetailActiviteDto, PersonnesDisponiblesResponse,
@@ -938,8 +939,11 @@ const confirmExport = async () => {
   
   try {
     loading.value = true;
-    await budgetService.exportBudgetToPdf(selectedAnneeId.value, exportColumns.value);
-    success.value = 'PDF exporté avec succès';
+    await PdfService.downloadBudgetPdf({
+      anneeExerciceId: selectedAnneeId.value,
+      ...exportColumns.value
+    });
+    success.value = 'PDF téléchargé et ouvert avec succès!';
     closeExportModal();
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Erreur lors de l\'export PDF';

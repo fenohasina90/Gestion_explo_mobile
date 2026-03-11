@@ -144,3 +144,11 @@ Je souhaite maintenant ajouter une page de statistiques pour les enfants et les 
 
 
 /snap/android-studio/209/bin/studio.sh
+
+
+Que fait on aussi pour que l'appli reste actif sans offre payant car il y a des fois ou le serveur est inactif et lorsqu'on utilise l'appli, il y a une erreur de connexion et on doit aller dans le navigateur et aller dans : https://explorateurs-backend.onrender.com/swagger-ui.html pour activer le serveur.
+Cette appli est utilise par 10 -  15 personne
+Voici les quota de l'offre gratuit:
+-  Free Instance hours: 750 hours/month
+- Free Bandwidth : 100GB/month
+- Free Pipeline: 500 minute/month

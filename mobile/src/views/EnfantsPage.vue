@@ -336,6 +336,7 @@ import parentService from '@/services/parent.service';
 import enfantService from '@/services/enfant.service';
 import classeService from '@/services/classe.service';
 import anneeExerciceService from '@/services/annee-exercice.service';
+import { PdfService } from '@/services/pdf.service';
 import InscriptionModal from '@/components/InscriptionModal.vue';
 import type {
   InscriptionResponse,
@@ -557,19 +558,25 @@ const showExportOptions = async () => {
 
 const exportPdf = async (exportAll = false) => {
   try {
+    loading.value = true;
+    
     if (exportAll) {
-      await inscriptionService.exportToPdf();
+      await PdfService.downloadInscriptionsPdf();
     } else {
-      await inscriptionService.exportToPdf(
+      await PdfService.downloadInscriptionsPdf(
         filterAnneeId.value || undefined,
         filterClasseId.value || undefined,
         filterGenre.value || undefined,
         filterAssurance.value ? filterAssurance.value === 'OUI' : undefined
       );
     }
-    success.value = 'Export PDF en cours...';
+    
+    success.value = 'PDF téléchargé et ouvert avec succès!';
   } catch (err: any) {
     error.value = 'Erreur lors de l\'export PDF';
+    console.error('Erreur export PDF:', err);
+  } finally {
+    loading.value = false;
   }
 };
 

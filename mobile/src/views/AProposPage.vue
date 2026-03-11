@@ -14,7 +14,7 @@
         <!-- Logo et nom de l'application -->
         <div class="app-header">
           <img src="/assets/logo.png" alt="Logo" class="app-logo" />
-          <h1>Gestion Explorations</h1>
+          <h1>Club Explorateurs</h1>
           <p class="version">Version 1.0.0</p>
         </div>
 
@@ -28,7 +28,7 @@
           </ion-card-header>
           <ion-card-content>
             <p>
-              Gestion Explorateur est une application mobile pour la gestion complète 
+              Club Explorateurs est une application mobile pour la gestion complète 
               des activités des explorateurs. Elle permet de gérer les inscriptions, 
               les staffs, les budgets, les programmes et le suivi des participations.
             </p>
