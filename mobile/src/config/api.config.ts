@@ -7,8 +7,8 @@ export const API_CONFIG = {
   // API locale (développement)
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
   
-  // Timeout des requêtes (30 secondes)
-  timeout: 30000,
+  // Timeout des requêtes (60 secondes pour cold start Render)
+  timeout: 60000,
   
   // Headers par défaut
   headers: {
