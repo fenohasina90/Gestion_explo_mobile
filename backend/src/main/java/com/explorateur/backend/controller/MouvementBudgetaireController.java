@@ -63,7 +63,7 @@ public class MouvementBudgetaireController {
     }
     
     @GetMapping("/etat-caisse")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    // @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir l'état de caisse",
                description = "Calcule l'état de caisse (total recettes, total dépenses, solde) pour une année d'exercice")
     public ResponseEntity<EtatCaisseResponse> getEtatCaisse(
@@ -74,7 +74,7 @@ public class MouvementBudgetaireController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    // @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir un mouvement par ID",
                description = "Récupère les détails d'un mouvement budgétaire")
     public ResponseEntity<MouvementBudgetaireResponse> getMouvementById(@PathVariable Long id) {
@@ -83,7 +83,7 @@ public class MouvementBudgetaireController {
     }
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    // @PreAuthorize("hasAnyRole('Directeur', 'Co_Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Consulter l'état de caisse avec filtres et pagination",
                description = "Récupère la liste paginée des mouvements budgétaires avec filtres optionnels")
     public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvementsWithFilters(

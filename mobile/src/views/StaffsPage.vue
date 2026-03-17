@@ -68,14 +68,13 @@
       </div>
 
       <!-- Liste des staffs -->
-      <ion-list v-if="!loading">
+      <!-- <ion-list v-if="!loading">
         <ion-item 
           v-for="staff in filteredStaffs" 
           :key="staff.id"
         >
           <ion-label>
             <h2>{{ staff.instructeurPrenom }} {{ staff.instructeurNom }}</h2>
-            <!-- <p></p> -->
             <p class="ion-text-wrap" style="font-size: 0.85rem; color: var(--ion-color-medium);">
               <span v-if="staff.instructeurTotem">{{ staff.instructeurTotem }} • </span>
               <span v-if="staff.instructeurTelephone">{{ staff.instructeurTelephone }} • </span>
@@ -92,6 +91,46 @@
             >
               <ion-icon :icon="createOutline"></ion-icon>
             </ion-button>
+            <ion-button 
+              v-if="isDirecteur"
+              color="danger" 
+              @click.stop="confirmDelete(staff.id)"
+            >
+              <ion-icon :icon="trashOutline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+
+        <div v-if="filteredStaffs.length === 0" class="ion-padding ion-text-center">
+          <ion-note>Aucun staff trouvé</ion-note>
+        </div>
+      </ion-list> -->
+
+      <ion-list v-if="!loading">
+        <ion-item 
+          v-for="staff in filteredStaffs" 
+          :key="staff.id"
+        >
+          <ion-label>
+            <h2>{{ staff.instructeurPrenom }} {{ staff.instructeurNom }}</h2>
+            <p class="ion-text-wrap" style="font-size: 0.85rem; color: var(--ion-color-medium);">
+              <span v-if="staff.instructeurTotem">{{ staff.instructeurTotem }} • </span>
+              <span v-if="staff.instructeurTelephone">{{ staff.instructeurTelephone }} • </span>
+              <span>{{ new Date(staff.anneeExercice).getFullYear() }}</span>
+            </p>
+          </ion-label>
+          <ion-badge :color="getRoleColor(staff.role)">
+            {{ staff.role }}
+          </ion-badge>
+          <ion-buttons slot="end">
+            <!-- Bouton d'édition visible seulement pour les directeurs -->
+            <ion-button 
+              v-if="canModify"
+              @click.stop="openEditModal(staff)"
+            >
+              <ion-icon :icon="createOutline"></ion-icon>
+            </ion-button>
+            <!-- Bouton de suppression visible seulement pour les directeurs -->
             <ion-button 
               v-if="isDirecteur"
               color="danger" 
@@ -171,7 +210,7 @@ const loading = ref(true);
 const showFilters = ref(true);
 
 const isDirecteur = computed(() => {
-  return authStore.user?.role === 'Directeur';
+  return authStore.user?.role === 'Directeur' || authStore.user?.role === 'Co_Directeur';
 });
 
 const canModify = computed(() => {
