@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class TypeController {
     private final TypeService typeService;
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Lister tous les types de mouvements",
                description = "Récupère la liste de tous les types de mouvements budgétaires (RECETTE, DEPENSE)")
     public ResponseEntity<List<TypeResponse>> getAllTypes() {
@@ -34,7 +32,6 @@ public class TypeController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
     @Operation(summary = "Obtenir un type par ID",
                description = "Récupère les détails d'un type de mouvement budgétaire")
     public ResponseEntity<TypeResponse> getTypeById(@PathVariable Long id) {

@@ -32,9 +32,9 @@ public class MouvementBudgetaireController {
     private final MouvementBudgetaireService mouvementBudgetaireService;
     
     @PostMapping
-    @PreAuthorize("hasRole('Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Créer un mouvement budgétaire", 
-               description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur uniquement")
+               description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur et Co-Directeur")
     public ResponseEntity<MouvementBudgetaireResponse> createMouvement(
             @Valid @RequestBody CreateMouvementBudgetaireRequest request,
             Authentication authentication) {
@@ -54,9 +54,9 @@ public class MouvementBudgetaireController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('Directeur')")
+    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
     @Operation(summary = "Supprimer un mouvement budgétaire",
-               description = "Supprime un mouvement budgétaire - Directeur uniquement")
+               description = "Supprime un mouvement budgétaire - Directeur et Co-Directeur")
     public ResponseEntity<Void> deleteMouvement(@PathVariable Long id) {
         mouvementBudgetaireService.deleteMouvement(id);
         return ResponseEntity.noContent().build();

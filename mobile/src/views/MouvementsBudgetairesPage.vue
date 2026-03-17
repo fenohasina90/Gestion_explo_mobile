@@ -372,7 +372,7 @@ const filters = ref<MouvementBudgetaireFilterRequest>({
 const isDirecteur = computed(() => authStore.user?.role === 'Directeur');
 const isDirecteurOrCo = computed(() => {
   const role = authStore.user?.role;
-  return role === 'Directeur' || role === 'Co_Directeur';
+  return role === 'Directeur' || role === 'Co-Directeur' || role === 'Co_Directeur';
 });
 
 const isFormValid = computed(() => {
