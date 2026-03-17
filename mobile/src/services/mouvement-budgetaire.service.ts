@@ -13,7 +13,7 @@ import type {
  * Service pour la gestion des mouvements budgétaires
  */
 class MouvementBudgetaireService {
-  private readonly baseUrl = '/api/mouvements-budgetaires';
+  private readonly baseUrl = '/api/budget-mouvements';
   private readonly typesUrl = '/api/types-mouvement';
 
   /**

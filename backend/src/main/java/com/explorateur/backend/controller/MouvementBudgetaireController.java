@@ -23,7 +23,7 @@ import java.time.LocalDate;
  * Controller pour la gestion des mouvements budgétaires
  */
 @RestController
-@RequestMapping("/api/mouvements-budgetaires")
+@RequestMapping("/api/budget-mouvements")
 @RequiredArgsConstructor
 @Tag(name = "Mouvements Budgétaires", description = "API de gestion des mouvements budgétaires (recettes et dépenses)")
 @SecurityRequirement(name = "bearerAuth")
