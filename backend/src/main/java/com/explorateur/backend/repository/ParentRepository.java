@@ -15,9 +15,16 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
      * Recherche de parents par nom et/ou prénom (pour auto-complétion)
      * Utilise LIKE avec l'opérateur || pour la concaténation SQLite
      */
+    // @Query(value = "SELECT * FROM parents p " +
+    //        "WHERE (LOWER(p.nom || ' ' || p.prenom) LIKE LOWER(:searchTerm) " +
+    //        "OR LOWER(p.prenom || ' ' || p.nom) LIKE LOWER(:searchTerm)) " +
+    //        "ORDER BY p.nom ASC, p.prenom ASC " +
+    //        "LIMIT 10", nativeQuery = true)
+    // List<Parent> searchByNomOrPrenom(@Param("searchTerm") String searchTerm);
+
     @Query(value = "SELECT * FROM parents p " +
-           "WHERE (LOWER(p.nom || ' ' || p.prenom) LIKE LOWER(:searchTerm) " +
-           "OR LOWER(p.prenom || ' ' || p.nom) LIKE LOWER(:searchTerm)) " +
+           "WHERE (LOWER(CONCAT(p.nom, ' ', p.prenom)) LIKE LOWER(:searchTerm) " +
+           "OR LOWER(CONCAT(p.prenom, ' ', p.nom)) LIKE LOWER(:searchTerm)) " +
            "ORDER BY p.nom ASC, p.prenom ASC " +
            "LIMIT 10", nativeQuery = true)
     List<Parent> searchByNomOrPrenom(@Param("searchTerm") String searchTerm);
