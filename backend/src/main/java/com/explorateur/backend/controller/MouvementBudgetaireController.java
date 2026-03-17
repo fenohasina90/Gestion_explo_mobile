@@ -32,9 +32,9 @@ public class MouvementBudgetaireController {
     private final MouvementBudgetaireService mouvementBudgetaireService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Créer un mouvement budgétaire", 
-               description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur et Co-Directeur")
+               description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur uniquement")
     public ResponseEntity<MouvementBudgetaireResponse> createMouvement(
             @Valid @RequestBody CreateMouvementBudgetaireRequest request,
             Authentication authentication) {
@@ -54,9 +54,9 @@ public class MouvementBudgetaireController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
+    @PreAuthorize("hasRole('Directeur')")
     @Operation(summary = "Supprimer un mouvement budgétaire",
-               description = "Supprime un mouvement budgétaire - Directeur et Co-Directeur")
+               description = "Supprime un mouvement budgétaire - Directeur uniquement")
     public ResponseEntity<Void> deleteMouvement(@PathVariable Long id) {
         mouvementBudgetaireService.deleteMouvement(id);
         return ResponseEntity.noContent().build();
@@ -109,6 +109,28 @@ public class MouvementBudgetaireController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
         
         PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
+        return ResponseEntity.ok(mouvementsPage);
+    }
+
+    @PostMapping("/search")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Consulter les mouvements avec filtres (POST)",
+               description = "Récupère la liste paginée des mouvements via payload de filtres")
+    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> searchMouvementsWithFilters(
+            @Valid @RequestBody(required = false) MouvementBudgetaireFilterRequest filters,
+            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
+            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
+
+        MouvementBudgetaireFilterRequest finalFilters = filters != null
+                ? filters
+                : MouvementBudgetaireFilterRequest.builder().build();
+
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(finalFilters, pageable);
         return ResponseEntity.ok(mouvementsPage);
     }
 }

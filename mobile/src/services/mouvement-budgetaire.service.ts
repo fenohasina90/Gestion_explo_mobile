@@ -34,33 +34,15 @@ class MouvementBudgetaireService {
     direction: 'asc' | 'desc' = 'desc'
   ): Promise<PageResponse<MouvementBudgetaire>> {
     const params = new URLSearchParams();
-    
-    // Ajout des filtres
-    if (filters?.recherche) {
-      params.append('recherche', filters.recherche);
-    }
-    if (filters?.dateDebut) {
-      params.append('dateDebut', filters.dateDebut);
-    }
-    if (filters?.dateFin) {
-      params.append('dateFin', filters.dateFin);
-    }
-    if (filters?.typeId) {
-      params.append('typeId', filters.typeId.toString());
-    }
-    if (filters?.anneeExerciceId) {
-      params.append('anneeExerciceId', filters.anneeExerciceId.toString());
-    }
-    
+
     // Ajout des paramètres de pagination
     params.append('page', page.toString());
     params.append('size', size.toString());
     params.append('sort', sort);
     params.append('direction', direction);
 
-    const url = `${this.baseUrl}?${params.toString()}`;
-    
-    return apiService.get<PageResponse<MouvementBudgetaire>>(url);
+    const url = `${this.baseUrl}/search?${params.toString()}`;
+    return apiService.post<PageResponse<MouvementBudgetaire>>(url, filters || {});
   }
 
   /**
