@@ -11,7 +11,7 @@
           <ion-button @click="showFilters = !showFilters">
             <ion-icon :icon="filterOutline"></ion-icon>
           </ion-button>
-          <ion-button v-if="isDirecteur" @click="openCreateModal">
+          <ion-button v-if="canModify" @click="openCreateModal">
             <ion-icon :icon="addOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -68,44 +68,6 @@
       </div>
 
       <!-- Liste des staffs -->
-      <!-- <ion-list v-if="!loading">
-        <ion-item 
-          v-for="staff in filteredStaffs" 
-          :key="staff.id"
-        >
-          <ion-label>
-            <h2>{{ staff.instructeurPrenom }} {{ staff.instructeurNom }}</h2>
-            <p class="ion-text-wrap" style="font-size: 0.85rem; color: var(--ion-color-medium);">
-              <span v-if="staff.instructeurTotem">{{ staff.instructeurTotem }} • </span>
-              <span v-if="staff.instructeurTelephone">{{ staff.instructeurTelephone }} • </span>
-              <span>{{ new Date(staff.anneeExercice).getFullYear() }}</span>
-            </p>
-          </ion-label>
-          <ion-badge :color="getRoleColor(staff.role)">
-            {{ staff.role }}
-          </ion-badge>
-          <ion-buttons slot="end">
-            <ion-button 
-              v-if="canModify"
-              @click.stop="openEditModal(staff)"
-            >
-              <ion-icon :icon="createOutline"></ion-icon>
-            </ion-button>
-            <ion-button 
-              v-if="isDirecteur"
-              color="danger" 
-              @click.stop="confirmDelete(staff.id)"
-            >
-              <ion-icon :icon="trashOutline"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-
-        <div v-if="filteredStaffs.length === 0" class="ion-padding ion-text-center">
-          <ion-note>Aucun staff trouvé</ion-note>
-        </div>
-      </ion-list> -->
-
       <ion-list v-if="!loading">
         <ion-item 
           v-for="staff in filteredStaffs" 
@@ -123,14 +85,12 @@
             {{ staff.role }}
           </ion-badge>
           <ion-buttons slot="end">
-            <!-- Bouton d'édition visible seulement pour les directeurs -->
             <ion-button 
               v-if="canModify"
               @click.stop="openEditModal(staff)"
             >
               <ion-icon :icon="createOutline"></ion-icon>
             </ion-button>
-            <!-- Bouton de suppression visible seulement pour les directeurs -->
             <ion-button 
               v-if="isDirecteur"
               color="danger" 
@@ -141,7 +101,6 @@
           </ion-buttons>
         </ion-item>
 
-        <!-- Message si aucun staff -->
         <div v-if="filteredStaffs.length === 0" class="ion-padding ion-text-center">
           <ion-note>Aucun staff trouvé</ion-note>
         </div>
@@ -209,12 +168,16 @@ const filterEstChefGuide = ref<boolean | null>(null);
 const loading = ref(true);
 const showFilters = ref(true);
 
-const isDirecteur = computed(() => {
-  return authStore.user?.role === 'Directeur' || authStore.user?.role === 'Co_Directeur';
+const canModify = computed(() => {
+  return (
+    authStore.user?.role === 'Directeur' ||
+    authStore.user?.role === 'Co-Directeur' ||
+    authStore.user?.role === 'Co_Directeur'
+  );
 });
 
-const canModify = computed(() => {
-  return authStore.user?.role === 'Directeur' || authStore.user?.role === 'Co_Directeur';
+const isDirecteur = computed(() => {
+  return authStore.user?.role === 'Directeur';
 });
 
 const filteredStaffs = computed(() => {
@@ -241,6 +204,7 @@ const filteredStaffs = computed(() => {
 function getRoleColor(roleName: string): string {
   const roleColors: Record<string, string> = {
     'Directeur': 'success',
+    'Co-Directeur': 'warning',
     'Co_Directeur': 'warning',
     'Secrétaire': 'primary',
     'Instructeur': 'medium'

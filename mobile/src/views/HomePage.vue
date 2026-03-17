@@ -68,8 +68,8 @@
             </ion-row>
         </ion-grid>
 
-        <!-- Section Gestion du Staff (Directeur et Co-Directeur) -->
-        <div v-if="canManageStaff">
+        <!-- Section Staff (accessible a tous les utilisateurs connectes) -->
+        <div>
           <h2 class="section-title">Gestion du Staff</h2>
           
           <ion-grid>

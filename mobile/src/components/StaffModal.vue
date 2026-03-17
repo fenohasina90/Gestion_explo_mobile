@@ -340,7 +340,11 @@ const loading = ref(false);
 let searchTimeout: any = null;
 
 const isCoDirecteur = computed(() => {
-  return authStore.user?.role === 'Co_Directeur' || authStore.user?.role === 'Directeur';
+  return (
+    authStore.user?.role === 'Directeur' ||
+    authStore.user?.role === 'Co-Directeur' ||
+    authStore.user?.role === 'Co_Directeur'
+  );
 });
 
 // IDs des instructeurs déjà assignés pour l'année sélectionnée (excluant les staffs supprimés)
