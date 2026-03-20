@@ -56,6 +56,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/budget-mouvements/**").authenticated()
                 .requestMatchers("/api/mouvements-budgetaires/**").authenticated()
                 .requestMatchers("/api/journal/**").authenticated()
+                .requestMatchers("/api/budget-query/**").authenticated()
+                .requestMatchers("/api/journal-query/**").authenticated()
                 // Tous les autres endpoints nécessitent une authentification
                 .anyRequest().authenticated()
             )

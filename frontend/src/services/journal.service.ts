@@ -6,6 +6,7 @@ import type { JournalEntry, JournalFilterRequest } from '../types';
  */
 class JournalService {
   private readonly baseUrl = '/api/journal';
+  private readonly queryUrl = '/api/journal-query/entries';
 
   /**
    * Récupérer toutes les entrées du journal
@@ -34,7 +35,7 @@ class JournalService {
     }
 
     const query = params.toString();
-    const url = query ? `${this.baseUrl}/filter?${query}` : `${this.baseUrl}/filter`;
+    const url = query ? `${this.queryUrl}?${query}` : this.queryUrl;
     return apiService.get<JournalEntry[]>(url);
   }
 
