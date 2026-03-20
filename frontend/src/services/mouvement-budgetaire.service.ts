@@ -13,7 +13,7 @@ import type {
  * Service pour la gestion des mouvements budgétaires
  */
 class MouvementBudgetaireService {
-  private readonly baseUrl = '/api/mouvements-budgetaires';
+  private readonly baseUrl = '/api/budget-mouvements';
   private readonly typesUrl = '/api/types-mouvement';
 
   /**
@@ -27,28 +27,8 @@ class MouvementBudgetaireService {
    * Récupérer tous les mouvements budgétaires avec filtres
    */
   async getMouvementsWithFilters(filters?: MouvementBudgetaireFilterRequest): Promise<MouvementBudgetaire[]> {
-    const params = new URLSearchParams();
-    
-    if (filters?.recherche) {
-      params.append('recherche', filters.recherche);
-    }
-    if (filters?.dateDebut) {
-      params.append('dateDebut', filters.dateDebut);
-    }
-    if (filters?.dateFin) {
-      params.append('dateFin', filters.dateFin);
-    }
-    if (filters?.typeId) {
-      params.append('typeId', filters.typeId.toString());
-    }
-    if (filters?.anneeExerciceId) {
-      params.append('anneeExerciceId', filters.anneeExerciceId.toString());
-    }
-
-    const queryString = params.toString();
-    const url = queryString ? `${this.baseUrl}?${queryString}` : this.baseUrl;
-    
-    return apiService.get<MouvementBudgetaire[]>(url);
+    const page = await this.getMouvementsWithFiltersPaginated(filters, 0, 1000, 'createdAt', 'desc');
+    return page.content;
   }
 
   /**
@@ -62,8 +42,7 @@ class MouvementBudgetaireService {
     direction: 'asc' | 'desc' = 'desc'
   ): Promise<PageResponse<MouvementBudgetaire>> {
     const params = new URLSearchParams();
-    
-    // Ajout des filtres
+
     if (filters?.recherche) {
       params.append('recherche', filters.recherche);
     }
@@ -79,15 +58,14 @@ class MouvementBudgetaireService {
     if (filters?.anneeExerciceId) {
       params.append('anneeExerciceId', filters.anneeExerciceId.toString());
     }
-    
+
     // Ajout des paramètres de pagination
     params.append('page', page.toString());
     params.append('size', size.toString());
     params.append('sort', sort);
     params.append('direction', direction);
 
-    const url = `${this.baseUrl}?${params.toString()}`;
-    
+    const url = `${this.baseUrl}/list?${params.toString()}`;
     return apiService.get<PageResponse<MouvementBudgetaire>>(url);
   }
 

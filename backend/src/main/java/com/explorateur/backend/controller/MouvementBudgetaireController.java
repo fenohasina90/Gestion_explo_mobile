@@ -109,6 +109,35 @@ public class MouvementBudgetaireController {
         return ResponseEntity.ok(mouvementsPage);
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "Consulter les mouvements (route alternative)",
+               description = "Récupère la liste paginée des mouvements budgétaires via route alternative")
+    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvementsWithFiltersList(
+            @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
+            @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
+            @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
+            @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
+            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId,
+            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
+            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
+
+        MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
+                .recherche(recherche)
+                .dateDebut(dateDebut)
+                .dateFin(dateFin)
+                .typeId(typeId)
+                .anneeExerciceId(anneeExerciceId)
+                .build();
+
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
+        return ResponseEntity.ok(mouvementsPage);
+    }
+
     @PostMapping("/search")
     @Operation(summary = "Consulter les mouvements avec filtres (POST)",
                description = "Récupère la liste paginée des mouvements via payload de filtres")

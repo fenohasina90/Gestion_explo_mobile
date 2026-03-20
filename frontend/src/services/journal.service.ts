@@ -18,7 +18,24 @@ class JournalService {
    * Filtrer les entrées du journal avec critères multiples
    */
   async filterJournal(filter: JournalFilterRequest): Promise<JournalEntry[]> {
-    return apiService.post<JournalEntry[]>(`${this.baseUrl}/filter`, filter);
+    const params = new URLSearchParams();
+
+    if (filter.dateDebut) {
+      params.append('dateDebut', filter.dateDebut);
+    }
+    if (filter.dateFin) {
+      params.append('dateFin', filter.dateFin);
+    }
+    if (filter.utilisateurId) {
+      params.append('utilisateurId', filter.utilisateurId.toString());
+    }
+    if (filter.searchText) {
+      params.append('searchText', filter.searchText);
+    }
+
+    const query = params.toString();
+    const url = query ? `${this.baseUrl}/filter?${query}` : `${this.baseUrl}/filter`;
+    return apiService.get<JournalEntry[]>(url);
   }
 
   /**

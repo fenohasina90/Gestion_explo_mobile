@@ -43,6 +43,26 @@ public class JournalController {
         return ResponseEntity.ok(journals);
     }
 
+    @GetMapping("/filter")
+    @Operation(summary = "Filtrer les entrées du journal (GET)",
+               description = "Retourne les entrées du journal selon les critères de filtrage via query params")
+    public ResponseEntity<List<JournalResponse>> filterJournalGet(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDebut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFin,
+            @RequestParam(required = false) Long utilisateurId,
+            @RequestParam(required = false) String searchText) {
+
+        JournalFilterRequest filter = JournalFilterRequest.builder()
+                .dateDebut(dateDebut)
+                .dateFin(dateFin)
+                .utilisateurId(utilisateurId)
+                .searchText(searchText)
+                .build();
+
+        List<JournalResponse> journals = journalService.getJournalWithFilters(filter);
+        return ResponseEntity.ok(journals);
+    }
+
     @GetMapping("/period")
     @Operation(summary = "Récupérer les entrées par période",
                description = "Retourne les entrées du journal entre deux dates")

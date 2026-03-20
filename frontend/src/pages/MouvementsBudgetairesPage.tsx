@@ -48,7 +48,10 @@ export function MouvementsBudgetairesPage() {
   });
 
   const isDirecteur = user?.role === 'Directeur';
-  const isDirecteurOrCo = user?.role === 'Directeur' || user?.role === 'Co_Directeur';
+  const isDirecteurOrCo =
+    user?.role === 'Directeur' ||
+    user?.role === 'Co-Directeur' ||
+    user?.role === 'Co_Directeur';
 
   useEffect(() => {
     loadData();
