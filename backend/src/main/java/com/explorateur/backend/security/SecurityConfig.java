@@ -52,6 +52,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/test/**").permitAll()
                 // Actuator endpoints (pour health check)
                 .requestMatchers("/actuator/**").permitAll()
+                // Endpoints budget/journal: tout utilisateur authentifié peut consulter
+                .requestMatchers("/api/budget-mouvements/**").authenticated()
+                .requestMatchers("/api/mouvements-budgetaires/**").authenticated()
+                .requestMatchers("/api/journal/**").authenticated()
                 // Tous les autres endpoints nécessitent une authentification
                 .anyRequest().authenticated()
             )

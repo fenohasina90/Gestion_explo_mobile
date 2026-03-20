@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ public class JournalController {
         return ResponseEntity.ok(journals);
     }
 
-    @PostMapping("/filter")
+    @PostMapping({"/filter", "/filtrer"})
     @Operation(summary = "Filtrer les entrées du journal",
                description = "Retourne les entrées du journal selon les critères de filtrage (date début, date fin, recherche textuelle)")
     public ResponseEntity<List<JournalResponse>> filterJournal(@RequestBody JournalFilterRequest filter) {
