@@ -14,7 +14,8 @@ import type {
  */
 class MouvementBudgetaireService {
   private readonly baseUrl = '/api/budget-mouvements';
-  private readonly allUrl = '/api/budget-mouvements/all';
+  private readonly readUrl = '/api/budget-read/mouvements';
+  private readonly allUrl = '/api/budget-read/mouvements/all';
   private readonly typesUrl = '/api/types-mouvement';
 
   /**
@@ -74,7 +75,7 @@ class MouvementBudgetaireService {
     params.append('sort', sort);
     params.append('direction', direction);
 
-    const url = `${this.baseUrl}?${params.toString()}`;
+    const url = `${this.readUrl}?${params.toString()}`;
     return apiService.get<PageResponse<MouvementBudgetaire>>(url);
   }
 
