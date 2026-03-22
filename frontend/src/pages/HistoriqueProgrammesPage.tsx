@@ -16,7 +16,6 @@ export function HistoriqueProgrammesPage() {
   const [selectedAnneeId, setSelectedAnneeId] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('statistiques');
   
-  const [statistiques, setStatistiques] = useState<StatistiquesAnnuelles[]>([]);
   const [progression, setProgression] = useState<ProgressionAnnuelle[]>([]);
   const [avancement, setAvancement] = useState<ProgrammeAvancement[]>([]);
   
@@ -74,16 +73,10 @@ export function HistoriqueProgrammesPage() {
   const loadStatistiques = async () => {
     try {
       setLoading(true);
-      // Charger à la fois les statistiques et la progression pour le filtrage
-      const [statsData, progData] = await Promise.all([
-        historiqueProgrammeService.getStatistiquesAnnuelles(
-          selectedAnneeId || undefined
-        ),
-        historiqueProgrammeService.getProgressionAnnuelle(
-          selectedAnneeId || undefined
-        )
-      ]);
-      setStatistiques(statsData);
+      // La vue statistiques est calculée depuis la progression
+      const progData = await historiqueProgrammeService.getProgressionAnnuelle(
+        selectedAnneeId || undefined
+      );
       setProgression(progData);
       setError(null);
     } catch (err: any) {
