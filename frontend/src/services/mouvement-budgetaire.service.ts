@@ -15,6 +15,7 @@ import type {
 class MouvementBudgetaireService {
   private readonly baseUrl = '/api/budget-mouvements';
   private readonly queryUrl = '/api/budget-query/mouvements';
+  private readonly allUrl = '/api/budget-mouvements/all';
   private readonly typesUrl = '/api/types-mouvement';
 
   /**
@@ -28,8 +29,16 @@ class MouvementBudgetaireService {
    * Récupérer tous les mouvements budgétaires avec filtres
    */
   async getMouvementsWithFilters(filters?: MouvementBudgetaireFilterRequest): Promise<MouvementBudgetaire[]> {
-    const page = await this.getMouvementsWithFiltersPaginated(filters, 0, 1000, 'createdAt', 'desc');
-    return page.content;
+    const params = new URLSearchParams();
+    if (filters?.recherche) params.append('recherche', filters.recherche);
+    if (filters?.dateDebut) params.append('dateDebut', filters.dateDebut);
+    if (filters?.dateFin) params.append('dateFin', filters.dateFin);
+    if (filters?.typeId) params.append('typeId', filters.typeId.toString());
+    if (filters?.anneeExerciceId) params.append('anneeExerciceId', filters.anneeExerciceId.toString());
+
+    const query = params.toString();
+    const url = query ? `${this.allUrl}?${query}` : this.allUrl;
+    return apiService.get<MouvementBudgetaire[]>(url);
   }
 
   /**
@@ -67,7 +76,34 @@ class MouvementBudgetaireService {
     params.append('direction', direction);
 
     const url = `${this.queryUrl}?${params.toString()}`;
-    return apiService.get<PageResponse<MouvementBudgetaire>>(url);
+
+    try {
+      return await apiService.get<PageResponse<MouvementBudgetaire>>(url);
+    } catch (error: any) {
+      // Fallback robuste: certains environnements renvoient 403 sur les routes paginées.
+      if (error?.response?.status !== 403) {
+        throw error;
+      }
+
+      const allData = await this.getMouvementsWithFilters(filters);
+      const start = page * size;
+      const end = start + size;
+      const content = allData.slice(start, end);
+      const totalElements = allData.length;
+      const totalPages = Math.max(1, Math.ceil(totalElements / size));
+
+      return {
+        content,
+        page,
+        size,
+        totalElements,
+        totalPages,
+        first: page === 0,
+        last: page >= totalPages - 1,
+        hasNext: page < totalPages - 1,
+        hasPrevious: page > 0,
+      };
+    }
   }
 
   /**

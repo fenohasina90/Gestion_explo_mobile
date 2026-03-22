@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Controller pour la gestion des mouvements budgétaires
@@ -136,6 +137,28 @@ public class MouvementBudgetaireController {
 
         PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
         return ResponseEntity.ok(mouvementsPage);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Consulter tous les mouvements (fallback)",
+               description = "Récupère tous les mouvements avec filtres sans pagination serveur")
+    public ResponseEntity<List<MouvementBudgetaireResponse>> getAllMouvementsWithFilters(
+            @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
+            @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
+            @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
+            @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
+            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId) {
+
+        MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
+                .recherche(recherche)
+                .dateDebut(dateDebut)
+                .dateFin(dateFin)
+                .typeId(typeId)
+                .anneeExerciceId(anneeExerciceId)
+                .build();
+
+        List<MouvementBudgetaireResponse> mouvements = mouvementBudgetaireService.getMouvementsWithFilters(filters);
+        return ResponseEntity.ok(mouvements);
     }
 
     @PostMapping("/search")

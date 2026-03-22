@@ -36,7 +36,27 @@ class JournalService {
 
     const query = params.toString();
     const url = query ? `${this.queryUrl}?${query}` : this.queryUrl;
-    return apiService.get<JournalEntry[]>(url);
+    try {
+      return await apiService.get<JournalEntry[]>(url);
+    } catch (error: any) {
+      if (error?.response?.status !== 403) {
+        throw error;
+      }
+
+      const entries = await this.getAllJournal();
+      return entries.filter((entry) => {
+        const entryDate = new Date(entry.timestamp);
+        const afterStart = filter.dateDebut ? entryDate >= new Date(filter.dateDebut) : true;
+        const beforeEnd = filter.dateFin ? entryDate <= new Date(filter.dateFin) : true;
+        const byUser = filter.utilisateurId ? entry.utilisateurId === filter.utilisateurId : true;
+        const byText = filter.searchText
+          ? entry.action.toLowerCase().includes(filter.searchText.toLowerCase()) ||
+            entry.username.toLowerCase().includes(filter.searchText.toLowerCase())
+          : true;
+
+        return afterStart && beforeEnd && byUser && byText;
+      });
+    }
   }
 
   /**
