@@ -1,6 +1,5 @@
 package com.explorateur.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -11,25 +10,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Schema(description = "Réponse pour un mouvement budgétaire")
+@Schema(description = "Réponse d'un mouvement budgétaire")
 public class MouvementBudgetaireResponse {
 
-    @Schema(description = "Identifiant unique du mouvement", example = "1")
+    @Schema(description = "Identifiant du mouvement", example = "10")
     private Long id;
 
-    @Schema(description = "Année d'exercice associée au mouvement")
+    @Schema(description = "Année d'exercice concernée")
     private AnneeExerciceResponse anneeExercice;
 
-    @Schema(description = "Type de mouvement (RECETTE ou DEPENSE)")
+    @Schema(description = "Type du mouvement")
     private TypeResponse type;
 
-    @Schema(description = "Montant du mouvement budgétaire", example = "50000.00")
+    @Schema(description = "Montant du mouvement", example = "50000.00")
     private BigDecimal montant;
 
-    @Schema(description = "Description détaillée du mouvement", example = "Cotisation mensuelle janvier 2026")
+    @Schema(description = "Description du mouvement", example = "Cotisation mensuelle")
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @Schema(description = "Date de création du mouvement", example = "2026-03-09T10:15:30")
+    @Schema(description = "Date de création", example = "2026-03-20T10:15:30")
     private LocalDateTime createdAt;
 }

@@ -14,7 +14,6 @@ import type {
  */
 class MouvementBudgetaireService {
   private readonly baseUrl = '/api/budget-mouvements';
-  private readonly queryUrl = '/api/journal/budget-mouvements';
   private readonly allUrl = '/api/budget-mouvements/all';
   private readonly typesUrl = '/api/types-mouvement';
 
@@ -75,35 +74,8 @@ class MouvementBudgetaireService {
     params.append('sort', sort);
     params.append('direction', direction);
 
-    const url = `${this.queryUrl}?${params.toString()}`;
-
-    try {
-      return await apiService.get<PageResponse<MouvementBudgetaire>>(url);
-    } catch (error: any) {
-      // Fallback robuste: certains environnements renvoient 403 sur les routes paginées.
-      if (error?.response?.status !== 403) {
-        throw error;
-      }
-
-      const allData = await this.getMouvementsWithFilters(filters);
-      const start = page * size;
-      const end = start + size;
-      const content = allData.slice(start, end);
-      const totalElements = allData.length;
-      const totalPages = Math.max(1, Math.ceil(totalElements / size));
-
-      return {
-        content,
-        page,
-        size,
-        totalElements,
-        totalPages,
-        first: page === 0,
-        last: page >= totalPages - 1,
-        hasNext: page < totalPages - 1,
-        hasPrevious: page > 0,
-      };
-    }
+    const url = `${this.baseUrl}?${params.toString()}`;
+    return apiService.get<PageResponse<MouvementBudgetaire>>(url);
   }
 
   /**

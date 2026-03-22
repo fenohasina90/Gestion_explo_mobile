@@ -11,118 +11,63 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controller pour la gestion des mouvements budgétaires
- */
 @RestController
 @RequestMapping("/api/budget-mouvements")
 @RequiredArgsConstructor
-@Tag(name = "Mouvements Budgétaires", description = "API de gestion des mouvements budgétaires (recettes et dépenses)")
+@Tag(name = "Mouvements Budgétaires", description = "API de gestion des mouvements budgétaires")
 @SecurityRequirement(name = "bearerAuth")
 public class MouvementBudgetaireController {
-    
+
     private final MouvementBudgetaireService mouvementBudgetaireService;
-    
+
     @PostMapping
     @PreAuthorize("hasRole('Directeur')")
-    @Operation(summary = "Créer un mouvement budgétaire", 
-               description = "Crée un nouveau mouvement budgétaire (recette ou dépense) - Directeur uniquement")
-    public ResponseEntity<MouvementBudgetaireResponse> createMouvement(
-            @Valid @RequestBody CreateMouvementBudgetaireRequest request,
-            Authentication authentication) {
-        MouvementBudgetaireResponse response = mouvementBudgetaireService.createMouvement(request, authentication.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @Operation(summary = "Créer un mouvement", description = "Création d'un mouvement budgétaire (Directeur uniquement)")
+    public ResponseEntity<MouvementBudgetaireResponse> createMouvement(@Valid @RequestBody CreateMouvementBudgetaireRequest request) {
+        return ResponseEntity.ok(mouvementBudgetaireService.createMouvement(request));
     }
-    
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur')")
-    @Operation(summary = "Modifier un mouvement budgétaire",
-               description = "Modifie un mouvement budgétaire existant - Directeur et Co-Directeur")
-    public ResponseEntity<MouvementBudgetaireResponse> updateMouvement(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateMouvementBudgetaireRequest request) {
-        MouvementBudgetaireResponse response = mouvementBudgetaireService.updateMouvement(id, request);
-        return ResponseEntity.ok(response);
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co_Directeur', 'ROLE_Co-Directeur')")
+    @Operation(summary = "Modifier un mouvement", description = "Modification d'un mouvement (Directeur et Co-Directeur)")
+    public ResponseEntity<MouvementBudgetaireResponse> updateMouvement(@PathVariable Long id,
+                                                                       @Valid @RequestBody UpdateMouvementBudgetaireRequest request) {
+        return ResponseEntity.ok(mouvementBudgetaireService.updateMouvement(id, request));
     }
-    
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('Directeur')")
-    @Operation(summary = "Supprimer un mouvement budgétaire",
-               description = "Supprime un mouvement budgétaire - Directeur uniquement")
+    @Operation(summary = "Supprimer un mouvement", description = "Suppression d'un mouvement budgétaire (Directeur uniquement)")
     public ResponseEntity<Void> deleteMouvement(@PathVariable Long id) {
         mouvementBudgetaireService.deleteMouvement(id);
         return ResponseEntity.noContent().build();
     }
-    
-    @GetMapping("/etat-caisse")
-    @Operation(summary = "Obtenir l'état de caisse",
-               description = "Calcule l'état de caisse (total recettes, total dépenses, solde) pour une année d'exercice")
-    public ResponseEntity<EtatCaisseResponse> getEtatCaisse(
-            @Parameter(description = "ID de l'année d'exercice (si non spécifié, prend l'année active)") 
-            @RequestParam(required = false) Long anneeExerciceId) {
-        EtatCaisseResponse etatCaisse = mouvementBudgetaireService.getEtatCaisse(anneeExerciceId);
-        return ResponseEntity.ok(etatCaisse);
-    }
-    
+
     @GetMapping("/{id}")
-    @Operation(summary = "Obtenir un mouvement par ID",
-               description = "Récupère les détails d'un mouvement budgétaire")
+    @Operation(summary = "Détail d'un mouvement", description = "Retourne un mouvement budgétaire par son identifiant")
     public ResponseEntity<MouvementBudgetaireResponse> getMouvementById(@PathVariable Long id) {
-        MouvementBudgetaireResponse response = mouvementBudgetaireService.getMouvementById(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(mouvementBudgetaireService.getMouvementById(id));
     }
-    
+
     @GetMapping
-    @Operation(summary = "Consulter l'état de caisse avec filtres et pagination",
-               description = "Récupère la liste paginée des mouvements budgétaires avec filtres optionnels")
-    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvementsWithFilters(
+    @Operation(summary = "Consulter les mouvements", description = "Consultation paginée avec filtres: recherche, date début/fin, type")
+    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvements(
             @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
             @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
             @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
-            @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
+            @Parameter(description = "ID du type") @RequestParam(required = false) Long typeId,
             @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId,
-            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Taille de page") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
-            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
-        
-        MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
-                .recherche(recherche)
-                .dateDebut(dateDebut)
-                .dateFin(dateFin)
-                .typeId(typeId)
-                .anneeExerciceId(anneeExerciceId)
-                .build();
-        
-        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
-        
-        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
-        return ResponseEntity.ok(mouvementsPage);
-    }
-
-    @GetMapping("/list")
-    @Operation(summary = "Consulter les mouvements (route alternative)",
-               description = "Récupère la liste paginée des mouvements budgétaires via route alternative")
-    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> getMouvementsWithFiltersList(
-            @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
-            @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
-            @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
-            @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
-            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId,
-            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
-            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
+            @Parameter(description = "Direction de tri") @RequestParam(defaultValue = "desc") String direction) {
 
         MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
                 .recherche(recherche)
@@ -135,19 +80,17 @@ public class MouvementBudgetaireController {
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
-        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable);
-        return ResponseEntity.ok(mouvementsPage);
+        return ResponseEntity.ok(mouvementBudgetaireService.getMouvementsWithFiltersPaginated(filters, pageable));
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Consulter tous les mouvements (fallback)",
-               description = "Récupère tous les mouvements avec filtres sans pagination serveur")
-    public ResponseEntity<List<MouvementBudgetaireResponse>> getAllMouvementsWithFilters(
-            @Parameter(description = "Recherche par description") @RequestParam(required = false) String recherche,
-            @Parameter(description = "Date de début") @RequestParam(required = false) LocalDate dateDebut,
-            @Parameter(description = "Date de fin") @RequestParam(required = false) LocalDate dateFin,
-            @Parameter(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)") @RequestParam(required = false) Long typeId,
-            @Parameter(description = "ID de l'année d'exercice") @RequestParam(required = false) Long anneeExerciceId) {
+    @Operation(summary = "Lister tous les mouvements", description = "Consultation non paginée avec filtres")
+    public ResponseEntity<List<MouvementBudgetaireResponse>> getAllMouvements(
+            @RequestParam(required = false) String recherche,
+            @RequestParam(required = false) LocalDate dateDebut,
+            @RequestParam(required = false) LocalDate dateFin,
+            @RequestParam(required = false) Long typeId,
+            @RequestParam(required = false) Long anneeExerciceId) {
 
         MouvementBudgetaireFilterRequest filters = MouvementBudgetaireFilterRequest.builder()
                 .recherche(recherche)
@@ -157,28 +100,28 @@ public class MouvementBudgetaireController {
                 .anneeExerciceId(anneeExerciceId)
                 .build();
 
-        List<MouvementBudgetaireResponse> mouvements = mouvementBudgetaireService.getMouvementsWithFilters(filters);
-        return ResponseEntity.ok(mouvements);
+        return ResponseEntity.ok(mouvementBudgetaireService.getMouvementsWithFilters(filters));
     }
 
     @PostMapping("/search")
-    @Operation(summary = "Consulter les mouvements avec filtres (POST)",
-               description = "Récupère la liste paginée des mouvements via payload de filtres")
-    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> searchMouvementsWithFilters(
-            @Valid @RequestBody(required = false) MouvementBudgetaireFilterRequest filters,
-            @Parameter(description = "Numéro de page (commence à 0)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Nombre d'éléments par page") @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Champ de tri") @RequestParam(defaultValue = "createdAt") String sort,
-            @Parameter(description = "Direction du tri (asc ou desc)") @RequestParam(defaultValue = "desc") String direction) {
+    @Operation(summary = "Rechercher des mouvements", description = "Recherche paginée via body JSON")
+    public ResponseEntity<PageResponse<MouvementBudgetaireResponse>> searchMouvements(
+            @RequestBody(required = false) MouvementBudgetaireFilterRequest filters,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
 
-        MouvementBudgetaireFilterRequest finalFilters = filters != null
-                ? filters
-                : MouvementBudgetaireFilterRequest.builder().build();
-
+        MouvementBudgetaireFilterRequest safeFilters = filters != null ? filters : new MouvementBudgetaireFilterRequest();
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
-        PageResponse<MouvementBudgetaireResponse> mouvementsPage = mouvementBudgetaireService.getMouvementsWithFiltersPaginated(finalFilters, pageable);
-        return ResponseEntity.ok(mouvementsPage);
+        return ResponseEntity.ok(mouvementBudgetaireService.getMouvementsWithFiltersPaginated(safeFilters, pageable));
+    }
+
+    @GetMapping("/etat-caisse")
+    @Operation(summary = "État de caisse", description = "Calcule total recettes, total dépenses et solde")
+    public ResponseEntity<EtatCaisseResponse> getEtatCaisse(@RequestParam(required = false) Long anneeExerciceId) {
+        return ResponseEntity.ok(mouvementBudgetaireService.getEtatCaisse(anneeExerciceId));
     }
 }

@@ -9,19 +9,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Schema(description = "Requête pour filtrer les mouvements budgétaires")
+@Schema(description = "Filtres de recherche des mouvements budgétaires")
 public class MouvementBudgetaireFilterRequest {
 
-    @Schema(description = "Recherche par description", example = "cotisation")
+    @Schema(description = "Texte de recherche dans la description", example = "cotisation")
     private String recherche;
 
-    @Schema(description = "Date de début du filtre", example = "2026-01-01")
+    @Schema(description = "Date de début", example = "2026-01-01")
     private LocalDate dateDebut;
 
-    @Schema(description = "Date de fin du filtre", example = "2026-12-31")
+    @Schema(description = "Date de fin", example = "2026-12-31")
     private LocalDate dateFin;
 
-    @Schema(description = "ID du type de mouvement (1=RECETTE, 2=DEPENSE)", example = "1")
+    @Schema(description = "ID du type de mouvement", example = "1")
     private Long typeId;
 
     @Schema(description = "ID de l'année d'exercice", example = "1")

@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -51,16 +50,9 @@ public class SecurityConfig {
                 // Endpoints publics - API
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/test/**").permitAll()
-                // Consultation budget/journal (lecture) : accessibles sans blocage
-                .requestMatchers(HttpMethod.GET, "/api/budget-mouvements").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/budget-mouvements/list").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/budget-mouvements/all").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/budget-mouvements/search").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/journal/budget-mouvements").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/journal/filter").permitAll()
                 // Actuator endpoints (pour health check)
                 .requestMatchers("/actuator/**").permitAll()
-                // Endpoints budget/journal: tout utilisateur authentifié peut consulter
+                // Endpoints budget/journal: accès authentifié
                 .requestMatchers("/api/budget-mouvements/**").authenticated()
                 .requestMatchers("/api/mouvements-budgetaires/**").authenticated()
                 .requestMatchers("/api/journal/**").authenticated()
