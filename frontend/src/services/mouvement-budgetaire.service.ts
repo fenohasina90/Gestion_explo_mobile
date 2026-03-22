@@ -14,7 +14,7 @@ import type {
  */
 class MouvementBudgetaireService {
   private readonly baseUrl = '/api/budget-mouvements';
-  private readonly queryUrl = '/api/budget-query/mouvements';
+  private readonly queryUrl = '/api/journal/budget-mouvements';
   private readonly allUrl = '/api/budget-mouvements/all';
   private readonly typesUrl = '/api/types-mouvement';
 
