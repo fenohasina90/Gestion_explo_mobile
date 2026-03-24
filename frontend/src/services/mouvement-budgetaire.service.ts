@@ -1,3 +1,4 @@
+import axios from 'axios';
 import apiService from './api.service';
 import type { 
   MouvementBudgetaire, 
@@ -14,9 +15,38 @@ import type {
  */
 class MouvementBudgetaireService {
   private readonly baseUrl = '/api/budget-mouvements';
-  private readonly readUrl = '/api/budget-read/mouvements';
-  private readonly allUrl = '/api/budget-read/mouvements/all';
+  private readonly readUrl = '/api/budget-mouvements';
+  private readonly allUrl = '/api/budget-mouvements/all';
   private readonly typesUrl = '/api/types-mouvement';
+  private readonly betaBaseUrl = import.meta.env.VITE_BETA_API_URL || '';
+
+  private getReadUrl(path: string): string {
+    if (!this.betaBaseUrl) {
+      return path;
+    }
+
+    const base = this.betaBaseUrl.endsWith('/')
+      ? this.betaBaseUrl.slice(0, -1)
+      : this.betaBaseUrl;
+    return `${base}${path}`;
+  }
+
+  private async betaGet<T>(path: string): Promise<T> {
+    const url = this.getReadUrl(path);
+
+    if (!this.betaBaseUrl) {
+      return apiService.get<T>(url);
+    }
+
+    const response = await axios.get<T>(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 30000,
+    });
+
+    return response.data;
+  }
 
   /**
    * Créer un nouveau mouvement budgétaire
@@ -38,7 +68,7 @@ class MouvementBudgetaireService {
 
     const query = params.toString();
     const url = query ? `${this.allUrl}?${query}` : this.allUrl;
-    return apiService.get<MouvementBudgetaire[]>(url);
+    return this.betaGet<MouvementBudgetaire[]>(url);
   }
 
   /**
@@ -76,14 +106,14 @@ class MouvementBudgetaireService {
     params.append('direction', direction);
 
     const url = `${this.readUrl}?${params.toString()}`;
-    return apiService.get<PageResponse<MouvementBudgetaire>>(url);
+    return this.betaGet<PageResponse<MouvementBudgetaire>>(url);
   }
 
   /**
    * Récupérer un mouvement par ID
    */
   async getMouvementById(id: number): Promise<MouvementBudgetaire> {
-    return apiService.get<MouvementBudgetaire>(`${this.baseUrl}/${id}`);
+    return this.betaGet<MouvementBudgetaire>(`${this.readUrl}/${id}`);
   }
 
   /**
@@ -104,10 +134,10 @@ class MouvementBudgetaireService {
    * Obtenir l'état de caisse
    */
   async getEtatCaisse(anneeExerciceId?: number): Promise<EtatCaisse> {
-    const url = anneeExerciceId 
-      ? `${this.baseUrl}/etat-caisse?anneeExerciceId=${anneeExerciceId}`
-      : `${this.baseUrl}/etat-caisse`;
-    return apiService.get<EtatCaisse>(url);
+    const url = anneeExerciceId
+      ? `${this.readUrl}/etat-caisse?anneeExerciceId=${anneeExerciceId}`
+      : `${this.readUrl}/etat-caisse`;
+    return this.betaGet<EtatCaisse>(url);
   }
 
   /**

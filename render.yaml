@@ -20,3 +20,40 @@ services:
       name: data
       mountPath: /data
       sizeGB: 1
+
+  # Service Web pour la consultation seule (sans auth) via backend_beta
+  - type: web
+    name: explorateurs-backend-beta
+    env: java
+    region: frankfurt
+    plan: free
+    buildCommand: cd backend_beta && mvn clean package -DskipTests
+    startCommand: cd backend_beta && java -jar target/*.jar
+    envVars:
+      - key: PORT
+        sync: false
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx512m"
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  # Frontend React/Vite
+  - type: web
+    name: explorateurs-frontend
+    env: static
+    region: frankfurt
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://explorateurs-backend.onrender.com
+      - key: VITE_BETA_API_URL
+        value: https://explorateurs-backend-beta.onrender.com
+      - key: VITE_API_TIMEOUT
+        value: "30000"
