@@ -3,32 +3,27 @@ services:
   # Service Web pour le backend Spring Boot
   - type: web
     name: explorateurs-backend
-    env: java
+    runtime: docker
     region: frankfurt # ou oregon, singapore selon votre localisation
     plan: free
-    buildCommand: cd backend && mvn clean package -DskipTests
-    startCommand: cd backend && java -Dspring.profiles.active=prod -jar target/*.jar
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: PORT
         sync: false
       - key: JWT_SECRET
         generateValue: true
-        sync: false
       - key: JAVA_TOOL_OPTIONS
         value: "-Xmx512m"
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1
 
   # Service Web pour la consultation seule (sans auth) via backend_beta
   - type: web
     name: explorateurs-backend-beta
-    env: java
+    runtime: docker
     region: frankfurt
     plan: free
-    buildCommand: cd backend_beta && mvn clean package -DskipTests
-    startCommand: cd backend_beta && java -jar target/*.jar
+    dockerfilePath: ./backend_beta/Dockerfile
+    dockerContext: ./backend_beta
     envVars:
       - key: PORT
         sync: false
@@ -44,7 +39,7 @@ services:
   # Frontend React/Vite
   - type: web
     name: explorateurs-frontend
-    env: static
+    runtime: static
     region: frankfurt
     plan: free
     rootDir: frontend

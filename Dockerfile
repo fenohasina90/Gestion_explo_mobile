@@ -26,4 +26,4 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENV PORT=8080
 
 # Commande de démarrage
-ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar"]
