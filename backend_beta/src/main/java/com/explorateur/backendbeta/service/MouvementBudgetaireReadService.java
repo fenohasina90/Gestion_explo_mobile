@@ -83,6 +83,12 @@ public class MouvementBudgetaireReadService {
     public EtatCaisseResponse getEtatCaisse(Long anneeExerciceId) {
         BigDecimal totalRecettes = mouvementBudgetaireRepository.sumMontantByType("RECETTE", anneeExerciceId);
         BigDecimal totalDepenses = mouvementBudgetaireRepository.sumMontantByType("DEPENSE", anneeExerciceId);
+        if (totalRecettes == null) {
+            totalRecettes = BigDecimal.ZERO;
+        }
+        if (totalDepenses == null) {
+            totalDepenses = BigDecimal.ZERO;
+        }
         BigDecimal solde = totalRecettes.subtract(totalDepenses);
 
         AnneeExercice annee = null;
