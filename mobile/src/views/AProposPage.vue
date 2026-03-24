@@ -58,7 +58,7 @@
                 <ion-icon :icon="personOutline" class="info-icon"></ion-icon>
                 <div>
                   <p class="info-label">Nom complet</p>
-                  <p class="info-value">MANGALAHY Fenohasina</p>
+                  <p class="info-value">Mangalahy Fenohasina</p>
                 </div>
               </div>
 
@@ -117,7 +117,7 @@
 
         <!-- Copyright -->
         <div class="copyright">
-          <p>© 2026 MANGALAHY Fenohasina</p>
+          <p>© 2026 Mangalahy Fenohasina</p>
           <p>Tous droits réservés</p>
         </div>
       </div>

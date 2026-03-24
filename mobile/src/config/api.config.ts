@@ -6,6 +6,7 @@
 export const API_CONFIG = {
   // API locale (développement)
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  betaBaseURL: import.meta.env.VITE_BETA_API_URL || '',
   
   // Timeout des requêtes (60 secondes pour cold start Render)
   timeout: 60000,
@@ -58,7 +59,5 @@ export const API_ENDPOINTS = {
   recentYear: '/api/annee-exercice/recente',
   
   // Journal d'audit
-  journal: '/api/journal',
-  journalFilter: '/api/journal/filter',
-  journalByPeriod: '/api/journal/period'
+  journal: '/api/journal'
 };
