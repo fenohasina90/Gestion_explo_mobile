@@ -41,7 +41,7 @@ services:
     name: explorateurs-frontend
     runtime: static
     # region: frankfurt
-    plan: free
+    # plan: free
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
