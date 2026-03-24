@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +41,20 @@ public class MouvementBudgetaireReadService {
 
     @Transactional(readOnly = true)
     public List<MouvementBudgetaireResponse> getMouvementsWithFilters(MouvementBudgetaireFilterRequest filters) {
+        String recherche = (filters != null && filters.getRecherche() != null) ? filters.getRecherche().trim() : "";
+        LocalDate dateDebut = (filters != null && filters.getDateDebut() != null) ? filters.getDateDebut() : LocalDate.of(1900, 1, 1);
+        LocalDate dateFin = (filters != null && filters.getDateFin() != null) ? filters.getDateFin() : LocalDate.of(2999, 12, 31);
+        LocalDateTime createdAtStart = dateDebut.atStartOfDay();
+        LocalDateTime createdAtEnd = dateFin.atTime(LocalTime.MAX);
+        Long typeId = (filters != null && filters.getTypeId() != null) ? filters.getTypeId() : -1L;
+        Long anneeExerciceId = (filters != null && filters.getAnneeExerciceId() != null) ? filters.getAnneeExerciceId() : -1L;
+
         List<MouvementBudgetaire> mouvements = mouvementBudgetaireRepository.findByFilters(
-                filters != null ? filters.getRecherche() : null,
-                filters != null ? filters.getDateDebut() : null,
-                filters != null ? filters.getDateFin() : null,
-                filters != null ? filters.getTypeId() : null,
-                filters != null ? filters.getAnneeExerciceId() : null,
+            recherche,
+            createdAtStart,
+            createdAtEnd,
+            typeId,
+            anneeExerciceId,
                 Sort.by(Sort.Direction.DESC, "createdAt")
         );
 
@@ -53,12 +64,20 @@ public class MouvementBudgetaireReadService {
     @Transactional(readOnly = true)
     public PageResponse<MouvementBudgetaireResponse> getMouvementsWithFiltersPaginated(MouvementBudgetaireFilterRequest filters,
                                                                                          Pageable pageable) {
+        String recherche = (filters != null && filters.getRecherche() != null) ? filters.getRecherche().trim() : "";
+        LocalDate dateDebut = (filters != null && filters.getDateDebut() != null) ? filters.getDateDebut() : LocalDate.of(1900, 1, 1);
+        LocalDate dateFin = (filters != null && filters.getDateFin() != null) ? filters.getDateFin() : LocalDate.of(2999, 12, 31);
+        LocalDateTime createdAtStart = dateDebut.atStartOfDay();
+        LocalDateTime createdAtEnd = dateFin.atTime(LocalTime.MAX);
+        Long typeId = (filters != null && filters.getTypeId() != null) ? filters.getTypeId() : -1L;
+        Long anneeExerciceId = (filters != null && filters.getAnneeExerciceId() != null) ? filters.getAnneeExerciceId() : -1L;
+
         Page<MouvementBudgetaire> page = mouvementBudgetaireRepository.findByFilters(
-                filters != null ? filters.getRecherche() : null,
-                filters != null ? filters.getDateDebut() : null,
-                filters != null ? filters.getDateFin() : null,
-                filters != null ? filters.getTypeId() : null,
-                filters != null ? filters.getAnneeExerciceId() : null,
+            recherche,
+            createdAtStart,
+            createdAtEnd,
+            typeId,
+            anneeExerciceId,
                 pageable
         );
 

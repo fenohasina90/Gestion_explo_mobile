@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MouvementBudgetaireRepository extends JpaRepository<MouvementBudgetaire, Long> {
@@ -17,16 +17,16 @@ public interface MouvementBudgetaireRepository extends JpaRepository<MouvementBu
     @Query("""
             SELECT m
             FROM MouvementBudgetaire m
-            WHERE (:recherche IS NULL OR :recherche = '' OR LOWER(COALESCE(m.description, '')) LIKE LOWER(CONCAT('%', :recherche, '%')))
-              AND (:dateDebut IS NULL OR FUNCTION('date', m.createdAt) >= :dateDebut)
-              AND (:dateFin IS NULL OR FUNCTION('date', m.createdAt) <= :dateFin)
-              AND (:typeId IS NULL OR m.type.id = :typeId)
-              AND (:anneeExerciceId IS NULL OR m.anneeExercice.id = :anneeExerciceId)
+                                                WHERE (:recherche = '' OR LOWER(COALESCE(m.description, '')) LIKE LOWER(CONCAT('%', :recherche, '%')))
+                                                        AND m.createdAt >= :createdAtStart
+                                                        AND m.createdAt <= :createdAtEnd
+                                                        AND (:typeId = -1 OR m.type.id = :typeId)
+                                                        AND (:anneeExerciceId = -1 OR m.anneeExercice.id = :anneeExerciceId)
             """)
     Page<MouvementBudgetaire> findByFilters(
             @Param("recherche") String recherche,
-            @Param("dateDebut") LocalDate dateDebut,
-            @Param("dateFin") LocalDate dateFin,
+            @Param("createdAtStart") LocalDateTime createdAtStart,
+            @Param("createdAtEnd") LocalDateTime createdAtEnd,
             @Param("typeId") Long typeId,
             @Param("anneeExerciceId") Long anneeExerciceId,
             Pageable pageable
@@ -35,16 +35,16 @@ public interface MouvementBudgetaireRepository extends JpaRepository<MouvementBu
     @Query("""
             SELECT m
             FROM MouvementBudgetaire m
-            WHERE (:recherche IS NULL OR :recherche = '' OR LOWER(COALESCE(m.description, '')) LIKE LOWER(CONCAT('%', :recherche, '%')))
-              AND (:dateDebut IS NULL OR FUNCTION('date', m.createdAt) >= :dateDebut)
-              AND (:dateFin IS NULL OR FUNCTION('date', m.createdAt) <= :dateFin)
-              AND (:typeId IS NULL OR m.type.id = :typeId)
-              AND (:anneeExerciceId IS NULL OR m.anneeExercice.id = :anneeExerciceId)
+                                                WHERE (:recherche = '' OR LOWER(COALESCE(m.description, '')) LIKE LOWER(CONCAT('%', :recherche, '%')))
+                                                        AND m.createdAt >= :createdAtStart
+                                                        AND m.createdAt <= :createdAtEnd
+                                                        AND (:typeId = -1 OR m.type.id = :typeId)
+                                                        AND (:anneeExerciceId = -1 OR m.anneeExercice.id = :anneeExerciceId)
             """)
     List<MouvementBudgetaire> findByFilters(
             @Param("recherche") String recherche,
-            @Param("dateDebut") LocalDate dateDebut,
-            @Param("dateFin") LocalDate dateFin,
+            @Param("createdAtStart") LocalDateTime createdAtStart,
+            @Param("createdAtEnd") LocalDateTime createdAtEnd,
             @Param("typeId") Long typeId,
             @Param("anneeExerciceId") Long anneeExerciceId,
             Sort sort
