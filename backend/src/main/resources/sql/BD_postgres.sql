@@ -201,7 +201,7 @@ CREATE TABLE categorie_programme (
 
 CREATE TABLE programmes (
     id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
+    nom VARCHAR(255) NOT NULL,
     description TEXT,
     categorie_id INTEGER,
     classes_id INTEGER,
@@ -330,128 +330,93 @@ CREATE TABLE journal (
 );
 
 -- =========================
--- Données initiales
+-- Optimisation Performance
 -- =========================
 
-INSERT INTO roles_staff (role_name) VALUES
-('Directeur'),
-('Co_Directeur'),
-('Secrétaire'),
-('Instructeur');
+-- Recherche textuelle rapide (ILIKE/LIKE sur texte libre)
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
-INSERT INTO classes (nom, logo, age) VALUES
-('Ami', 'Ami.png', 10),
-('Compagnon', 'Compagnon.png', 11),
-('Eclaireur', 'Eclaireur.png', 12),
-('Pionnier', 'Pionnier.png', 13),
-('Voyageur', 'Voyageur.png', 14),
-('Guide', 'Guide.png', 15);
+-- Index FK principaux (accelere JOIN + filtres frequents)
+CREATE INDEX IF NOT EXISTS idx_roles_action_role_id ON roles_action(role_id);
+CREATE INDEX IF NOT EXISTS idx_utilisateur_role_id ON utilisateur(role_id);
+CREATE INDEX IF NOT EXISTS idx_utilisateur_annee_exercice_id ON utilisateur(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_staff_id_instructeur ON staff(id_instructeur);
+CREATE INDEX IF NOT EXISTS idx_staff_annee_exercice_id ON staff(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_staff_role_id ON staff(role_id);
+CREATE INDEX IF NOT EXISTS idx_enfants_parent_id ON enfants(parent_id);
+CREATE INDEX IF NOT EXISTS idx_inscriptions_enfant_id ON inscriptions(enfant_id);
+CREATE INDEX IF NOT EXISTS idx_inscriptions_annee_exercice_id ON inscriptions(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_inscriptions_classe_id ON inscriptions(classe_id);
+CREATE INDEX IF NOT EXISTS idx_budget_global_annee_exercice_id ON budget_global(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_budget_global_status_id ON budget_global(status_id);
+CREATE INDEX IF NOT EXISTS idx_activites_id_budget ON activites(id_budget);
+CREATE INDEX IF NOT EXISTS idx_activites_status_id ON activites(status_id);
+CREATE INDEX IF NOT EXISTS idx_details_activites_activite_id ON details_activites(activite_id);
+CREATE INDEX IF NOT EXISTS idx_participants_explo_activite_id ON participants_activites_explo(activite_id);
+CREATE INDEX IF NOT EXISTS idx_participants_explo_enfant_id ON participants_activites_explo(enfant_id);
+CREATE INDEX IF NOT EXISTS idx_participants_staff_activite_id ON participants_activites_staff(activite_id);
+CREATE INDEX IF NOT EXISTS idx_participants_staff_staff_id ON participants_activites_staff(staff_id);
+CREATE INDEX IF NOT EXISTS idx_programmes_categorie_id ON programmes(categorie_id);
+CREATE INDEX IF NOT EXISTS idx_programmes_classes_id ON programmes(classes_id);
+CREATE INDEX IF NOT EXISTS idx_classe_progressive_annee_exercice_id ON classe_progressive(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_cp_details_programme_id ON cp_details(programme_id);
+CREATE INDEX IF NOT EXISTS idx_cp_details_instructeurs_cp_details_id ON cp_details_instructeurs(cp_details_id);
+CREATE INDEX IF NOT EXISTS idx_cp_details_instructeurs_instructeur_id ON cp_details_instructeurs(instructeur_id);
+CREATE INDEX IF NOT EXISTS idx_cp_presence_explo_cp_id ON cp_presence_explo(classe_progressive_id);
+CREATE INDEX IF NOT EXISTS idx_cp_presence_explo_enfant_id ON cp_presence_explo(enfant_id);
+CREATE INDEX IF NOT EXISTS idx_cp_presence_staff_cp_id ON cp_presence_staff(classe_progressive_id);
+CREATE INDEX IF NOT EXISTS idx_cp_presence_staff_staff_id ON cp_presence_staff(staff_id);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_programme_id ON historique_programmes(programme_id);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_cp_id ON historique_programmes(classe_progressive_id);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_status_id ON historique_programmes(status_id);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_annee_id ON historique_programmes(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_programme_progression_annee_id ON programme_progression_annuelle(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_mouvement_budgetaire_annee_id ON mouvement_budgetaire(annee_exercice_id);
+CREATE INDEX IF NOT EXISTS idx_mouvement_budgetaire_type_id ON mouvement_budgetaire(type_id);
+CREATE INDEX IF NOT EXISTS idx_journal_utilisateur_id ON journal(utilisateur_id);
 
-INSERT INTO roles_action (role_id, action) VALUES
-(1, 'CREER'),
-(1, 'MODIFIER'),
-(1, 'SUPPRIMER'),
-(1, 'CONSULTER'),
-(2, 'MODIFIER'),
-(2, 'CONSULTER'),
-(3, 'CONSULTER'),
-(4, 'CONSULTER');
+-- Index composes pour tri/filtrage les plus frequents
+CREATE INDEX IF NOT EXISTS idx_mouvement_budgetaire_annee_type_created_at
+    ON mouvement_budgetaire(annee_exercice_id, type_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_mouvement_budgetaire_created_at
+    ON mouvement_budgetaire(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_journal_timestamp
+    ON journal(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_journal_utilisateur_timestamp
+    ON journal(utilisateur_id, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_classe_progressive_annee_date
+    ON classe_progressive(annee_exercice_id, date_cp DESC);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_programme_created_at
+    ON historique_programmes(programme_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_historique_programmes_cp_created_at
+    ON historique_programmes(classe_progressive_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_inscriptions_annee_classe
+    ON inscriptions(annee_exercice_id, classe_id);
+CREATE INDEX IF NOT EXISTS idx_inscriptions_enfant_annee
+    ON inscriptions(enfant_id, annee_exercice_id);
 
-INSERT INTO budget_status (nom) VALUES
-('Créé'),
-('Approuvé comité');
+-- Index partiels pour tables avec suppression logique (etat <> 11)
+CREATE INDEX IF NOT EXISTS idx_utilisateur_active_username
+    ON utilisateur(username)
+    WHERE etat <> 11;
+CREATE INDEX IF NOT EXISTS idx_utilisateur_active_annee
+    ON utilisateur(annee_exercice_id)
+    WHERE etat <> 11;
+CREATE INDEX IF NOT EXISTS idx_staff_active_annee
+    ON staff(annee_exercice_id)
+    WHERE etat <> 11;
+CREATE INDEX IF NOT EXISTS idx_staff_active_instructeur_annee
+    ON staff(id_instructeur, annee_exercice_id)
+    WHERE etat <> 11;
 
-INSERT INTO activite_status (status) VALUES
-('En attente'),
-('Terminé'),
-('Annulé'),
-('Rejeté');
-
-INSERT INTO categorie_programme (nom) VALUES
-('Lovan'' ny fiangonana'),
-('Ankapobeny'),
-('Fikarohana ara-panahy'),
-('Fanompoana ny hafa'),
-('Fahasalamana sy toe-batana tomady'),
-('Fiainana ankalamanjana'),
-('Lalindalina kokoa'),
-('Asa manavanana');
-
-INSERT INTO programmes (nom, description, categorie_id, classes_id) VALUES
-('Boky miara-mihira', 'Mianara hira 10 vaovao ao amin''ny boky fiangonana', 1, 1), -- Ami
-('Tantara ara-baiboly', 'Mitantara tantara ara-baiboly 3', 1, 1), -- Ami
-('Hira fiderana', 'Mianara hira fiderana 5', 1, 2), -- Compagnon
-('Lesona Alahady', 'Mandray anjara amin''ny lesona Alahady mandritra ny 3 volana', 1, 3), -- Eclaireur
-('Fampianarana Baiboly', 'Manomana fampianarana Baiboly ho an''ny kilasy kely', 1, 4), -- Pionnier
-('Toriteny', 'Manome toriteny fohy mandritra ny fanompoam-pivavahana', 1, 5), -- Voyageur
-('Fitarika ny fiankohofana', 'Mitari-piankohofana mandritra ny 1 volana', 1, 6), -- Guide
-
-('Fivoriana sy fandaminana', 'Mandray anjara amin''ny fivoriana fandaminana', 2, 1), -- Ami
-('Fiaraha-miasa', 'Miara-miasa amin''ny namana 3', 2, 2), -- Compagnon
-('Tetibola', 'Mianatra mitantana tetibola', 2, 3), -- Eclaireur
-('Fanatanterahana tetikasa', 'Manatanteraka tetikasa iray', 2, 4), -- Pionnier
-('Fitantanana fotoana', 'Mamorona agenda isan-kerinandro', 2, 5), -- Voyageur
-('Fitarika ekipa', 'Mitondra ekipa mandritra ny 1 volana', 2, 6), -- Guide
-
-('Vakiteny Baiboly', 'Mamaky Baiboly isanandro mandritra ny 1 volana', 3, 1), -- Ami
-('Salamo', 'Mianatra Salamo 3', 3, 2), -- Compagnon
-('Bokin''ny Baiboly', 'Mianatra momba ny bokin''ny Baiboly 5', 3, 2), -- Compagnon
-('Toetran''Andriamanitra', 'Mianatra toetran''Andriamanitra 5', 3, 3), -- Eclaireur
-('Vavaka', 'Manoratra diary vavaka mandritra ny 1 volana', 3, 4), -- Pionnier
-('Famakiana andinin-teny', 'Mamakiteny andinin-teny 20', 3, 5), -- Voyageur
-('Fandalinana lalina', 'Manao fandalinana lalina momba ny toko iray', 3, 6), -- Guide
-
-('Fanampiana ray aman-dreny', 'Manampy ray aman-dreny ao an-trano', 4, 1), -- Ami
-('Fitsidihana marary', 'Mitsidika olona marary', 4, 2), -- Compagnon
-('Fanadiovana manodidina', 'Manadio ny manodidina ny fiangonana', 4, 2), -- Compagnon
-('Fanampiana ny mpianatra kely', 'Manampy ny mpianatra kely hianatra', 4, 3), -- Eclaireur
-('Fanomezana', 'Manome fanomezana ho an''ny sahirana', 4, 4), -- Pionnier
-('Fikarakarana hetsika', 'Manampy amin''ny fikarakarana hetsika', 4, 5), -- Voyageur
-('Tetikasa ho an''ny fokontany', 'Manatanteraka tetikasa ho an''ny fokontany', 4, 6), -- Guide
-
-('Fanatanjahan-tena', 'Manao fanatanjahan-tena 3 isan-kerinandro', 5, 1), -- Ami
-('Fisakafoana ara-pahasalamana', 'Mianatra momba ny sakafo mahasalama', 5, 2), -- Compagnon
-('Fidiovana', 'Mianatra mikarakara tena', 5, 3), -- Eclaireur
-('Torimaso', 'Mianatra momba ny torimaso ara-pahasalamana', 5, 4), -- Pionnier
-('Fanatanjahan-tena mahery', 'Manao fanatanjahan-tena 5 isan-kerinandro', 5, 5), -- Voyageur
-('Fitsaboana voalohany', 'Mianatra fitsaboana voalohany', 5, 6), -- Guide
-
-('Fambolena', 'Mamboly voninkazo na legioma', 6, 1), -- Ami
-('Fitsangatsanganana', 'Manao fitsangatsanganana 2', 6, 2), -- Compagnon
-('Fanjonoana', 'Mianatra manjono', 6, 3), -- Eclaireur
-('Fampiana tranolay', 'Mianatra mampianatra tranolay', 6, 4), -- Pionnier
-('Fahavelomana any an''ala', 'Mianatra fomba fahavelomana any an''ala', 6, 5), -- Voyageur
-('Lalan-kizorana', 'Manomana sy manao lalan-kizorana', 6, 6), -- Guide
-
-('Zava-kanto', 'Mamorona zavakanto iray', 7, 1), -- Ami
-('Mozika', 'Mianatra mozika', 7, 2), -- Compagnon
-('Dihy', 'Mianatra dihy vaovao', 7, 3), -- Eclaireur
-('Sary', 'Manao sary 3', 7, 4), -- Pionnier
-('Tononkalo', 'Manoratra tononkalo 2', 7, 5), -- Voyageur
-('Hai-tao an-tanana', 'Manao asa tanana sarotra', 7, 6), -- Guide
-
-('Asa fanjairana', 'Mianatra manjaitra', 8, 1), -- Ami
-('Fandrahoan-tsakafo', 'Mahandro sakafo tsotra', 8, 2), -- Compagnon
-('Asa hazo', 'Mianatra asa hazo', 8, 3), -- Eclaireur
-('Fanjairana mandroso', 'Manjaitra akanjo tsotra', 8, 4), -- Pionnier
-('Fambolena mandroso', 'Mikarakara zaridaina', 8, 5), -- Voyageur
-('Asa vy', 'Mianatra asa vy', 8, 6); -- Guide
-
-INSERT INTO programme_status (status) VALUES
-('En attente'),
-('En cours'),
-('Terminé');
-
-INSERT INTO type (type) VALUES
-('RECETTE'),
-('DEPENSE');
-
--- Année d'exercice en cours
--- PostgreSQL: CURRENT_DATE au lieu de date('now')
-INSERT INTO annee_exercice (annee, date_fin, created_at) VALUES
-(DATE_TRUNC('year', CURRENT_DATE), DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year' - INTERVAL '1 day', CURRENT_TIMESTAMP);
-
--- Utilisateur par défaut (directeur/directeur123)
--- Hash BCrypt généré par Spring Security BCryptPasswordEncoder
-INSERT INTO utilisateur (username, password_hash, role_id, active, annee_exercice_id, created_at, updated_at) VALUES
-('directeur', '$2a$10$jUuOSBA7kVjDxLfvbwa2bObataLc7L3/zVz.IYQsecOE5FwaT.PZa', 1, TRUE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- Index trigram pour recherche "contains" sur texte
+CREATE INDEX IF NOT EXISTS idx_mouvement_budgetaire_description_trgm
+    ON mouvement_budgetaire USING gin (LOWER(COALESCE(description, '')) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_journal_action_trgm
+    ON journal USING gin (LOWER(COALESCE(action, '')) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_parents_nom_prenom_trgm
+    ON parents USING gin (LOWER(nom || ' ' || prenom) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_enfants_nom_prenom_trgm
+    ON enfants USING gin (LOWER(nom || ' ' || prenom) gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_instructeur_nom_prenom_trgm
+    ON instructeur USING gin (LOWER(nom || ' ' || prenom) gin_trgm_ops);
