@@ -88,7 +88,8 @@
         </div>
 
         <!-- Section Gestion des Programmes (Directeur et Co-Directeur) -->
-        <div v-if="canManageStaff">
+        <!-- <div v-if="canManageStaff"> -->
+        <div>
           <h2 class="section-title">Gestion des Programmes</h2>
           
           <ion-grid>
@@ -110,17 +111,6 @@
                 </ion-card>
               </ion-col>
             </ion-row>
-            <!-- <ion-row>
-              <ion-col size="12">
-                <ion-card button @click="$router.push('/classes-progressives')" class="action-card-wrapper">
-                  <ion-card-content class="action-card programme-card-large">
-                    <ion-icon :icon="checkmarkOutline" class="action-icon"></ion-icon>
-                    <h3>Classes Progressives (CP)</h3>
-                    <p>Planifier et gérer les séances</p>
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-            </ion-row> -->
             <ion-row>
               <ion-col size="12">
                 <ion-card button @click="$router.push('/historique-programmes')" class="action-card-wrapper">
@@ -132,17 +122,6 @@
                 </ion-card>
               </ion-col>
             </ion-row>
-            <!-- <ion-row>
-              <ion-col size="12">
-                <ion-card button @click="$router.push('/statistiques')" class="action-card-wrapper">
-                  <ion-card-content class="action-card programme-card-large">
-                    <ion-icon :icon="listOutline" class="action-icon"></ion-icon>
-                    <h3>Statistiques</h3>
-                    <p>Statistiques de participation des Explorateurs et staffs</p>
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-            </ion-row> -->
           </ion-grid>
         </div>
 

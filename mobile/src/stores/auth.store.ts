@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Getters computed
   const userRole = computed(() => user.value?.role || null);
   const isDirecteur = computed(() => user.value?.role === 'Directeur');
-  const isCoDirecteur = computed(() => user.value?.role === 'Co-Directeur');
+  const isCoDirecteur = computed(() => user.value?.role === 'Co-Directeur' || user.value?.role === 'Co_Directeur');
 
   /**
    * Initialise le store depuis le stockage local

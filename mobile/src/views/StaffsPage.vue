@@ -170,9 +170,7 @@ const showFilters = ref(true);
 
 const canModify = computed(() => {
   return (
-    authStore.user?.role === 'Directeur' ||
-    authStore.user?.role === 'Co-Directeur' ||
-    authStore.user?.role === 'Co_Directeur'
+    authStore.user?.role === 'Directeur'
   );
 });
 

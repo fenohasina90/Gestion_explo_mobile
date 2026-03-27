@@ -598,7 +598,7 @@ const handleInscriptionError = (message: string) => {
 };
 
 const canModify = () => {
-  return authStore.user?.role === 'Directeur' || authStore.user?.role === 'Co_Directeur';
+  return authStore.user?.role === 'Directeur';
 };
 
 const canDelete = () => {

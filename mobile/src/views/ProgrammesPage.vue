@@ -153,7 +153,7 @@ const filterClasseId = ref<number | null>(null);
 
 const canModify = computed(() => {
   const role = authStore.user?.role;
-  return role === 'Directeur' || role === 'Co_Directeur';
+  return role === 'Directeur' || role === 'Co_Directeur' || role === 'Co-Directeur';
 });
 
 const filteredProgrammes = computed(() => {

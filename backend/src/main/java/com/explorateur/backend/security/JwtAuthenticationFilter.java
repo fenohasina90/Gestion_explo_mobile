@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -63,12 +66,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (jwtUtil.validateToken(jwt, username)) {
                     // Extraire le rôle du token
                     String role = jwtUtil.extractClaim(jwt, claims -> claims.get("role", String.class));
+
+                    List<SimpleGrantedAuthority> authorities = buildAuthorities(role);
                     
-                    // Créer l'authentification avec le préfixe ROLE_ (sans conversion en majuscules)
+                    // Créer l'authentification avec les alias nécessaires (underscore et tiret)
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             username,
                             null,
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
+                        authorities
                     );
                     
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -80,5 +85,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         filterChain.doFilter(request, response);
+    }
+
+    private List<SimpleGrantedAuthority> buildAuthorities(String role) {
+        Set<String> roleVariants = new LinkedHashSet<>();
+
+        String safeRole = role == null ? "" : role.trim();
+        if (!safeRole.isEmpty()) {
+            roleVariants.add(safeRole);
+            roleVariants.add(safeRole.replace('_', '-'));
+            roleVariants.add(safeRole.replace('-', '_'));
+        }
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (String variant : roleVariants) {
+            if (!variant.isEmpty()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + variant));
+            }
+        }
+
+        return authorities;
     }
 }
