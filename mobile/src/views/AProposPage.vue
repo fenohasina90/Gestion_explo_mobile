@@ -86,7 +86,7 @@
         </ion-card>
 
         <!-- Technologies -->
-        <ion-card>
+        <!-- <ion-card>
           <ion-card-header>
             <ion-card-title>
               <ion-icon :icon="codeSlashOutline" class="title-icon"></ion-icon>
@@ -113,7 +113,7 @@
               </ion-chip>
             </div>
           </ion-card-content>
-        </ion-card>
+        </ion-card> -->
 
         <!-- Copyright -->
         <div class="copyright">

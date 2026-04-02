@@ -59,7 +59,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Lister toutes les catégories de programme",
                description = "Récupère la liste de toutes les catégories de programme")
     public ResponseEntity<List<CategorieProgrammeResponse>> getAllCategories() {
@@ -68,7 +68,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir une catégorie par ID",
                description = "Récupère les détails d'une catégorie de programme")
     public ResponseEntity<CategorieProgrammeResponse> getCategorieById(@PathVariable Long id) {
@@ -77,7 +77,7 @@ public class CategorieProgrammeController {
     }
     
     @GetMapping("/{id}/count-programmes")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Compter les programmes d'une catégorie",
                description = "Compte le nombre de programmes associés à une catégorie")
     public ResponseEntity<Long> countProgrammesByCategorie(@PathVariable Long id) {

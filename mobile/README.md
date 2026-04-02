@@ -233,3 +233,13 @@ Développé pour le Club des Explorateurs - Église Adventiste
 ## 📄 Licence
 
 Propriétaire - Tous droits réservés
+
+
+
+salama daholo,
+soson-kevitra ity:
+nijery an'ilay slide zah teo dia ao anatiny ao misy an'io cotisation io.
+maninona raha esorina tao io satria isika hanentana olona hiditra ato amin'ilay club nefa efa misy resaka vola hivoaka amzareo sahady dia mety hanakana anazy tsy hiditra indray ilay izy fa rehefa tafiditra ao anatiny ilay olona dia izay vao resahana io sy izay mety ho fitsipika hafa rehetra.
+Rehefa nijery ny an'olona nanao presentation teny tsinona otran tsy nisy niresaka anzan.
+Soson-kevitra ftsn ny ah iny fa tsy haiko izay efa tapakareo tao amin'ny fivoriana, ialana tsiny moa fa zah tsy nivory.
+Mankasitraka

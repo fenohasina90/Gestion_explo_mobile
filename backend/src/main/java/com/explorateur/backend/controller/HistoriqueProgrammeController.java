@@ -28,7 +28,7 @@ public class HistoriqueProgrammeController {
     private final ProgrammeScheduler programmeScheduler;
     
     @GetMapping("/programme/{programmeId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir l'historique complet d'un programme",
                description = "Récupère tous les changements de statut d'un programme (toutes années confondues)")
     public ResponseEntity<List<HistoriqueProgrammeDto>> getHistoriqueProgramme(
@@ -39,7 +39,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/programme/{programmeId}/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir l'historique d'un programme pour une année",
                description = "Récupère tous les changements de statut d'un programme pour une année d'exercice spécifique")
     public ResponseEntity<List<HistoriqueProgrammeDto>> getHistoriqueProgrammeParAnnee(
@@ -53,7 +53,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/cp/{cpId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir l'historique d'une Classe Progressive",
                description = "Récupère tous les changements de statut effectués dans une CP")
     public ResponseEntity<List<HistoriqueProgrammeDto>> getHistoriqueCP(
@@ -64,7 +64,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/progression/programme/{programmeId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir les progressions annuelles d'un programme",
                description = "Récupère le résumé des progressions d'un programme par année")
     public ResponseEntity<List<ProgressionAnnuelleDto>> getProgressionsProgramme(
@@ -75,7 +75,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/progression")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir la progression annuelle de tous les programmes",
                description = "Récupère le résumé des progressions de tous les programmes, optionnellement filtrée par année")
     public ResponseEntity<List<ProgressionAnnuelleDto>> getProgressionAnnuelle(
@@ -86,7 +86,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/statistiques/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir les statistiques annuelles des programmes",
                description = "Récupère les statistiques agrégées des programmes pour une année (nombre terminés, en cours, etc.)")
     public ResponseEntity<StatistiquesAnnuellesDto> getStatistiquesAnnuelles(
@@ -97,7 +97,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/statistiques")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir les statistiques de tous les programmes",
                description = "Récupère les statistiques agrégées de tous les programmes, optionnellement filtrées par année")
     public ResponseEntity<List<StatistiquesAnnuellesDto>> getToutesStatistiques(
@@ -108,7 +108,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/avancement/annee/{anneeExerciceId}")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir l'avancement de tous les programmes pour une année",
                description = "Récupère l'état d'avancement détaillé de tous les programmes pour une année donnée, " +
                            "avec possibilité de filtrer par classe et catégorie")
@@ -125,7 +125,7 @@ public class HistoriqueProgrammeController {
     }
     
     @GetMapping("/avancement")
-    @PreAuthorize("hasAnyRole('Directeur', 'Co-Directeur', 'Secrétaire', 'Instructeur')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Directeur', 'ROLE_Co-Directeur', 'ROLE_Co_Directeur', 'ROLE_Secrétaire', 'ROLE_Instructeur')")
     @Operation(summary = "Obtenir l'avancement de tous les programmes",
                description = "Récupère l'état d'avancement détaillé de tous les programmes, " +
                            "optionnellement filtrés par année, classe et catégorie")

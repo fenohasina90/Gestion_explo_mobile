@@ -89,6 +89,8 @@ CREATE TABLE parents (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+
 CREATE TABLE enfants (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
@@ -102,6 +104,39 @@ CREATE TABLE enfants (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_id) REFERENCES parents(id)
 );
+INSERT INTO parents (nom, prenom, adresse, telephone) VALUES
+('Mme', 'Fara 2', null, null); --21
+INSERT INTO enfants (nom, prenom, genre, date_naissance, adresse, parent_id, bapteme) VALUES
+('MANOROMANDA', 'Landa Heira Tielz', 'GARCON', '2016-11-21', null, 2, null),
+('RASANJY', 'Tsiaroniaina Manohisoa Ariel', 'GARCON', '2016-09-29', null, 3, null),
+('ANDRIANANTENAINA', 'Fanomezantsoa Filamatra Diary', 'GARCON', '2015-02-20', null, 4, null),
+('ANDRIANARISON', 'Tanjona Ny Aina Itokiana', 'GARCON', '2015-12-13', null, 5, null),
+('FENOINTSOA', 'Henika Fitahiana Lucah', 'GARCON', '2015-06-20', null, 6, null),
+('RAKOTOZAFY', 'Tanjona', 'GARCON', '2015-03-16', null, 7, null),
+('RANDRIAMIANDRISOA', 'Hajaniaina Harena', 'GARCON', '2015-12-19', null, 8, null),
+('RANDRIANARIJAONA', 'Solofofandresena Princia', 'FILLE', '2015-09-09', null, 9, null),
+('RAKOTONDRAJAO', 'Mathieu Fidinirina', 'GARCON', '2014-04-29', null, 1, null),
+('RAMIANDRISOA', 'Tsaralova Fiàna', 'FILLE', '2014-01-31', null, 11, null),
+('RANARISOLO', 'Nomenjanahary Honoré', 'GARCON', '2014-01-13', null, 12, null),
+('MIARINTSOA', 'Sahaza Fitia Andriah', 'FILLE', '2013-02-28', null, 13, null),
+('RAKOTONDRAJAO', 'Tiffah Yonnah', 'FILLE', '2013-06-23', null, 14, null),
+('RAKOTONDRATSIMBA', 'Ny Tendry Milanto', 'FILLE', '2013-03-29', null, 15, null),
+('RASOARINIRINA', 'Hanitriniaina Valimbavaka', 'FILLE', '2013-01-31', null, 16, null),
+('TOMBOLAZA', 'Andriamisaina Manda', 'GARCON', '2013-09-06', null, 17, null),
+('TOMBOLAZA', 'Andriamisaina Ny Aro', 'GARCON', '2013-09-06', null, 17, null),
+('FANOMEZANTSOA', 'Hariseheno Nilaina', 'FILLE', '2012-03-25', null, 18, null),
+('FENOINTSOA', 'Andrianina Mathieu', 'GARCON', '2012-07-31', null, 6, null),
+('RAMIANDRISOA', 'Fifaliana', 'GARCON', '2012-06-07', null, 8, null),
+('RANDRIAMAMPIANINA', 'Nirina Joannah', 'FILLE', '2012-09-14', null, 19, null),
+('RATSARAEFADAHY', 'Tefinjanahary André', 'GARCON', '2012-01-01', null, 20, null),
+('ANDRIANARISON', 'Fitahiantsoa Nandrianina', 'GARCON', '2011-06-05', null, 5, null),
+('MANOROMANDA', 'Landa Ahiëlle', 'FILLE', '2011-06-05', null, 2, null),
+('RAKOTONIAINA', 'Fanomezanjanahary Jonathan Jeremia', 'GARCON', '2011-06-20', null, 21, null),
+('RAKOTONIAINA', 'Fanomezanjanahary Jonathan Jeremie', 'GARCON', '2011-06-20', null, 21, null);
+
+
+
+
 
 CREATE TABLE inscriptions (
     id SERIAL PRIMARY KEY,

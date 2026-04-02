@@ -97,7 +97,7 @@
               <ion-icon :icon="closeCircleOutline"></ion-icon>
             </ion-button>
             <ion-button 
-              v-if="canModify"
+              v-if="canDelete"
               color="danger" 
               @click.stop="confirmDelete(cp.id)"
             >
@@ -174,6 +174,8 @@ const canModify = computed(() => {
   const role = authStore.user?.role;
   return role === 'Directeur' || role === 'Co_Directeur';
 });
+
+const canDelete = computed(() => authStore.user?.role === 'Directeur');
 
 onMounted(() => {
   loadCPs();

@@ -4,7 +4,7 @@
       <ion-toolbar>
         <div style="display: flex; align-items: center; width: 100%;">
           <img src="/assets/logo.png" alt="Logo" class="header-logo" />
-          <ion-title class="always-visible-title">Tableau de bord</ion-title>
+          <ion-title class="always-visible-title">Accueil</ion-title>
         </div>
       </ion-toolbar>
     </ion-header>

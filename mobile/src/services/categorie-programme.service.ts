@@ -50,7 +50,7 @@ class CategorieProgrammeService {
    * Compter les programmes par catégorie
    */
   async countProgrammesByCategorie(categorieId: number): Promise<number> {
-    return await api.get<number>(`${this.BASE_URL}/${categorieId}/count`);
+    return await api.get<number>(`${this.BASE_URL}/${categorieId}/count-programmes`);
   }
 }
 
