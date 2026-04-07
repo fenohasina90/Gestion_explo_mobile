@@ -1,4 +1,5 @@
 import api from './api.service';
+import axios from 'axios';
 import type {
   ClasseProgressive,
   CreateClasseProgressiveRequest,
@@ -11,6 +12,28 @@ import type {
  */
 class ClasseProgressiveService {
   private readonly BASE_URL = '/api/classe-progressive';
+  private readonly betaBaseUrl = import.meta.env.VITE_BETA_API_URL || '';
+
+  private getBetaUrl(path: string): string {
+    const base = this.betaBaseUrl.endsWith('/')
+      ? this.betaBaseUrl.slice(0, -1)
+      : this.betaBaseUrl;
+    return `${base}${path}`;
+  }
+
+  private async betaDelete(path: string): Promise<void> {
+    if (!this.betaBaseUrl) {
+      await api.delete(path);
+      return;
+    }
+
+    await axios.delete(this.getBetaUrl(path), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 30000,
+    });
+  }
 
   /**
    * Récupérer toutes les CPs
@@ -56,7 +79,7 @@ class ClasseProgressiveService {
    * Supprimer une CP
    */
   async deleteCP(id: number): Promise<void> {
-    await api.delete(`${this.BASE_URL}/${id}`);
+    await this.betaDelete(`${this.BASE_URL}/${id}`);
   }
 
   /**
